@@ -1,2 +1,3 @@
 # deno-lib
-Library of (arguably) useful Deno classes
+Library of (arguably) useful Deno classes.  
+Comes with no warranties whatsoever.
