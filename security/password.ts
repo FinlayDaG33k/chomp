@@ -1,5 +1,4 @@
-import { crypto } from "https://deno.land/std@0.113.0/crypto/mod.ts";
-import { DigestAlgorithm } from "https://cdn.deno.land/std/versions/0.113.0/raw/_wasm_crypto/mod.ts";
+import { DigestAlgorithm, crypto } from "../deps.ts";
 import { Random } from "./random.ts";
 
 /**

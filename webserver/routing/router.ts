@@ -1,5 +1,5 @@
+import { readerFromStreamReader } from "../../deps.ts";
 import { pathToRegexp, match } from "../pathToRegexp.ts";
-import { readerFromStreamReader } from "https://deno.land/std/io/mod.ts";
 
 interface Route {
   path: string;
