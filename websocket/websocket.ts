@@ -1,5 +1,5 @@
 import { WebSocketServer, WebSocketAcceptedClient } from "https://deno.land/x/websocket@v0.1.1/mod.ts";
-import { Logger } from "../logging.ts";
+import { Logger } from "../logging/logger.ts";
 import { Events } from "./events.ts";
 
 export class Websocket {
