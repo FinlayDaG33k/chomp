@@ -1,1 +1,1 @@
-import { env } from "../deps.ts";
+export { env } from "../deps.ts";
