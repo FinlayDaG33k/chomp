@@ -88,7 +88,7 @@ interface IPasswordOpts {
   allowInsecure?: boolean;
 }
 
-export default class Password {
+export class Password {
   /**
    * Hash the password using the specified password algorithm
    *
