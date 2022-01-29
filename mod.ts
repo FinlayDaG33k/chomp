@@ -2,6 +2,8 @@ export { cron } from "./common/cron.ts";
 export { env } from "./common/env.ts";
 export { Time } from "./common/time.ts";
 
+export { RCON } from "./communication/rcon.ts";
+
 export { Logger } from "./logging/logger.ts";
 
 export { Password } from "./security/password.ts";

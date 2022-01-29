@@ -6,3 +6,4 @@ export { format as formatter } from "https://cdn.deno.land/std/versions/0.77.0/r
 export { WebSocketServer, WebSocketAcceptedClient } from "https://deno.land/x/websocket@v0.1.1/mod.ts";
 export { engineFactory } from "https://deno.land/x/view_engine@v1.4.5/mod.ts";
 export { readerFromStreamReader } from "https://deno.land/std/io/mod.ts";
+export { Buffer } from "https://deno.land/std@0.87.0/node/buffer.ts";
