@@ -62,6 +62,6 @@ export class RCON {
     }
 
     this.conn.closeWrite();
-    return str || "";
+    return str.replace(/\0/g, '') || "";
   }
 }
