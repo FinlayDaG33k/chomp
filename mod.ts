@@ -9,6 +9,8 @@ export { Logger } from "./logging/logger.ts";
 export { Password } from "./security/password.ts";
 export { Random } from "./security/random.ts";
 
+export { tokenizer } from "./util/tokenizer.ts";
+
 export { Controller } from "./webserver/controller/controller.ts";
 export { Router } from "./webserver/routing/router.ts";
 export { Webserver } from "./webserver/webserver.ts";
