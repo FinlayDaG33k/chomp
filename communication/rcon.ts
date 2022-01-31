@@ -14,7 +14,7 @@ export class RCON {
       port: port,
     });
 
-    this.send(password, "AUTH");
+    await this.send(password, "AUTH");
   }
 
   public async send(data: string, cmd?: keyof typeof PacketType): Promise<string> {
