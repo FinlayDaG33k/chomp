@@ -46,6 +46,10 @@ export class RCON {
     this.conn.write(buf);
   }
 
+  public async close(): Promise<void> {
+    await this.conn.close();
+  }
+
   private async recv(): Promise<string> {
     const data = new Buffer(2048); // TODO: Fix
     await this.conn.read(data);
@@ -61,7 +65,6 @@ export class RCON {
       str = str.substring(0, str.length - 1);
     }
 
-    this.conn.closeWrite();
     return str.replace(/\0/g, '') || "";
   }
 }
