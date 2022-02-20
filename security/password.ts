@@ -109,7 +109,7 @@ export class Password {
     let result = await Password.doHash(password, algo, salt, options.cost!);
 
     // Return our final hash string
-    return `!${HASH_IDENTIFIERS.indexOf(algo)}!${options.cost}!${salt}!${result}`;
+    return `${HASH_IDENTIFIERS.indexOf(algo)}!${options.cost}!${salt}!${result}`;
   }
 
   /**
@@ -122,11 +122,12 @@ export class Password {
     // Split input hash at the delimiter
     // Then build our data
     const tokens = hash.split('!');
+    if(tokens.length < 4) throw Error('Malformed input hash');
     let data = {
-      algo: HASH_IDENTIFIERS[Number(tokens[1])],
-      cost: Number(tokens[2]),
-      salt: tokens[3],
-      hash: tokens[4]
+      algo: HASH_IDENTIFIERS[Number(tokens[0])],
+      cost: Number(tokens[1]),
+      salt: tokens[2],
+      hash: tokens[3]
     };
 
     // Create our hash
