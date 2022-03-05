@@ -6,6 +6,7 @@ export { RCON } from "./communication/rcon.ts";
 
 export { Logger } from "./logging/logger.ts";
 
+export { Hash, Algorithms } from "./security/hash.ts";
 export { Password } from "./security/password.ts";
 export { Random } from "./security/random.ts";
 
