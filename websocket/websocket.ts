@@ -1,20 +1,30 @@
 import { WebSocketServer, WebSocketAcceptedClient } from "../deps.ts";
 import { Logger } from "../logging/logger.ts";
 import { Events } from "./events.ts";
+import { Authenticator } from "./authenticator.ts";
 
 export class Websocket {
-  private port = 80;
+  private readonly port: number = 80;
+  private readonly authenticate: boolean = false;
   private server: WebSocketServer|null = null;
 
-  constructor(port: number = 80) {
+  constructor(port: number = 80, authenticate: boolean = false) {
     this.port = port;
+    this.authenticate = authenticate;
   }
 
   public start() {
     this.server = new WebSocketServer(this.port, Deno.env.get('REAL_IP_HEADER') ?? null);
-    this.server.on("connection", (client: WebSocketAcceptedClient) => {
+    this.server.on("connection", (client: WebSocketAcceptedClient, url: string) => {
       Logger.info(`New WebSocket connection from "${(client.webSocket.conn.remoteAddr as Deno.NetAddr).hostname!}"...`);
       this.handleEvent('connect', {});
+
+      // Authenticate if required
+      if(this.authenticate === true && !Authenticator.client(url.replace('/', ''))) {
+        Logger.warning(`Closing connection with "${(client.webSocket.conn.remoteAddr as Deno.NetAddr).hostname!}": Invalid token!`);
+        client.close(1000, 'Invalid authentication token!');
+        return;
+      }
 
       client.on("message", (message: string) => this.onMessage(message));
     });
