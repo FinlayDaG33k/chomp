@@ -17,7 +17,6 @@ export class Websocket {
     this.server = new WebSocketServer(this.port, Deno.env.get('REAL_IP_HEADER') ?? null);
     this.server.on("connection", (client: WebSocketAcceptedClient, url: string) => {
       Logger.info(`New WebSocket connection from "${(client.webSocket.conn.remoteAddr as Deno.NetAddr).hostname!}"...`);
-      this.handleEvent('connect', {});
 
       // Authenticate if required
       if(this.authenticate === true && !Authenticator.client(url.replace('/', ''))) {
