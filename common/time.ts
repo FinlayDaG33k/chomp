@@ -2,7 +2,7 @@ import { time as timets } from "https://denopkg.com/burhanahmeed/time.ts@v2.0.1/
 import { format as formatter } from "https://cdn.deno.land/std/versions/0.77.0/raw/datetime/mod.ts";
 
 export class Time {
-  private time;
+  private readonly time;
   public get getTime() { return this.time; }
   public get milliseconds() { return this.time.getMilliseconds(); }
   public get seconds() { return this.time.getSeconds(); }
