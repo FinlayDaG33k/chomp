@@ -17,7 +17,7 @@ export class Events {
   public static async add(event: IEvent) {
     try {
       // Import the event handler
-      Events.handlers[event.handler] = await import(`file://${Deno.cwd()}/src/commands/${event.handler}.ts`)
+      Events.handlers[event.handler] = await import(`file://${Deno.cwd()}/src/events/${event.handler}.ts`)
     } catch(e) {
       Logger.error(`Could not register event handler for "${event}": ${e.message}`);
       return;
