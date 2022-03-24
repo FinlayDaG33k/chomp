@@ -26,6 +26,9 @@ export class Websocket {
         return;
       }
 
+      // Dispatch "ClientConnect" event
+      this.handleEvent('ClientConnect', {client: client});
+
       client.on("message", (message: string) => this.onMessage(message));
     });
   }
