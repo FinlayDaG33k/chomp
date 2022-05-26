@@ -11,7 +11,10 @@ export { Hash, Algorithms } from "./security/hash.ts";
 export { Password } from "./security/password.ts";
 export { Random } from "./security/random.ts";
 
+export { CheckSource } from "./util/check-source.ts";
 export { tokenizer } from "./util/tokenizer.ts";
+export { lcfirst } from "./util/lcfirst.ts";
+export { ucfirst } from "./util/ucfirst.ts";
 
 export { Controller } from "./webserver/controller/controller.ts";
 export { Router } from "./webserver/routing/router.ts";
