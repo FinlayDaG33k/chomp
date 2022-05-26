@@ -3,6 +3,7 @@ export { env } from "./common/env.ts";
 export { Time } from "./common/time.ts";
 
 export { RCON } from "./communication/rcon.ts";
+export { Redis } from "./communication/redis.ts";
 
 export { Logger } from "./logging/logger.ts";
 
