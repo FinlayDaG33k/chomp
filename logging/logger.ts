@@ -37,10 +37,19 @@ export class Logger {
   }
 
   /**
+   * Write a stacktrace to the console
+   *
+   * @param stacktrace The stacktrace
+   * @returns void
+   */
+  public static trace(stacktrace: any): void {
+    console.error(stacktrace);
+  }
+
+  /**
    * Return the current time in format.
    * eg. 2020/11/28 20:50:30
    *
-   * @private
    * @returns string The formatted time
    */
   private static time(): string { return new Time().format(`yyyy/MM/dd HH:mm:ss`); }
