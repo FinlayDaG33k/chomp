@@ -7,4 +7,5 @@ export { WebSocketServer, WebSocketAcceptedClient } from "https://deno.land/x/we
 export { engineFactory } from "https://deno.land/x/view_engine@v1.4.5/mod.ts";
 export { readerFromStreamReader } from "https://deno.land/std@0.126.0/io/mod.ts";
 export { Buffer } from "https://deno.land/std@0.87.0/node/buffer.ts";
+export * from "https://deno.land/x/discordeno@13.0.0-rc18/mod.ts";
 export { connect as redisConnect } from "https://deno.land/x/redis@v0.25.2/mod.ts";

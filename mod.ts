@@ -5,6 +5,10 @@ export { Time } from "./common/time.ts";
 export { RCON } from "./communication/rcon.ts";
 export { Redis } from "./communication/redis.ts";
 
+export { Discord } from "./discord/discord.ts";
+export { EventDispatcher } from "./discord/event-dispatcher.ts";
+export { InteractionDispatcher } from "./discord/interaction-dispatcher.ts";
+
 export { Logger } from "./logging/logger.ts";
 
 export { Hash, Algorithms } from "./security/hash.ts";
