@@ -1,4 +1,5 @@
 import { Time } from "../common/time.ts";
+import { Configure } from "../common/configure.ts";
 
 export class Logger {
   /**
@@ -33,7 +34,7 @@ export class Logger {
    * @returns void
    */
   public static debug(message: string): void {
-    if(Deno.env.get('DEBUG') == "true") console.log(`[${Logger.time()}] DEBUG > ${message}`);
+    if(Deno.env.get('DEBUG') == "true" || Configure.get('debug', false)) console.log(`[${Logger.time()}] DEBUG > ${message}`);
   }
 
   /**
