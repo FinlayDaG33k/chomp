@@ -44,7 +44,7 @@ export class Hash {
     this.result = await crypto.subtle.digest(this.algo as DigestAlgorithm, new TextEncoder().encode(this.input));
   }
 
-  public async hex() {
+  public hex() {
     return [...new Uint8Array(this.result)].map(x => x.toString(16).padStart(2, '0')).join('');
   }
 }

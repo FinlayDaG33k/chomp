@@ -9,9 +9,9 @@ export interface DiscordInitOpts {
 
 export class Discord {
   protected static bot: any;
-  protected token: string = '';
+  protected token = '';
   protected intents: any[] = ['Guilds', 'GuildMessages', 'GuildMembers'];
-  protected botId: bigint = BigInt(0);
+  protected botId = BigInt(0);
 
   /**
    * Return the instance of the Discord bot connection
@@ -22,9 +22,9 @@ export class Discord {
   public static getBot(): any { return Discord.bot; }
 
   public constructor(opts: DiscordInitOpts) {
-    if(opts.hasOwnProperty('token')) this.token = opts.token;
-    if(opts.hasOwnProperty('intents')) this.intents = opts.intents;
-    if(opts.hasOwnProperty('botId')) this.botId = BigInt(opts.botId);
+    if('token' in opts) this.token = opts.token;
+    if('intents' in opts) this.intents = opts.intents;
+    if('botId' in opts) this.botId = BigInt(opts.botId);
 
     Discord.bot = createBot({
       token: this.token,
@@ -37,16 +37,16 @@ export class Discord {
         messageCreate(bot, message) {
           EventDispatcher.dispatch('MessageReceive', {bot: bot, message: message});
         },
-        guildMemberAdd(bot, member, user) {
+        guildMemberAdd(_bot, member, user) {
           EventDispatcher.dispatch('GuildMemberAdd', {member: member, user: user});
         },
-        reactionAdd(bot, data) {
+        reactionAdd(_bot, data) {
           EventDispatcher.dispatch('MessageReactionAdd', data);
         },
-        reactionRemove(bot, data) {
+        reactionRemove(_bot, data) {
           EventDispatcher.dispatch('MessageReactionRemove', data);
         },
-        interactionCreate(bot, interaction) {
+        interactionCreate(_bot, interaction) {
           EventDispatcher.dispatch('InteractionCreate', interaction);
         }
       }

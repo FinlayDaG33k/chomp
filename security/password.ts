@@ -79,8 +79,8 @@ export class Password {
     if(typeof options.cost !== 'number' || options.cost <= 0) options.cost = DEFAULT_OPTS.cost;
 
     // Create our hash
-    let salt = await Random.string(32);
-    let result = await Password.doHash(password, algo, salt, options.cost!);
+    const salt = await Random.string(32);
+    const result = await Password.doHash(password, algo, salt, options.cost!);
 
     // Return our final hash string
     return `${HASH_IDENTIFIERS.indexOf(algo)}!${options.cost}!${salt}!${result}`;
@@ -97,7 +97,7 @@ export class Password {
     // Then build our data
     const tokens = hash.split('!');
     if(tokens.length < 4) throw Error('Malformed input hash');
-    let data = {
+    const data = {
       algo: HASH_IDENTIFIERS[Number(tokens[0])],
       cost: Number(tokens[1]),
       salt: tokens[2],
@@ -105,17 +105,17 @@ export class Password {
     };
 
     // Create our hash
-    let result = await Password.doHash(password, data.algo, data.salt, data.cost);
+    const result = await Password.doHash(password, data.algo, data.salt, data.cost);
 
     // Compare hash and return the result
     return result === data.hash;
   }
 
   private static async doHash(input: string, algo: string, salt: string, cost: number): Promise<string> {
-    let rounds = 2 ** cost;
+    const rounds = 2 ** cost;
     let result = input;
     for(let round = 0; round < rounds; round++) {
-      let h = new Hash(input, algo);
+      const h = new Hash(input, algo);
       await h.digest();
       result = await h.hex();
     }

@@ -42,6 +42,7 @@ export class EventDispatcher {
       EventDispatcher.handlers[event.handler] = await import(`file://${Deno.cwd()}/src/events/${event.handler}.ts`)
     } catch(e) {
       Logger.error(`Could not register event handler for "${event.name}": ${e.message}`);
+      Logger.trace(e);
       return;
     }
 
@@ -58,7 +59,7 @@ export class EventDispatcher {
   public static async dispatch(event: string, data: any = {}): Promise<void> {
     // Get the event handler
     const handler = EventDispatcher.getHandler(event);
-    if(!handler) return Logger.warning(`Event "${event}" does not exist! (did you register it?)`);
+    if(!handler) return Logger.debug(`Event "${event}" does not exist! (did you register it?)`);
 
     // Create an instance of the event handler
     const controller = new EventDispatcher.handlers[handler.handler][`${event}Event`](data);

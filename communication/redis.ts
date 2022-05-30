@@ -1,4 +1,5 @@
-import { redisConnect, Logger } from "../deps.ts";
+import { redisConnect } from "../deps.ts";
+import { Logger } from "../logging/logger.ts";
 
 export class Redis {
   private static connection: any = null;
