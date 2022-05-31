@@ -1,5 +1,5 @@
 import { Time } from "../common/time.ts";
-import { Configure } from "../common/configure.ts";
+import Configure from "../common/configure.ts";
 
 export class Logger {
   /**
