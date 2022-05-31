@@ -63,9 +63,17 @@ export class CheckSource {
     this.files.push(path);
   }
 
+  /**
+   * Check all files found
+   */
   private async checkFiles() {
     for await(const file of this.files) {
-      await import(`file://${Deno.cwd()}/${file}`);
+      try {
+        await import(`file://${Deno.cwd()}/${file}`);
+      } catch(e) {
+        Logger.error(`Check for "${Deno.cwd()}/${file}" failed: ${e.message}`);
+        Logger.trace(e.stack);
+      }
     }
   }
 }
