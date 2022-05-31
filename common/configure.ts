@@ -5,7 +5,7 @@ interface ConfigureItem {
   value: any;
 }
 
-export default class Configure {
+export class Configure {
   private static config: ConfigureItem[] = [];
   private static hasLoaded = false;
 
