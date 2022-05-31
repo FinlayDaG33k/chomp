@@ -31,7 +31,10 @@ export class Configure {
     // Read our JSON
     try {
       const json = await Deno.readTextFile(`${Deno.cwd()}/config.json`);
-      Configure.config = JSON.parse(json);
+      const data = JSON.parse(json);
+      for(const entry of Object.keys(data)) {
+        Configure.set(entry, data[entry]);
+      }
     } catch(e) {
       Logger.error(`Could not load JSON: "${e.message}"`);
       Logger.trace(e.stack);
