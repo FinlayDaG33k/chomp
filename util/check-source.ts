@@ -36,7 +36,7 @@ export class CheckSource {
     Logger.info(`Getting all files in directory "${path}"...`);
     for await(const entry of Deno.readDir(path)) {
       if(entry.isDirectory) {
-        if(this.exclusions.directories !== null && this.exclusions.directories.includes(entry.name)) {
+        if('directories' in this.exclusions && this.exclusions.directories !== null && this.exclusions.directories.includes(entry.name)) {
           Logger.debug(`Skipping excluded directory "${path}/${entry.name}"...`);
           continue;
         }
@@ -44,7 +44,7 @@ export class CheckSource {
       }
 
       if(entry.isFile) {
-        if(this.exclusions.files !== null && this.exclusions.files.includes(entry.name)) {
+        if('files' in this.exclusions && this.exclusions.files !== null && this.exclusions.files.includes(entry.name)) {
           Logger.debug(`Skipping excluded file "${path}/${entry.name}"...`);
           continue;
         }
