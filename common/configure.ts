@@ -17,7 +17,7 @@ export class Configure {
   public static async load(): Promise<void> {
     // Make sure we don't have loaded already
     if(Configure.hasLoaded === true) return;
-    Logger.info(`Loading data into Configure!`)
+    Logger.info(`Loading data into Configure...`);
 
     // Make sure our file exists
     try {
