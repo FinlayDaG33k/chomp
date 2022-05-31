@@ -1,3 +1,4 @@
+export { Configure } from "./common/configure.ts";
 export { cron } from "./common/cron.ts";
 export { env } from "./common/env.ts";
 export { Time } from "./common/time.ts";
