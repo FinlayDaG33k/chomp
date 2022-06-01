@@ -52,10 +52,10 @@ export class Configure {
    * @param defaultValue Default value to return when no result was found
    * @returns ConfigureItem|null
    */
-  public static get(key: string, defaultValue: any = null): ConfigureItem|null {
+  public static get(key: string, defaultValue: any = null): any {
     const result = Configure.config.find((item: ConfigureItem) => item.key === key);
     if(typeof result === 'undefined') return defaultValue;
-    return result;
+    return result.value;
   }
 
   /**
