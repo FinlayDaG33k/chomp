@@ -40,7 +40,7 @@ export class CheckSource {
           Logger.debug(`Skipping excluded directory "${path}/${entry.name}"...`);
           continue;
         }
-        this.getFiles(`${path}/${entry.name}`);
+        await this.getFiles(`${path}/${entry.name}`);
       }
 
       if(entry.isFile) {
@@ -48,6 +48,7 @@ export class CheckSource {
           Logger.debug(`Skipping excluded file "${path}/${entry.name}"...`);
           continue;
         }
+        Logger.debug(`Found file "${path}/${entry.name}"...`);
         this.addFile(`${path}/${entry.name}`);
       }
     }
