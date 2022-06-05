@@ -1,4 +1,4 @@
-import { createBot, startBot } from "../deps.ts";
+import { createBot, startBot, DiscordGatewayPayload } from "../deps.ts";
 import { EventDispatcher } from "./event-dispatcher.ts";
 
 export interface DiscordInitOpts {
@@ -39,6 +39,15 @@ export class Discord {
         },
         guildMemberAdd(_bot, member, user) {
           EventDispatcher.dispatch('GuildMemberAdd', {member: member, user: user});
+        },
+        guildRoleCreate(_bot, data: DiscordGatewayPayload) {
+          EventDispatcher.dispatch('GuildRoleCreate', data);
+        },
+        guildRoleDelete(_bot, data: DiscordGatewayPayload) {
+          EventDispatcher.dispatch('GuildRoleDelete', data);
+        },
+        guildRoleUpdate(_bot, data: DiscordGatewayPayload) {
+          EventDispatcher.dispatch('GuildRoleUpdate', data);
         },
         reactionAdd(_bot, data) {
           EventDispatcher.dispatch('MessageReactionAdd', data);
