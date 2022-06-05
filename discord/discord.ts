@@ -34,6 +34,9 @@ export class Discord {
         ready() {
           EventDispatcher.dispatch('BotReady', {});
         },
+        guildCreate(bot, guild) {
+          EventDispatcher.dispatch('GuildCreate', {guild: guild});
+        },
         messageCreate(bot, message) {
           EventDispatcher.dispatch('MessageReceive', {bot: bot, message: message});
         },
