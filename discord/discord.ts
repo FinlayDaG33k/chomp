@@ -37,7 +37,7 @@ export class Discord {
         guildCreate(bot, guild) {
           EventDispatcher.dispatch('GuildCreate', {guild: guild});
         },
-        guildLoaded(bot, data, shardId: number) {
+        guildLoaded(bot, data) {
           EventDispatcher.dispatch('GuildLoaded', data);
         },
         messageCreate(bot, message) {
