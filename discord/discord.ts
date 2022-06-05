@@ -40,14 +40,14 @@ export class Discord {
         guildMemberAdd(_bot, member, user) {
           EventDispatcher.dispatch('GuildMemberAdd', {member: member, user: user});
         },
-        guildRoleCreate(_bot, data: DiscordGatewayPayload) {
-          EventDispatcher.dispatch('GuildRoleCreate', data);
+        roleCreate(_bot, role) {
+          EventDispatcher.dispatch('GuildRoleCreate', {role: role});
         },
-        guildRoleDelete(_bot, data: DiscordGatewayPayload) {
-          EventDispatcher.dispatch('GuildRoleDelete', data);
+        roleDelete(_bot, role) {
+          EventDispatcher.dispatch('GuildRoleDelete', {role: role});
         },
-        guildRoleUpdate(_bot, data: DiscordGatewayPayload) {
-          EventDispatcher.dispatch('GuildRoleUpdate', data);
+        roleUpdate(_bot, role) {
+          EventDispatcher.dispatch('GuildRoleUpdate', {role: role});
         },
         reactionAdd(_bot, data) {
           EventDispatcher.dispatch('MessageReactionAdd', data);
