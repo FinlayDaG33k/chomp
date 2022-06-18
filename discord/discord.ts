@@ -46,6 +46,9 @@ export class Discord {
         guildMemberAdd(_bot, member, user) {
           EventDispatcher.dispatch('GuildMemberAdd', {member: member, user: user});
         },
+        guildMemberRemove(_bot, user) {
+          EventDispatcher.dispatch('GuildMemberRemove', {user: user});
+        },
         roleCreate(_bot, role) {
           EventDispatcher.dispatch('RoleCreate', {role: role});
         },
