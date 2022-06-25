@@ -29,7 +29,7 @@ export class Discord {
     if('botId' in opts) this.botId = BigInt(opts.botId);
     if('withCache' in opts) this.enableCache = opts.withCache || false;
 
-    let bot = createBot({
+    let baseBot = createBot({
       token: this.token,
       intents: this.intents,
       botId: this.botId,
@@ -75,12 +75,12 @@ export class Discord {
 
     // Enable cache if required
     if(this.enableCache === true) {
-      bot = enableCachePlugin(bot);
+      const bot = enableCachePlugin(baseBot);
       enableCacheSweepers(bot);
+      Discord.bot = bot;
+    } else {
+      Discord.bot = baseBot;
     }
-
-    // Set our bot
-    Discord.bot = bot;
   }
 
   /**
