@@ -9,3 +9,4 @@ export { readerFromStreamReader } from "https://deno.land/std@0.126.0/io/mod.ts"
 export { Buffer } from "https://deno.land/std@0.87.0/node/buffer.ts";
 export * from "https://deno.land/x/discordeno@13.0.0-rc18/mod.ts";
 export { connect as redisConnect } from "https://deno.land/x/redis@v0.25.2/mod.ts";
+export { enableCachePlugin, enableCacheSweepers } from "https://deno.land/x/discordeno_cache_plugin@0.0.21/mod.ts";

@@ -1,10 +1,11 @@
-import { createBot, startBot, DiscordGatewayPayload } from "../deps.ts";
+import { createBot, startBot, enableCachePlugin, enableCacheSweepers } from "../deps.ts";
 import { EventDispatcher } from "./event-dispatcher.ts";
 
 export interface DiscordInitOpts {
   token: string;
   intents: any[];
   botId: bigint|number;
+  withCache?: boolean;
 }
 
 export class Discord {
@@ -12,6 +13,7 @@ export class Discord {
   protected token = '';
   protected intents: any[] = ['Guilds', 'GuildMessages', 'GuildMembers'];
   protected botId = BigInt(0);
+  protected enableCache = false;
 
   /**
    * Return the instance of the Discord bot connection
@@ -25,8 +27,9 @@ export class Discord {
     if('token' in opts) this.token = opts.token;
     if('intents' in opts) this.intents = opts.intents;
     if('botId' in opts) this.botId = BigInt(opts.botId);
+    if('withCache' in opts) this.enableCache = opts.withCache || false;
 
-    Discord.bot = createBot({
+    let bot = createBot({
       token: this.token,
       intents: this.intents,
       botId: this.botId,
@@ -69,6 +72,15 @@ export class Discord {
         }
       }
     });
+
+    // Enable cache if required
+    if(this.enableCache === true) {
+      bot = enableCachePlugin(bot);
+      enableCacheSweepers(bot);
+    }
+
+    // Set our bot
+    Discord.bot = bot;
   }
 
   /**
