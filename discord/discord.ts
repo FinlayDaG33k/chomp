@@ -1,6 +1,7 @@
 import { createBot, startBot } from "https://deno.land/x/discordeno@13.0.0-rc18/mod.ts";
 import { enableCachePlugin, enableCacheSweepers } from "https://deno.land/x/discordeno_cache_plugin@0.0.21/mod.ts";
 import { EventDispatcher } from "./event-dispatcher.ts";
+import { Logger } from "../logging/logger.ts";
 
 export interface DiscordInitOpts {
   token: string;
@@ -14,7 +15,6 @@ export class Discord {
   protected token = '';
   protected intents: any[] = ['Guilds', 'GuildMessages', 'GuildMembers'];
   protected botId = BigInt(0);
-  protected enableCache = false;
 
   /**
    * Return the instance of the Discord bot connection
@@ -25,12 +25,17 @@ export class Discord {
   public static getBot(): any { return Discord.bot; }
 
   public constructor(opts: DiscordInitOpts) {
-    if('token' in opts) this.token = opts.token;
+    // Make sure required parameters are present
+    if('token' in opts) {
+      this.token = opts.token;
+    } else {
+      Logger.error('No Discord bot token was provided!');
+      Deno.exit(1);
+    }
     if('intents' in opts) this.intents = opts.intents;
     if('botId' in opts) this.botId = BigInt(opts.botId);
-    if('withCache' in opts) this.enableCache = opts.withCache || false;
 
-    let baseBot = createBot({
+    const baseBot = createBot({
       token: this.token,
       intents: this.intents,
       botId: this.botId,
@@ -75,7 +80,7 @@ export class Discord {
     });
 
     // Enable cache if required
-    if(this.enableCache === true) {
+    if(opts.withCache === true) {
       const bot = enableCachePlugin(baseBot);
       enableCacheSweepers(bot);
       Discord.bot = bot;
