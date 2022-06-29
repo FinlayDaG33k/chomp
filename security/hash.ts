@@ -6,7 +6,7 @@ import { crypto } from "https://deno.land/std@0.113.0/crypto/mod.ts";
  */
 export enum Algorithms {
   SHA384 = 'SHA-384',
-  SHA3_224 = 'SHA-224',
+  SHA3_224 = 'SHA3-224',
   SHA3_256 = 'SHA3-256',
   SHA3_384 = 'SHA3-384',
   SHA3_512 = 'SHA3-512',
