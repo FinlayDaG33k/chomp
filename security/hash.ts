@@ -33,6 +33,17 @@ export enum Algorithms {
   MD5 = 'MD5',
 }
 
+/**
+ * Specify algorithms that are supported but deemed insecure
+ */
+export const INSECURE_ALGORITHMS: string[] = [
+  Algorithms.SHA224,
+  Algorithms.SHA256,
+  Algorithms.SHA512,
+  Algorithms.SHA1,
+  Algorithms.MD5,
+];
+
 export class Hash {
   private result: any;
 

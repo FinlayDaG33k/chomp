@@ -1,5 +1,5 @@
 import { Random } from "./random.ts";
-import { Algorithms, Hash } from "./hash.ts";
+import { Algorithms, Hash, INSECURE_ALGORITHMS } from "./hash.ts";
 
 /**
  *  Recommended hashing algorithm for most use-cases.
@@ -33,17 +33,6 @@ const HASH_IDENTIFIERS = [
   Algorithms.KECCAK256,
   Algorithms.KECCAK384,
   Algorithms.KECCAK512
-];
-
-/**
- * Specify algorithms that are supported but deemed insecure
- */
-const INSECURE_ALGORITHMS: string[] = [
-  Algorithms.SHA224,
-  Algorithms.SHA256,
-  Algorithms.SHA512,
-  Algorithms.SHA1,
-  Algorithms.MD5,
 ];
 
 // Set default options for hashing
