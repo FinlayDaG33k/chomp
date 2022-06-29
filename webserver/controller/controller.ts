@@ -1,4 +1,4 @@
-import { engineFactory } from "../../deps.ts";
+import { engineFactory } from "https://deno.land/x/view_engine@v1.4.5/mod.ts";
 
 export class Controller {
   protected name: string = ''

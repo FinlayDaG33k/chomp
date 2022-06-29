@@ -1,5 +1,5 @@
-import { readerFromStreamReader } from "../../deps.ts";
-import { pathToRegexp, match } from "../pathToRegexp.ts";
+import { readerFromStreamReader } from "https://deno.land/std@0.126.0/io/mod.ts";
+import { pathToRegexp } from "../pathToRegexp.ts";
 
 interface Route {
   path: string;
@@ -41,6 +41,10 @@ export class Router {
     }
   }
 
+  /**
+   *
+   * @param args
+   */
   public async execute(args: RouteArgs) {
     // Make sure a rout was specified
     if(args.route === null) return;

@@ -1,4 +1,5 @@
-import { createBot, startBot, enableCachePlugin, enableCacheSweepers } from "../deps.ts";
+import { createBot, startBot } from "https://deno.land/x/discordeno@13.0.0-rc18/mod.ts";
+import { enableCachePlugin, enableCacheSweepers } from "https://deno.land/x/discordeno_cache_plugin@0.0.21/mod.ts";
 import { EventDispatcher } from "./event-dispatcher.ts";
 
 export interface DiscordInitOpts {

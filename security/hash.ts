@@ -1,8 +1,9 @@
+import { DigestAlgorithm } from "https://cdn.deno.land/std/versions/0.113.0/raw/_wasm_crypto/mod.ts";
+import { crypto } from "https://deno.land/std@0.113.0/crypto/mod.ts";
+
 /**
  * List of algorithms supported by this library
  */
-import {crypto, DigestAlgorithm} from "../deps.ts";
-
 export enum Algorithms {
   SHA384 = 'SHA-384',
   SHA3_224 = 'SHA-224',

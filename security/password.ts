@@ -1,5 +1,5 @@
-import {Random} from "./random.ts";
-import {Algorithms, Hash} from "./hash.ts";
+import { Random } from "./random.ts";
+import { Algorithms, Hash } from "./hash.ts";
 
 /**
  *  Recommended hashing algorithm for most use-cases.
@@ -55,7 +55,7 @@ export const DEFAULT_OPTS: IPasswordOpts = {
 /**
  * Options for hashing a password
  */
-interface IPasswordOpts {
+export interface IPasswordOpts {
   /* Cost factor for hashing (2**cost) */
   cost?: number;
   /* Allow the use of insecure algorithms */
@@ -73,7 +73,7 @@ export class Password {
    */
   public static async hash(password: string, algo: Algorithms = PASSWORD_DEFAULT, options: IPasswordOpts = DEFAULT_OPTS): Promise<string> {
     // Make sure we are not using an insecure algorithm
-    if(INSECURE_ALGORITHMS.includes(algo) && !options.allowInsecure) throw Error('Insecure hashing algorithm selected, aborting');
+    if(INSECURE_ALGORITHMS.includes(algo) && !options.allowInsecure) throw Error('Insecure hashing algorithm selected, aborting.');
 
     // Make sure cost is set, else, use a default
     if(typeof options.cost !== 'number' || options.cost <= 0) options.cost = DEFAULT_OPTS.cost;

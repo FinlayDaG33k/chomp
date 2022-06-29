@@ -1,4 +1,4 @@
-import { redisConnect } from "../deps.ts";
+import { connect as redisConnect } from "https://deno.land/x/redis@v0.25.2/mod.ts"
 import { Logger } from "../logging/logger.ts";
 
 export class Redis {
