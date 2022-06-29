@@ -1,5 +1,6 @@
 import { Time } from "../common/time.ts";
 import { Configure } from "../common/configure.ts";
+import { cyan, yellow, red, magenta, bold } from "https://deno.land/std@0.117.0/fmt/colors.ts";
 
 export class Logger {
   /**
@@ -8,7 +9,7 @@ export class Logger {
    * @param message The message to write
    * @returns void
    */
-  public static info(message: string): void { console.log(`[${Logger.time()}] INFO  > ${message}`); }
+  public static info(message: string): void { console.log(`[${Logger.time()}] ${cyan('INFO')}  > ${message}`); }
 
   /**
    * Write a warning message to the console
@@ -16,7 +17,7 @@ export class Logger {
    * @param message The message to write
    * @returns void
    */
-  public static warning(message: string): void { console.error(`[${Logger.time()}] WARN  > ${message}`); }
+  public static warning(message: string): void { console.error(`[${Logger.time()}] ${yellow('WARN')}  > ${message}`); }
 
   /**
    * Write an error message to the console
@@ -24,7 +25,7 @@ export class Logger {
    * @param message The message to write
    * @returns void
    */
-  public static error(message: string): void { console.error(`[${Logger.time()}] ERROR > ${message}`); }
+  public static error(message: string): void { console.error(`[${Logger.time()}] ${red(bold('ERROR'))} > ${message}`); }
 
   /**
    * Write a debug message to the console
@@ -34,7 +35,7 @@ export class Logger {
    * @returns void
    */
   public static debug(message: string): void {
-    if(Configure.get('debug', false)) console.log(`[${Logger.time()}] DEBUG > ${message}`);
+    if(Configure.get('debug', false)) console.log(`[${Logger.time()}] ${magenta('DEBUG')} > ${message}`);
   }
 
   /**
