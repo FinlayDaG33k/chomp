@@ -22,6 +22,8 @@ export enum Algorithms {
   KECCAK384 = "KECCAK-384",
   KECCAK512 = "KECCAK-512",
   /* Insecure, please do not use in production */
+  RIPEMD160 = "RIPEMD-160",
+  /* Insecure, please do not use in production */
   SHA224 = 'SHA-224',
   /* Insecure, please do not use in production */
   SHA256 = 'SHA-256',
@@ -37,6 +39,7 @@ export enum Algorithms {
  * Specify algorithms that are supported but deemed insecure
  */
 export const INSECURE_ALGORITHMS: string[] = [
+  Algorithms.RIPEMD160,
   Algorithms.SHA224,
   Algorithms.SHA256,
   Algorithms.SHA512,
