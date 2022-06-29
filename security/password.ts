@@ -115,7 +115,7 @@ export class Password {
     const rounds = 2 ** cost;
     let result = input;
     for(let round = 0; round < rounds; round++) {
-      const h = new Hash(input, algo);
+      const h = new Hash(`${salt}${input}`, algo);
       await h.digest();
       result = await h.hex();
     }
