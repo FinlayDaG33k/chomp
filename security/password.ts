@@ -9,31 +9,41 @@ export const PASSWORD_DEFAULT = Algorithms.SHA3_256;
 
 /**
  * Create a mapping of algorithms to identifiers
- * Please *never* change the order of these (only append)
+ * To add new identifier:
+ * - Hash enum value using SHA1
+ * - Add first 2 characters as identifier
+ * - Prefix with "d" (to make linter happy)
  */
-const HASH_IDENTIFIERS = [
-  Algorithms.MD5,
-  Algorithms.SHA1,
-  Algorithms.SHA224,
-  Algorithms.SHA256,
-  Algorithms.SHA384,
-  Algorithms.SHA512,
-  Algorithms.SHA3_224,
-  Algorithms.SHA3_256,
-  Algorithms.SHA3_384,
-  Algorithms.SHA3_512,
-  Algorithms.SHAKE128,
-  Algorithms.SHAKE256,
-  Algorithms.BLAKE2B256,
-  Algorithms.BLAKE2B384,
-  Algorithms.BLAKE2B,
-  Algorithms.BLAKE2S,
-  Algorithms.BLAKE3,
-  Algorithms.KECCAK224,
-  Algorithms.KECCAK256,
-  Algorithms.KECCAK384,
-  Algorithms.KECCAK512
-];
+enum HASH_IDENTIFIERS {
+  'd5e' = 'SHA-384',
+  'd6d' = 'SHA3-224',
+  'd88' = 'SHA3-256',
+  'def' = 'SHA3-384',
+  'd81' = 'SHA3-512',
+  'dfa' = 'SHAKE128',
+  'de3' = 'SHAKE256',
+  'd34' = 'BLAKE2B-256',
+  'd20' = 'BLAKE2B-384',
+  'd85' = 'BLAKE2B',
+  'd05' = "BLAKE2S",
+  'd63' = "BLAKE3",
+  'd87' = "KECCAK-224",
+  'd78' = "KECCAK-256",
+  'd1c' = "KECCAK-384",
+  'df6' = "KECCAK-512",
+  /* Insecure, please do not use in production */
+  'dc0' = 'RIPEMD-160',
+  /* Insecure, please do not use in production */
+  'dba' = 'SHA-224',
+  /* Insecure, please do not use in production */
+  'd45' = 'SHA-256',
+  /* Insecure, please do not use in production */
+  'db8' = 'SHA-512',
+  /* Insecure, please do not use in production */
+  'dc5' = 'SHA-1',
+  /* Insecure, please do not use in production */
+  'db7' = 'MD5',
+}
 
 // Set default options for hashing
 export const DEFAULT_OPTS: IPasswordOpts = {
@@ -67,12 +77,17 @@ export class Password {
     // Make sure cost is set, else, use a default
     if(typeof options.cost !== 'number' || options.cost <= 0) options.cost = DEFAULT_OPTS.cost;
 
+    // Get our identifier
+    const identifierIndex = Object.values(HASH_IDENTIFIERS).indexOf(algo as unknown as HASH_IDENTIFIERS);
+    if(!identifierIndex) throw Error(`Identifier for algorithm "${algo}" could not be found!`);
+    const identifier = Object.keys(HASH_IDENTIFIERS)[identifierIndex];
+
     // Create our hash
     const salt = await Random.string(32);
     const result = await Password.doHash(password, algo, salt, options.cost!);
 
     // Return our final hash string
-    return `${HASH_IDENTIFIERS.indexOf(algo)}!${options.cost}!${salt}!${result}`;
+    return `${identifier}!${options.cost}!${salt}!${result}`;
   }
 
   /**
@@ -87,7 +102,7 @@ export class Password {
     const tokens = hash.split('!');
     if(tokens.length < 4) throw Error('Malformed input hash');
     const data = {
-      algo: HASH_IDENTIFIERS[Number(tokens[0])],
+      algo: HASH_IDENTIFIERS[tokens[0] as keyof typeof HASH_IDENTIFIERS],
       cost: Number(tokens[1]),
       salt: tokens[2],
       hash: tokens[3]
