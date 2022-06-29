@@ -49,9 +49,12 @@ export class Logger {
 
   /**
    * Return the current time in format.
-   * eg. 2020/11/28 20:50:30
+   * Configurable using the "logger.timeformat" key.
+   * Defaults to "yyyy/MM/dd HH:mm:ss" (2020/11/28 20:50:30)
    *
    * @returns string The formatted time
    */
-  private static time(): string { return new Time().format(`yyyy/MM/dd HH:mm:ss`); }
+  private static time(): string {
+    return new Time().format(Configure.get('logger.timeformat', 'yyyy/MM/dd HH:mm:ss'));
+  }
 }
