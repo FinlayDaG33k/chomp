@@ -3,6 +3,8 @@ import { enableCachePlugin, enableCacheSweepers } from "https://deno.land/x/disc
 import { EventDispatcher } from "./event-dispatcher.ts";
 import { Logger } from "../logging/logger.ts";
 
+export * from "https://deno.land/x/discordeno@13.0.0-rc18/mod.ts";
+
 export interface DiscordInitOpts {
   token: string;
   intents: any[];
