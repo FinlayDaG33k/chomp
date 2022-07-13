@@ -2,6 +2,7 @@ import { WebSocketServer, WebSocketAcceptedClient } from "https://deno.land/x/we
 import { Logger } from "../logging/logger.ts";
 import { Events } from "./events.ts";
 import { Authenticator } from "./authenticator.ts";
+import { Configure } from "../common/configure.ts";
 
 export class Websocket {
   private readonly port: number = 80;
@@ -14,7 +15,7 @@ export class Websocket {
   }
 
   public start() {
-    this.server = new WebSocketServer(this.port, Deno.env.get('REAL_IP_HEADER') ?? null);
+    this.server = new WebSocketServer(this.port, Configure.get('real_ip_header', 'X-Forwarded-For') ?? null);
     this.server.on("connection", (client: WebSocketAcceptedClient, url: string) => {
       Logger.info(`New WebSocket connection from "${(client.webSocket.conn.remoteAddr as Deno.NetAddr).hostname!}"...`);
 
