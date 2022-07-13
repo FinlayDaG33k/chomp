@@ -48,6 +48,10 @@ export class CheckSource {
           Logger.debug(`Skipping excluded file "${path}/${entry.name}"...`);
           continue;
         }
+        if(!this.isTs(entry.name)) {
+          Logger.debug(`Skipping non-ts file...`);
+          continue;
+        }
         Logger.debug(`Found file "${path}/${entry.name}"...`);
         this.addFile(`${path}/${entry.name}`);
       }
@@ -76,5 +80,16 @@ export class CheckSource {
         Logger.trace(e.stack);
       }
     }
+  }
+
+  /**
+   * Checks whether the file is a ".ts" file
+   *
+   * @returns boolean
+   */
+  private isTs(name: string): boolean {
+    const pos = name.lastIndexOf(".");
+    if(pos < 1) return false;
+    return name.slice(pos + 1) === 'ts';
   }
 }
