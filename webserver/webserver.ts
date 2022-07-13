@@ -29,7 +29,18 @@ export class Webserver {
       Logger.info(`Request from "${(conn.remoteAddr as Deno.NetAddr).hostname!}:${(conn.remoteAddr as Deno.NetAddr).port!}": ${request.request.method} | ${request.request.url}`);
       try {
         const routing = await this.router.route(request.request);
-        if(!routing || !routing.route) throw Error('No route!');
+        if(!routing || !routing.route) {
+          return new Response(
+            'The requested page could not be found.',
+            {
+              status: 404,
+              headers: {
+                'content-type': 'text/plain',
+                'Access-Control-Allow-Origin': '*'
+              }
+            }
+          );
+        }
         const response = await this.router.execute({
           route: routing.route,
           body: await this.router.getBody(request.request),
