@@ -13,8 +13,12 @@ export class Time {
   public get month() { return this.time.getMonth(); }
   public get year() { return this.time.getFullYear(); }
 
-  public constructor(time: string|undefined = undefined) {
-    this.time = timets(time).tz(Deno.env.get('TZ')!).t;
+  public constructor(time: string|undefined = undefined, timezone: string|null = null) {
+    if(!timezone) {
+      this.time = timets(time).tz(Deno.env.get('TZ')!).t;
+      return;
+    }
+    this.time = timets(time).tz(timezone).t;
   }
 
   public format(format: string) {
