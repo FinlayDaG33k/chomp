@@ -28,15 +28,21 @@ export class Logger {
    * @returns void
    */
   public static error(message: string, stack: string|null = null): void {
-    let output = `[${Logger.time()}] ${red(bold('ERROR'))} > ${message}`;
-    if(stack) output += `\r\n${stack}`;
+    // Check if we need to write to file
+    // Write to file if need be
     if(Configure.get('error_log')) {
       try {
+        let output = `[${Logger.time()}] 'ERROR' > ${message}`;
+        if(stack) output += `\r\n${stack}`;
         Deno.writeTextFile(Configure.get('error_log'), output, {append: true});
       }  catch(e) {
         console.error(`Could not append to error log: "${e.message}"`);
       }
     }
+
+    // Write to console
+    let output = `[${Logger.time()}] ${red(bold('ERROR'))} > ${message}`;
+    if(stack) output += `\r\n${stack}`;
     console.error(output);
   }
 
