@@ -9,6 +9,11 @@ export class Ntfy {
   ) {
   }
 
+  /**
+   * Send a notification through Ntfy
+   *
+   * @param message
+   */
   public async send(message: string): Promise<void> {
     try {
       const auth = btoa(`${this.username}:${this.password}`);

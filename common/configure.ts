@@ -12,11 +12,12 @@ export class Configure {
   /**
    * Load our configure date from file
    *
+   * @param force Set to true to force re-loading the configure
    * @returns void
    */
-  public static async load(): Promise<void> {
+  public static async load(force = false): Promise<void> {
     // Make sure we don't have loaded already
-    if(Configure.hasLoaded === true) return;
+    if(Configure.hasLoaded === true && force === false) return;
     Logger.info(`Loading data into Configure...`);
 
     // Make sure our file exists
@@ -41,6 +42,7 @@ export class Configure {
       return;
     }
 
+    // Mark configure as loaded
     Logger.info(`Finished loading Configure!`);
     Configure.hasLoaded = true;
   }

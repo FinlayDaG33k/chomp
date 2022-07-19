@@ -8,15 +8,29 @@ export enum PacketType {
 export class RCON {
   private conn!: Deno.Conn;
 
-  public async connect(ip: string, port: number, password: string) {
+  /**
+   * Connect to an RCON server.
+   *
+   * @param ip
+   * @param port
+   * @param password Optional password for authentication
+   */
+  public async connect(ip: string, port: number, password: string|null = null) {
     this.conn = await Deno.connect({
       hostname: ip,
       port: port,
     });
 
-    await this.send(password, "AUTH");
+    if(password) await this.send(password, "AUTH");
   }
 
+  /**
+   * Send data to the server
+   *
+   * @param data
+   * @param cmd
+   * @returns Promise<string>
+   */
   public async send(data: string, cmd?: keyof typeof PacketType): Promise<string> {
     cmd = cmd || "COMMAND";
     const length: number = Buffer.byteLength(data);
@@ -32,6 +46,15 @@ export class RCON {
     return await this.recv();
   }
 
+  /**
+   * Send data to the server.
+   * It is preferred to use RCON#send instead.
+   * TODO: Return data received from server
+   *
+   * @param data
+   * @param cmd
+   * @returns void
+   */
   public sendSync(data: string, cmd?: keyof typeof PacketType): void {
     cmd = cmd || "COMMAND";
     const length: number = Buffer.byteLength(data);
@@ -46,10 +69,20 @@ export class RCON {
     this.conn.write(buf);
   }
 
+  /**
+   * Close connection to the server
+   *
+   * @returns Promise<void>
+   */
   public async close(): Promise<void> {
     await this.conn.close();
   }
 
+  /**
+   * Create a buffer to receive data from the server
+   *
+   * @returns Promise<string> Data received from the server
+   */
   private async recv(): Promise<string> {
     const data = new Buffer(2048); // TODO: Fix
     await this.conn.read(data);

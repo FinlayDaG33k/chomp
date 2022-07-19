@@ -126,38 +126,6 @@ const runScheduler = () => {
     }, 1000);
 };
 
-export const everyMinute = (cb: JobType) => {
-    cron(`1 * * * * *`, cb);
-};
-
-export const every15Minute = (cb: JobType) => {
-    cron(`1 */15 * * * *`, cb);
-};
-
-export const hourly = (cb: JobType) => {
-    cron(`1 0 * * * *`, cb);
-};
-
-export const daily = (cb: JobType) => {
-    cron(`1 0 0 * * *`, cb);
-};
-
-export const weekly = (cb: JobType, weekDay: string | number = 1) => {
-    cron(`1 0 0 * * ${weekDay}`, cb);
-};
-
-export const biweekly = (cb: JobType) => {
-    cron(`1 0 0 */14 * *`, cb);
-};
-
-export const monthly = (cb: JobType, dayOfMonth: string | number = 1) => {
-    cron(`1 0 0 ${dayOfMonth} */1 *`, cb);
-};
-
-export const yearly = (cb: JobType) => {
-    cron(`1 0 0 1 1 *`, cb);
-};
-
 export const start = () => {
     if (shouldStopRunningScheduler) {
         shouldStopRunningScheduler = false;
