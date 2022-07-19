@@ -28,11 +28,14 @@ export class Logger {
    * @returns void
    */
   public static error(message: string, stack: string|null = null): void {
+    // Get current time
+    const now = Logger.time();
+
     // Check if we need to write to file
     // Write to file if need be
     if(Configure.get('error_log')) {
       try {
-        let output = `[${Logger.time()}] 'ERROR' > ${message}`;
+        let output = `[${now}] ERROR > ${message}`;
         if(stack) output += `\r\n${stack}`;
         Deno.writeTextFile(Configure.get('error_log'), output, {append: true});
       }  catch(e) {
@@ -41,7 +44,7 @@ export class Logger {
     }
 
     // Write to console
-    let output = `[${Logger.time()}] ${red(bold('ERROR'))} > ${message}`;
+    let output = `[${now}] ${red(bold('ERROR'))} > ${message}`;
     if(stack) output += `\r\n${stack}`;
     console.error(output);
   }
