@@ -31,7 +31,6 @@ enum HASH_IDENTIFIERS {
   'd78' = "KECCAK-256",
   'd1c' = "KECCAK-384",
   'df6' = "KECCAK-512",
-  'd9a' = 'TIGER',
   /* Insecure, please do not use in production */
   'dc0' = 'RIPEMD-160',
   /* Insecure, please do not use in production */

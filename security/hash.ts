@@ -1,5 +1,5 @@
-import { DigestAlgorithm } from "https://cdn.deno.land/std/versions/0.147.0/raw/_wasm_crypto/mod.ts";
-import { crypto } from "https://deno.land/std@0.147.0/crypto/mod.ts";
+import { DigestAlgorithm } from "https://cdn.deno.land/std/versions/0.113.0/raw/_wasm_crypto/mod.ts";
+import { crypto } from "https://deno.land/std@0.113.0/crypto/mod.ts";
 
 /**
  * List of algorithms supported by this library
@@ -21,7 +21,6 @@ export enum Algorithms {
   KECCAK256 = "KECCAK-256",
   KECCAK384 = "KECCAK-384",
   KECCAK512 = "KECCAK-512",
-  TIGER = "TIGER",
   /* Insecure, please do not use in production */
   RIPEMD160 = "RIPEMD-160",
   /* Insecure, please do not use in production */
