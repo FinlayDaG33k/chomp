@@ -76,8 +76,7 @@ export class CheckSource {
       try {
         await import(`file://${Deno.cwd()}/${file}`);
       } catch(e) {
-        Logger.error(`Check for "${Deno.cwd()}/${file}" failed: ${e.message}`);
-        Logger.trace(e.stack);
+        Logger.error(`Check for "${Deno.cwd()}/${file}" failed: ${e.message}`, e.stack);
       }
     }
   }

@@ -28,7 +28,7 @@ export class Ntfy {
       if(resp.status === 200) return;
       throw Error(`${resp.status} - ${resp.statusText}`);
     } catch(e) {
-      Logger.error(`Could not send notification: "${e.message}"`);
+      Logger.error(`Could not send notification: "${e.message}"`, e.stack);
     }
   }
 }

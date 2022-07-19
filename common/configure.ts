@@ -39,8 +39,7 @@ export class Configure {
         Configure.set(entry, data[entry]);
       }
     } catch(e) {
-      Logger.error(`Could not load JSON: "${e.message}"`);
-      Logger.trace(e.stack);
+      Logger.error(`Could not load JSON: "${e.message}"`, e.stack);
       return;
     }
 

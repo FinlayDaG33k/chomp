@@ -57,8 +57,8 @@ export class Controller {
     // Make sure out template exists
     try {
       await Deno.stat(path);
-    } catch(_e) {
-      Logger.error(`Could not find template for "${this.name[0].toLowerCase() + this.name.slice(1)}#${this.action}"`);
+    } catch(e) {
+      Logger.error(`Could not find template for "${this.name[0].toLowerCase() + this.name.slice(1)}#${this.action}"`, e.stack);
       return;
     }
 

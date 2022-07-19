@@ -89,7 +89,7 @@ export class InteractionDispatcher {
     try {
       await controller['execute']();
     } catch(e) {
-      Logger.error(e.message);
+      Logger.error(`Could not dispatch interaction "${interaction}": "${e.message}"`, e.stack);
     }
   }
 }

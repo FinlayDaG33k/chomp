@@ -87,7 +87,7 @@ export class Websocket {
     try {
       await controller['execute'](data);
     } catch(e) {
-      Logger.error(e.message);
+      Logger.error(`Could not dispatch event "${event}": "${e.message}"`, e.stack);
     }
   }
 }

@@ -19,7 +19,7 @@ export class Events {
       // Import the event handler
       Events.handlers[event.handler] = await import(`file://${Deno.cwd()}/src/events/${event.handler}.ts`)
     } catch(e) {
-      Logger.error(`Could not register event handler for "${event}": ${e.message}`);
+      Logger.error(`Could not register event handler for "${event}": ${e.message}`, e.stack);
       return;
     }
 
@@ -38,7 +38,7 @@ export class Events {
     try {
       await controller['execute'](data);
     } catch(e) {
-      Logger.error(e.message);
+      Logger.error(`Could not dispatch event "${event}": "${e.message}"`, e.stack);
     }
   }
 }

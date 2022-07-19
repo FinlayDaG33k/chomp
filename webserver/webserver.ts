@@ -50,7 +50,7 @@ export class Webserver {
         if(!response) throw Error('Response was empty');
         await request.respondWith(response);
       } catch(e) {
-        Logger.error(`Could not serve response: ${e.message}`);
+        Logger.error(`Could not serve response: ${e.message}`, e.stack);
         await request.respondWith(new Response('Internal server error', {status: 500}));
       }
     }
