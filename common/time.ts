@@ -1,5 +1,6 @@
 import { time as timets } from "https://denopkg.com/burhanahmeed/time.ts@v2.0.1/mod.ts";
 import { format as formatter } from "https://cdn.deno.land/std/versions/0.77.0/raw/datetime/mod.ts";
+import { T } from "../util/time-string.ts";
 
 export class Time {
   private readonly time;
@@ -23,6 +24,11 @@ export class Time {
 
   public midnight() {
     this.time.setHours(0,0,0,0);
+    return this;
+  }
+
+  public add(input: string) {
+    this.time.setMilliseconds(this.time.getMilliseconds() + T`${input}`);
     return this;
   }
 
