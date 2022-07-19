@@ -7,6 +7,7 @@ export interface ExclusionConfig {
 
 export class CheckSource {
   private files: string[] = [];
+  private errors = 0;
 
   constructor(
     private readonly path: string,
@@ -22,6 +23,10 @@ export class CheckSource {
     await this.checkFiles();
 
     // Exit when done
+    if(this.errors > 0) {
+      Logger.info(`Finished checking files with ${this.errors} errors!\r\nPlease check the logs above for more information.`);
+      Deno.exit(1);
+    }
     Logger.info(`Finished checking files!`);
     Deno.exit(0);
   }
@@ -77,6 +82,7 @@ export class CheckSource {
         await import(`file://${Deno.cwd()}/${file}`);
       } catch(e) {
         Logger.error(`Check for "${Deno.cwd()}/${file}" failed: ${e.message}`, e.stack);
+        this.errors++;
       }
     }
   }
