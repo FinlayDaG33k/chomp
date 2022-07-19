@@ -6,7 +6,9 @@ interface ConfigureItem {
 }
 
 export class Configure {
-  private static config: ConfigureItem[] = [];
+  private static config: ConfigureItem[] = [
+    { key: 'error_logs', value: `${Deno.cwd()}/logs/error.log` }
+  ];
   private static hasLoaded = false;
 
   /**

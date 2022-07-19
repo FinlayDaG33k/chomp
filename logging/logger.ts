@@ -20,12 +20,25 @@ export class Logger {
   public static warning(message: string): void { console.error(`[${Logger.time()}] ${yellow('WARN')}  > ${message}`); }
 
   /**
-   * Write an error message to the console
+   * Write an error message to the console.
+   * If the "error_log" Configure item is set, will also write to file.
    *
    * @param message The message to write
+   * @param stack Optional stacktrace
    * @returns void
    */
-  public static error(message: string): void { console.error(`[${Logger.time()}] ${red(bold('ERROR'))} > ${message}`); }
+  public static error(message: string, stack: string|null = null): void {
+    let output = `[${Logger.time()}] ${red(bold('ERROR'))} > ${message}`;
+    if(stack) output += `\r\n${stack}`;
+    if(Configure.get('error_log')) {
+      try {
+        Deno.writeTextFile(Configure.get('error_log'), output, {append: true});
+      }  catch(e) {
+        console.error(`Could not append to error log: "${e.message}"`);
+      }
+    }
+    console.error(output);
+  }
 
   /**
    * Write a debug message to the console
@@ -45,6 +58,7 @@ export class Logger {
    * @returns void
    */
   public static trace(stacktrace: any): void {
+    Logger.warning('Use of Logger#stack is deprecated, please pass trace to Logger#error instead.');
     console.error(stacktrace);
   }
 
