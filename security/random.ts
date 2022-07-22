@@ -5,7 +5,7 @@ export class Random {
    * @param length Amount of bytes to be generated
    * @returns Uint8Array
    */
-  public static async bytes(length: number): Promise<Uint8Array> {
+  public static bytes(length: number): Uint8Array {
     const buf = new Uint8Array(length);
     crypto.getRandomValues(buf);
     return buf;
@@ -19,6 +19,6 @@ export class Random {
    */
   public static async string(length: number): Promise<string> {
     const buf = await Random.bytes(length / 2);
-    return Array.from(buf, (dec: number) => dec.toString(16).padStart(2, "0")).join('')
+    return Array.from(buf, (dec: number) => dec.toString(16).padStart(2, "0")).join('');
   }
 }

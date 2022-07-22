@@ -26,20 +26,32 @@ export class Webserver {
 
     // Handle each request for this connection
     for await(const request of httpConn) {
-      Logger.info(`Request from "${(conn.remoteAddr as Deno.NetAddr).hostname!}:${(conn.remoteAddr as Deno.NetAddr).port!}": ${request.request.method} | ${request.request.url}`);
+      Logger.debug(`Request from "${(conn.remoteAddr as Deno.NetAddr).hostname!}:${(conn.remoteAddr as Deno.NetAddr).port!}": ${request.request.method} | ${request.request.url}`);
       try {
         const routing = await this.router.route(request.request);
-        if(!routing || !routing.route) throw Error('No route!');
+        if(!routing || !routing.route) {
+          return new Response(
+            'The requested page could not be found.',
+            {
+              status: 404,
+              headers: {
+                'content-type': 'text/plain',
+                'Access-Control-Allow-Origin': '*'
+              }
+            }
+          );
+        }
         const response = await this.router.execute({
           route: routing.route,
           body: await this.router.getBody(request.request),
           params: await this.router.getParams(routing.route, routing.path ?? '/'),
-          auth: await this.router.getAuth(request.request)
+          auth: this.router.getAuth(request.request)
         });
-        request.respondWith(response);
+        if(!response) throw Error('Response was empty');
+        await request.respondWith(response);
       } catch(e) {
-        Logger.error(`Could not serve response: ${e.message}`);
-        request.respondWith(new Response('whoops', {status: 500}));
+        Logger.error(`Could not serve response: ${e.message}`, e.stack);
+        await request.respondWith(new Response('Internal server error', {status: 500}));
       }
     }
   }

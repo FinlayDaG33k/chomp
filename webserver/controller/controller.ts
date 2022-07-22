@@ -1,14 +1,13 @@
-import { engineFactory } from "../../deps.ts";
+import { engineFactory } from "https://deno.land/x/view_engine@v1.4.5/mod.ts";
+import { Logger } from "../../logging/logger.ts";
 
 export class Controller {
-  protected name: string = ''
-  protected action: string = '';
-
+  protected name = ''
+  protected action = '';
   protected vars: any = {};
-
-  protected status: number = 200;
-  protected body: string = '';
-  protected type: string = 'text/html';
+  protected status = 200;
+  protected body = '';
+  protected type = 'text/html';
 
   constructor(
     name: string,
@@ -18,9 +17,21 @@ export class Controller {
     this.action = action;
   }
 
+  /**
+   * Set a view variable
+   *
+   * @param key
+   * @param value
+   */
   protected set(key: string, value: any) { this.vars[key] = value; }
 
-  public async render() {
+  /**
+   * Render the page output
+   * Will try to decide the best way of doing it based on the MIME set
+   *
+   * @returns Promise<void>
+   */
+  public async render(): Promise<void> {
     switch(this.type) {
       case 'application/json':
         this.body = JSON.stringify(this.vars['data']);
@@ -34,7 +45,23 @@ export class Controller {
     }
   }
 
-  private async handlebars() {
+  /**
+   * Render Handlebars templates
+   *
+   * @returns Promise<any>
+   */
+  private async handlebars(): Promise<any> {
+    // Get our template location
+    const path = `./src/templates/${this.name[0].toLowerCase() + this.name.slice(1)}/${this.action}.hbs`;
+
+    // Make sure out template exists
+    try {
+      await Deno.stat(path);
+    } catch(e) {
+      Logger.error(`Could not find template for "${this.name[0].toLowerCase() + this.name.slice(1)}#${this.action}"`, e.stack);
+      return;
+    }
+
     // Initialize our engine
     const engine = engineFactory.getHandlebarsEngine();
 
@@ -42,7 +69,7 @@ export class Controller {
     const template = await Deno.readTextFile(`./src/templates/${this.name[0].toLowerCase() + this.name.slice(1)}/${this.action}.hbs`);
 
     // Let the engine render
-    return await engine(template, this.vars);
+    return engine(template, this.vars);
   }
 
   public response() {

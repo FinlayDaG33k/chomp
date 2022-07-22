@@ -1,20 +1,33 @@
-import { WebSocketServer, WebSocketAcceptedClient } from "../deps.ts";
+import { WebSocketServer, WebSocketAcceptedClient } from "https://deno.land/x/websocket@v0.1.3/mod.ts";
 import { Logger } from "../logging/logger.ts";
 import { Events } from "./events.ts";
+import { Authenticator } from "./authenticator.ts";
+import { Configure } from "../common/configure.ts";
 
 export class Websocket {
-  private port = 80;
+  private readonly port: number = 80;
+  private readonly authenticate: boolean = false;
   private server: WebSocketServer|null = null;
 
-  constructor(port: number = 80) {
+  constructor(port: number = 80, authenticate: boolean = false) {
     this.port = port;
+    this.authenticate = authenticate;
   }
 
   public start() {
-    this.server = new WebSocketServer(this.port, Deno.env.get('REAL_IP_HEADER') ?? null);
-    this.server.on("connection", (client: WebSocketAcceptedClient) => {
+    this.server = new WebSocketServer(this.port, Configure.get('real_ip_header', 'X-Forwarded-For') ?? null);
+    this.server.on("connection", (client: WebSocketAcceptedClient, url: string) => {
       Logger.info(`New WebSocket connection from "${(client.webSocket.conn.remoteAddr as Deno.NetAddr).hostname!}"...`);
-      this.handleEvent('connect', {});
+
+      // Authenticate if required
+      if(this.authenticate === true && !Authenticator.client(url.replace('/', ''))) {
+        Logger.warning(`Closing connection with "${(client.webSocket.conn.remoteAddr as Deno.NetAddr).hostname!}": Invalid token!`);
+        client.close(1000, 'Invalid authentication token!');
+        return;
+      }
+
+      // Dispatch "ClientConnect" event
+      this.handleEvent('ClientConnect', {client: client});
 
       client.on("message", (message: string) => this.onMessage(message));
     });
@@ -74,7 +87,7 @@ export class Websocket {
     try {
       await controller['execute'](data);
     } catch(e) {
-      Logger.error(e.message);
+      Logger.error(`Could not dispatch event "${event}": "${e.message}"`, e.stack);
     }
   }
 }
