@@ -1,6 +1,17 @@
 # Chomp
 Library of (arguably) useful Deno classes.  
-Comes with no warranties whatsoever.
+Should work just fine but comes with no warranties whatsoever.  
+
+## Usage
+Add the following to your file:
+```ts
+import * from "https://deno.land/x/chomp@1.0.0/mod.ts";
+```
+
+That's it!  
+You can visit the [documentation](https://doc.deno.land/https://deno.land/x/chomp@1.0.0/mod.ts) to see what Chomp is capable off!  
+Someday I'll write a better usage guide.
+
 
 ## Compatibility
 Below a chart indicating for which Deno version this library is built and tested.  
