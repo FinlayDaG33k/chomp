@@ -80,6 +80,65 @@ export class Configure {
     // Update our value
     result.value = value;
   }
+
+  /**
+   * Return whether a key exists
+   *
+   * @param key
+   * @returns boolean
+   */
+  public static check(key: string): boolean {
+    const result = Configure.config.find((item: ConfigureItem) => item.key === key);
+    return typeof result !== 'undefined';
+  }
+
+  public static consume(key: string, defaultValue: any = null): any {
+    // Find the item in the Configure
+    const index = Configure.config.findIndex((item: ConfigureItem) => item.key === key);
+    if(index === -1) return defaultValue;
+
+    // Create a WeakReference to the item
+    const ref = new WeakRef(Configure.config[index]);
+
+    // Delete the original item
+    delete Configure.config[index];
+
+    // Return WeakReference
+    return ref;
+  }
+
+  /**
+   * Delete a ConfigureItem from the Configure
+   *
+   * @param key
+   * @returns void
+   */
+  public static delete(key: string): void {
+    // Find the item in the Configure
+    const index = Configure.config.findIndex((item: ConfigureItem) => item.key === key);
+    if(index === -1) return;
+
+    // Delete the original item
+    delete Configure.config[index];
+  }
+
+  /**
+   * Dump all contents of the Configure
+   *
+   * @returns ConfigureItem[]
+   */
+  public static dump(): ConfigureItem[] {
+    return Configure.config;
+  }
+
+  /**
+   * Clear all items in the configure (including defaults)
+   *
+   * @returns void
+   */
+  public static clear(): void {
+    Configure.config = [];
+  }
 }
 
 // Load our configure when this file is loaded
