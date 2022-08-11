@@ -98,10 +98,20 @@ export class Queue {
    */
   public add(item: QueueItem): void {
     if(Object.keys(item.data).length === 0) throw Error('Data for queue item may not be empty!');
+
+    // Add default weight if none specified with the WEIGHTED scheduler
     if(!item.hasOwnProperty('weight') && this.scheduler === Scheduler.WEIGHTED) {
       Logger.debug('No weight was set with weighted scheduler, defaulting to 0...');
       item.weight = 0;
     }
+
+    // Remove weight if we don't use the WEIGHTED scheduler
+    if(item.hasOwnProperty('weight') && this.scheduler !== Scheduler.WEIGHTED) {
+      Logger.debug('A weight was set without the weighted scheduler, removing it...');
+      delete item.weight;
+    }
+
+    // Add item to the queue
     this.items.push(item);
   }
 
