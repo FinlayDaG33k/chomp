@@ -100,6 +100,7 @@ Deno.test("Queue Test", async (t) => {
     // Make sure contains works
     assertEquals(queue.contains({ weight: 0, data: { job: 'test1', } }), true);
     assertEquals(queue.contains({ weight: 1, data: { job: 'test3', } }), true);
+    assertEquals(queue.contains({ weight: 2, data: { job: 'test3', } }), false);
 
     // Make sure we didn't add "weightless" items
     assertEquals(queue.contains({ data: { job: 'test6', } }), false);
