@@ -85,15 +85,15 @@ Deno.test("Queue Test", async (t) => {
     queue.add({ weight: 0, data: { job: 'test2', } });
     queue.add({ weight: 1, data: { job: 'test3', } });
     queue.add({ weight: 2, data: { job: 'test4', } });
-    queue.add({ weight: 3, data: { job: 'test4', } }); // Using same data as previous on purpose
-    queue.add({ data: { job: 'test5', } });
+    queue.add({ weight: 3, data: { job: 'test5', } });
+    queue.add({ data: { job: 'test6', } });
 
     // Make sure peeking works without removal
-    assertEquals(queue.peek, { weight: 3, data: { job: 'test4', } });
+    assertEquals(queue.peek, { weight: 3, data: { job: 'test5', } });
     assertEquals(queue.count, 6);
 
     // Make sure next works with removal
-    assertEquals(queue.next, { weight: 3, data: { job: 'test4', } });
+    assertEquals(queue.next, { weight: 3, data: { job: 'test5', } });
     assertEquals(queue.count, 5);
     assertEquals(queue.peek, { weight: 2, data: { job: 'test4', } });
 
@@ -102,6 +102,6 @@ Deno.test("Queue Test", async (t) => {
     assertEquals(queue.contains({ weight: 1, data: { job: 'test3', } }), true);
 
     // Make sure we didn't add "weightless" items
-    assertEquals(queue.contains({ data: { job: 'test5', } }), false);
+    assertEquals(queue.contains({ data: { job: 'test6', } }), false);
   });
 })
