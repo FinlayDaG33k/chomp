@@ -140,6 +140,3 @@ export class Configure {
     Configure.config = [];
   }
 }
-
-// Load our configure when this file is loaded
-await Configure.load();
