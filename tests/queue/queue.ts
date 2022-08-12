@@ -10,6 +10,10 @@ Deno.test("Queue Test", async (t) => {
     assertEquals(queue.isEmpty, true);
     assertEquals(queue.count, 0);
 
+    // Test next and peek on an empty queue
+    assertEquals(queue.peek, null);
+    assertEquals(queue.next, null);
+
     // Add test items to the queue
     queue.add({ data: { job: 'test1', } });
     queue.add({ data: { job: 'test2', } });
