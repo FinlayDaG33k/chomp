@@ -97,9 +97,18 @@ export class Queue {
           Logger.debug('No weight was set with weighted scheduler, defaulting to 0...');
           item.weight = 0;
         }
+
+        // Loop over all items in queue, add it at the bottom of it's weight
+        for (let i=0; i<this.items.length;i++) {
+          // @ts-ignore Weight is set to 0 by default
+          if (item.weight > this.items[i].weight || i === this.items.length) {
+            this.items.splice(i, 0, item);
+            return;
+          }
+        }
+
+        // Queue is empty, just push
         this.items.push(item);
-        // @ts-ignore We automatically set the weight to 0 if none is set explicitly
-        this.items.sort((a: QueueItem, b: QueueItem) => b.weight - a.weight);
         break;
       default:
         throw Error('No scheduler has been set, this is a bug!');
