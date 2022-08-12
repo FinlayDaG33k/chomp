@@ -48,22 +48,9 @@ export class Queue {
     // Make sure we have items in our queue
     if(this.items.length === 0) return null;
 
-    // Return and remove QueueItem based on scheduler
-    switch(this.scheduler) {
-      case Scheduler.FIFO:
-        // @ts-ignore We already return null when no items are present
-        return this.items.shift();
-      case Scheduler.LIFO:
-        // @ts-ignore We already return null when no items are present
-        return this.items.pop();
-      case Scheduler.WEIGHTED:
-        // @ts-ignore We automatically set weights when the WEIGHTED scheduler is used
-        this.items.sort((a: QueueItem, b: QueueItem) => b.weight - a.weight);
-        // @ts-ignore We already return null when no items are present
-        return this.items.shift();
-      default:
-        throw Error('No scheduler has been set, this is a bug!');
-    }
+    // Return the first item in our queue and remove it
+    // @ts-ignore We already return null when no items are present
+    return this.items.shift();
   }
 
   /**
@@ -76,43 +63,47 @@ export class Queue {
     // Make sure we have items in our queue
     if(this.items.length === 0) return null;
 
-    // Return QueueItem based on scheduler
-    switch(this.scheduler) {
-      case Scheduler.FIFO:
-        return this.items[0];
-      case Scheduler.LIFO:
-        return this.items[this.items.length -1];
-      case Scheduler.WEIGHTED:
-        // @ts-ignore We automatically set weights when the WEIGHTED scheduler is used
-        this.items.sort((a: QueueItem, b: QueueItem) => b.weight - a.weight);
-        return this.items[0];
-      default:
-        throw Error('No scheduler has been set, this is a bug!');
-    }
+    // Return the first item in our queue
+    return this.items[0];
   }
 
   /**
-   * Add an item to the end of the queue
+   * Add an item to the queue based on the scheduler used
    *
    * @param item Item to add to the queue
    */
   public add(item: QueueItem): void {
+    // Make sure data was set
     if(Object.keys(item.data).length === 0) throw Error('Data for queue item may not be empty!');
 
-    // Add default weight if none specified with the WEIGHTED scheduler
-    if(!item.hasOwnProperty('weight') && this.scheduler === Scheduler.WEIGHTED) {
-      Logger.debug('No weight was set with weighted scheduler, defaulting to 0...');
-      item.weight = 0;
+    // Add item to the queue based on the scheduler used
+    switch(this.scheduler) {
+      case Scheduler.FIFO:
+        if(item.hasOwnProperty('weight')) {
+          Logger.debug('A weight was set without the weighted scheduler, removing it...');
+          delete item.weight;
+        }
+        this.items.push(item);
+        break;
+      case Scheduler.LIFO:
+        if(item.hasOwnProperty('weight')) {
+          Logger.debug('A weight was set without the weighted scheduler, removing it...');
+          delete item.weight;
+        }
+        this.items.unshift(item);
+        break;
+      case Scheduler.WEIGHTED:
+        if(!item.hasOwnProperty('weight')) {
+          Logger.debug('No weight was set with weighted scheduler, defaulting to 0...');
+          item.weight = 0;
+        }
+        this.items.push(item);
+        // @ts-ignore We automatically set the weight to 0 if none is set explicitly
+        this.items.sort((a: QueueItem, b: QueueItem) => b.weight - a.weight);
+        break;
+      default:
+        throw Error('No scheduler has been set, this is a bug!');
     }
-
-    // Remove weight if we don't use the WEIGHTED scheduler
-    if(item.hasOwnProperty('weight') && this.scheduler !== Scheduler.WEIGHTED) {
-      Logger.debug('A weight was set without the weighted scheduler, removing it...');
-      delete item.weight;
-    }
-
-    // Add item to the queue
-    this.items.push(item);
   }
 
   /**
