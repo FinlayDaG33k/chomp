@@ -68,6 +68,13 @@ export class Queue {
   }
 
   /**
+   * Return all the items in the queue
+   *
+   * @returns QueueItems[]
+   */
+  public get dump(): QueueItem[] { return [...this.items]; }
+
+  /**
    * Add an item to the queue based on the scheduler used
    *
    * @param item Item to add to the queue
