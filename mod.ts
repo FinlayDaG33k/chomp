@@ -12,6 +12,7 @@ export { EventDispatcher } from "./discord/event-dispatcher.ts";
 export { InteractionDispatcher } from "./discord/interaction-dispatcher.ts";
 
 export { Logger } from "./logging/logger.ts";
+export { Queue, Scheduler } from "./queue/queue.ts";
 
 export { Hash, Algorithms } from "./security/hash.ts";
 export { Password } from "./security/password.ts";
