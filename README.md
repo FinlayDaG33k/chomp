@@ -5,11 +5,11 @@ Should work just fine but comes with no warranties whatsoever.
 ## Usage
 Add the following to your file:
 ```ts
-import * from "https://deno.land/x/chomp@1.0.0/mod.ts";
+import * from "https://deno.land/x/chomp/mod.ts";
 ```
 
 That's it!  
-You can visit the [documentation](https://doc.deno.land/https://deno.land/x/chomp@1.0.0/mod.ts) to see what Chomp is capable off!  
+You can visit the [documentation](https://doc.deno.land/https://deno.land/x/chomp/mod.ts) to see what Chomp is capable off!  
 Someday I'll write a better usage guide.
 
 
@@ -19,6 +19,7 @@ Compatibility may be more flexible, however, chances are this library may not wo
 
 | Library Version | Deno Version |
 |-----------------|--------------|
+| 1.1.0           | 1.24.0       |
 | 1.0.0           | 1.15.3       |
 | 0.0.2           | ???          |
 | 0.0.1           | ???          |
