@@ -80,7 +80,63 @@ export class Configure {
     // Update our value
     result.value = value;
   }
-}
 
-// Load our configure when this file is loaded
-await Configure.load();
+  /**
+   * Return whether a key exists
+   *
+   * @param key
+   * @returns boolean
+   */
+  public static check(key: string): boolean {
+    const result = Configure.config.find((item: ConfigureItem) => item.key === key);
+    return typeof result !== 'undefined';
+  }
+
+  public static consume(key: string, defaultValue: any = null): any {
+    // Find the item in the Configure
+    const index = Configure.config.findIndex((item: ConfigureItem) => item.key === key);
+    if(index === -1) return defaultValue;
+
+    // Create an array to keep our item
+    const ref = [Configure.config[index]];
+
+    // Delete the original item
+    Configure.config.splice(index, 1);
+
+    // Return the value
+    return ref[0].value;
+  }
+
+  /**
+   * Delete a ConfigureItem from the Configure
+   *
+   * @param key
+   * @returns void
+   */
+  public static delete(key: string): void {
+    // Find the item in the Configure
+    const index = Configure.config.findIndex((item: ConfigureItem) => item.key === key);
+    if(index === -1) return;
+
+    // Delete the original item
+    Configure.config.splice(index, 1);
+  }
+
+  /**
+   * Dump all contents of the Configure
+   *
+   * @returns ConfigureItem[]
+   */
+  public static dump(): ConfigureItem[] {
+    return Configure.config;
+  }
+
+  /**
+   * Clear all items in the configure (including defaults)
+   *
+   * @returns void
+   */
+  public static clear(): void {
+    Configure.config = [];
+  }
+}
