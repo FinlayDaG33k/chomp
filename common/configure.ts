@@ -97,14 +97,14 @@ export class Configure {
     const index = Configure.config.findIndex((item: ConfigureItem) => item.key === key);
     if(index === -1) return defaultValue;
 
-    // Create a WeakReference to the item
-    const ref = new WeakRef(Configure.config[index]);
+    // Create an array to keep our item
+    const ref = [Configure.config[index]];
 
     // Delete the original item
-    delete Configure.config[index];
+    Configure.config.splice(index, 1);
 
-    // Return WeakReference
-    return ref;
+    // Return the value
+    return ref[0].value;
   }
 
   /**
