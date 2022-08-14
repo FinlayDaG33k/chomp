@@ -57,7 +57,7 @@ export class Logger {
    * @returns void
    */
   public static debug(message: string): void {
-    if(Configure.get('debug', false)) console.log(`[${Logger.time()}] ${magenta('DEBUG')} > ${message}`);
+    if(Deno.env.get('DEBUG') == "true" || Configure.get('debug', false)) console.log(`[${Logger.time()}] ${magenta('DEBUG')} > ${message}`);
   }
 
   /**
