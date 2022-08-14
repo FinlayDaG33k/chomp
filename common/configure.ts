@@ -119,7 +119,7 @@ export class Configure {
     if(index === -1) return;
 
     // Delete the original item
-    delete Configure.config[index];
+    Configure.config.splice(index, 1);
   }
 
   /**
