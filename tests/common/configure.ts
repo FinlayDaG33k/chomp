@@ -19,7 +19,7 @@ Deno.test("Configure Test", async (t) => {
   // Make sure clearing works
   Configure.set('test3', 'chomp');
   Configure.clear();
-  assertEquals(Configure.dump(), []);
+  assertEquals(Configure.dump(), new Map<string, any>());
 
   // Make sure default values work on get and consume
   assertEquals(Configure.get('test4', 'default value'), 'default value');

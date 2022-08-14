@@ -1,14 +1,9 @@
 import { Logger } from "../logging/logger.ts";
 
-interface ConfigureItem {
-  key: string;
-  value: any;
-}
-
 export class Configure {
-  private static config: ConfigureItem[] = [
-    { key: 'error_log', value: `${Deno.cwd()}/logs/error.log` }
-  ];
+  private static config = new Map<string, any>([
+    ['error_log', `${Deno.cwd()}/logs/error.log`]
+  ]);
   private static hasLoaded = false;
 
   /**
@@ -53,12 +48,14 @@ export class Configure {
    *
    * @param key Key to look for
    * @param defaultValue Default value to return when no result was found
-   * @returns ConfigureItem|null
+   * @returns any
    */
   public static get(key: string, defaultValue: any = null): any {
-    const result = Configure.config.find((item: ConfigureItem) => item.key === key);
-    if(typeof result === 'undefined') return defaultValue;
-    return result.value;
+    // Check if the key exists.
+    // If not: return the default value
+    // Else: return the value in the Configure
+    if(!Configure.config.has(key)) return defaultValue;
+    return Configure.config.get(key);
   }
 
   /**
@@ -69,16 +66,7 @@ export class Configure {
    * @returns void
    */
   public static set(key: string, value: any): void {
-    // Check if the key already exists
-    // Add it if not
-    const result = Configure.config.find((item: ConfigureItem) => item.key === key);
-    if(typeof result === 'undefined') {
-      Configure.config.push({ key: key, value: value });
-      return;
-    }
-
-    // Update our value
-    result.value = value;
+    Configure.config.set(key, value);
   }
 
   /**
@@ -88,23 +76,21 @@ export class Configure {
    * @returns boolean
    */
   public static check(key: string): boolean {
-    const result = Configure.config.find((item: ConfigureItem) => item.key === key);
-    return typeof result !== 'undefined';
+    return Configure.config.has(key);
   }
 
   public static consume(key: string, defaultValue: any = null): any {
-    // Find the item in the Configure
-    const index = Configure.config.findIndex((item: ConfigureItem) => item.key === key);
-    if(index === -1) return defaultValue;
+    // Check if the key exists, if not, return the default value
+    if(!Configure.config.has(key)) return defaultValue;
 
-    // Create an array to keep our item
-    const ref = [Configure.config[index]];
+    // Hack together a reference to our item's value
+    const ref = [Configure.config.get(key)];
 
     // Delete the original item
-    Configure.config.splice(index, 1);
+    Configure.config.delete(key);
 
     // Return the value
-    return ref[0].value;
+    return ref[0];
   }
 
   /**
@@ -114,12 +100,7 @@ export class Configure {
    * @returns void
    */
   public static delete(key: string): void {
-    // Find the item in the Configure
-    const index = Configure.config.findIndex((item: ConfigureItem) => item.key === key);
-    if(index === -1) return;
-
-    // Delete the original item
-    Configure.config.splice(index, 1);
+    Configure.config.delete(key);
   }
 
   /**
@@ -127,7 +108,7 @@ export class Configure {
    *
    * @returns ConfigureItem[]
    */
-  public static dump(): ConfigureItem[] {
+  public static dump(): Map<string, any> {
     return Configure.config;
   }
 
@@ -137,6 +118,6 @@ export class Configure {
    * @returns void
    */
   public static clear(): void {
-    Configure.config = [];
+    Configure.config.clear();
   }
 }
