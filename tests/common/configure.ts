@@ -1,7 +1,6 @@
 import { assertEquals } from "https://deno.land/std@0.152.0/testing/asserts.ts";
 import { Configure } from "../../common/configure.ts";
 
-
 Deno.test("Configure Test", async (t) => {
   // Add a test variable and test against it
   Configure.set('test1', 'chomp');
