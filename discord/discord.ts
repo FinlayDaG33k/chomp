@@ -42,42 +42,175 @@ export class Discord {
       intents: this.intents,
       botId: this.botId,
       events: {
-        ready() {
-          EventDispatcher.dispatch('BotReady', {});
+        botUpdate(_bot, user) {
+          EventDispatcher.dispatch('BotUpdate', user);
         },
-        guildCreate(bot, guild) {
-          EventDispatcher.dispatch('GuildCreate', {guild: guild});
+        channelCreate(_bot, channel) {
+          EventDispatcher.dispatch('ChannelCreate', channel);
         },
-        guildLoaded(bot, data) {
+        channelDelete(_bot, channel) {
+          EventDispatcher.dispatch('ChannelDelete', channel);
+        },
+        channelPinsUpdate(_bot, data) {
+          EventDispatcher.dispatch('ChannelPinsUpdate', data);
+        },
+        channelUpdate(_bot, channel) {
+          EventDispatcher.dispatch('ChannelUpdate', channel);
+        },
+        debug(text, ...args: any[]) {
+          EventDispatcher.dispatch('Debug', { text: text, args: args });
+        },
+        dispatchRequirements(_bot, data, shardId) {
+          EventDispatcher.dispatch('DispatchRequirements', { data: data, shardId: shardId });
+        },
+        guildBanAdd(_bot, user, guildId) {
+          EventDispatcher.dispatch('GuildBanAdd', { user: user, guildId: guildId });
+        },
+        guildBanRemove(_bot, user, guildId) {
+          EventDispatcher.dispatch('GuildBanRemove', { user: user, guildId: guildId });
+        },
+        guildCreate(_bot, guild) {
+          EventDispatcher.dispatch('GuildCreate', guild);
+        },
+        guildDelete(_bot, id, shardId) {
+          EventDispatcher.dispatch('GuildDelete', { id: id, shardId: shardId });
+        },
+        guildEmojisUpdate(_bot, payload) {
+          EventDispatcher.dispatch('guildEmojisUpdate', payload);
+        },
+        guildLoaded(_bot, data) {
           EventDispatcher.dispatch('GuildLoaded', data);
         },
-        messageCreate(bot, message) {
-          EventDispatcher.dispatch('MessageReceive', {bot: bot, message: message});
-        },
         guildMemberAdd(_bot, member, user) {
-          EventDispatcher.dispatch('GuildMemberAdd', {member: member, user: user});
+          EventDispatcher.dispatch('GuildMemberAdd', { member: member, user: user });
         },
         guildMemberRemove(_bot, user) {
-          EventDispatcher.dispatch('GuildMemberRemove', {user: user});
+          EventDispatcher.dispatch('GuildMemberRemove', user);
         },
-        roleCreate(_bot, role) {
-          EventDispatcher.dispatch('RoleCreate', {role: role});
+        guildMemberUpdate(_bot, member, user) {
+          EventDispatcher.dispatch('GuildMemberUpdate', { member: member, user: user });
         },
-        roleDelete(_bot, role) {
-          EventDispatcher.dispatch('RoleDelete', {role: role});
+        guildUpdate(_bot, guild) {
+          EventDispatcher.dispatch('InteractionCreate', guild);
         },
-        roleUpdate(_bot, role) {
-          EventDispatcher.dispatch('RoleUpdate', {role: role});
+        integrationCreate(_bot, integration) {
+          EventDispatcher.dispatch('IntegrationCreate', integration);
         },
-        reactionAdd(_bot, data) {
-          EventDispatcher.dispatch('MessageReactionAdd', data);
+        integrationDelete(_bot, payload) {
+          EventDispatcher.dispatch('IntegrationDelete', payload);
         },
-        reactionRemove(_bot, data) {
-          EventDispatcher.dispatch('MessageReactionRemove', data);
+        integrationUpdate(_bot, payload) {
+          EventDispatcher.dispatch('IntegrationUpdate', payload);
         },
         interactionCreate(_bot, interaction) {
           EventDispatcher.dispatch('InteractionCreate', interaction);
-        }
+        },
+        inviteCreate(_bot, invite) {
+          EventDispatcher.dispatch('InviteCreate', invite);
+        },
+        inviteDelete(_bot, payload) {
+          EventDispatcher.dispatch('InviteDelete', payload);
+        },
+        messageCreate(_bot, message) {
+          // Remapped to "MessageReceive"
+          // Reason: Easier to understand
+          EventDispatcher.dispatch('MessageReceive', { message: message });
+        },
+        messageDelete(_bot, payload, message?) {
+          EventDispatcher.dispatch('MessageDelete', { payload: payload, message: message });
+        },
+        messageUpdate(_bot, message, oldMessage?) {
+          EventDispatcher.dispatch('MessageUpdate', { message: message, oldMessage: oldMessage });
+        },
+        presenceUpdate(_bot, presence, oldPresence?) {
+          EventDispatcher.dispatch('PresenceUpdate', { presence: presence, oldPresence: oldPresence });
+        },
+        raw(_bot, data, shardId) {
+          EventDispatcher.dispatch('Raw', { data: data, shardId: shardId });
+        },
+        reactionAdd(_bot, payload) {
+          // Remapped to "MessageReactionAdd"
+          // Reason: Easier to understand
+          EventDispatcher.dispatch('MessageReactionAdd', payload);
+        },
+        reactionRemove(_bot, data) {
+          // Remapped to "MessageReactionRemove"
+          // Reason: Easier to understand
+          EventDispatcher.dispatch('MessageReactionRemove', data);
+        },
+        reactionRemoveAll(_bot, payload) {
+          // Remapped to "MessageReactionRemoveAll"
+          // Reason: Easier to understand
+          EventDispatcher.dispatch('MessageReactionRemoveAll', payload);
+        },
+        reactionRemoveEmoji(_bot, payload) {
+          EventDispatcher.dispatch('ReactionRemoveEmoji', payload);
+        },
+        ready(_bot, payload, rawPayload) {
+          // Remapped to "MessageReactionRemoveAll"
+          // Reason: Easier to understand
+          EventDispatcher.dispatch('BotReady', { payload: payload, rawPayload: rawPayload });
+        },
+        roleCreate(_bot, role) {
+          EventDispatcher.dispatch('RoleCreate', role);
+        },
+        roleDelete(_bot, role) {
+          EventDispatcher.dispatch('RoleDelete', role);
+        },
+        roleUpdate(_bot, role) {
+          EventDispatcher.dispatch('RoleUpdate', role);
+        },
+        scheduledEventCreate(_bot, event) {
+          EventDispatcher.dispatch('ScheduledEventCreate', event);
+        },
+        scheduledEventDelete(_bot,event) {
+          EventDispatcher.dispatch('ScheduledEventDelete', event);
+        },
+        scheduledEventUpdate(_bot,event) {
+          EventDispatcher.dispatch('ScheduledEventUpdate', event);
+        },
+        scheduledEventUserAdd(_bot, payload) {
+          EventDispatcher.dispatch('ScheduledEventUserAdd', payload);
+        },
+        scheduledEventUserRemove(_bot, payload) {
+          EventDispatcher.dispatch('ScheduledEventUserRemove', payload);
+        },
+        stageInstanceCreate(_bot, data) {
+          EventDispatcher.dispatch('StageInstanceCreate', data);
+        },
+        stageInstanceDelete(_bot, data) {
+          EventDispatcher.dispatch('StageInstanceDelete', data);
+        },
+        stageInstanceUpdate(_bot, data) {
+          EventDispatcher.dispatch('StageInstanceUpdate', data);
+        },
+        threadCreate(_bot, thread) {
+          EventDispatcher.dispatch('ThreadCreate', thread);
+        },
+        threadDelete(_bot, thread) {
+          EventDispatcher.dispatch('ThreadDelete', thread);
+        },
+        threadMembersUpdate(_bot, payload) {
+          EventDispatcher.dispatch('ThreadMembersUpdate', payload);
+        },
+        threadUpdate(_bot, thread) {
+          EventDispatcher.dispatch('ThreadUpdate', thread);
+        },
+        typingStart(_bot, payload) {
+          EventDispatcher.dispatch('TypingStart', payload);
+        },
+        voiceChannelLeave(_bot, voiceState, guild, channel) {
+          EventDispatcher.dispatch('VoiceChannelLeave', { voiceState: voiceState, guild: guild, channel: channel });
+        },
+        voiceServerUpdate(_bot, payload) {
+          EventDispatcher.dispatch('VoiceServerUpdate', payload);
+        },
+        voiceStateUpdate(_bot, voiceState) {
+          EventDispatcher.dispatch('VoiceStateUpdate', voiceState);
+        },
+        webhooksUpdate(_bot, payload) {
+          EventDispatcher.dispatch('WebhooksUpdate', payload);
+        },
       }
     });
 
