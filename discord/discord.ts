@@ -3,7 +3,7 @@ import { enableCachePlugin, enableCacheSweepers } from "https://deno.land/x/disc
 import { EventDispatcher } from "./event-dispatcher.ts";
 import { Logger } from "../logging/logger.ts";
 
-export * from "https://deno.land/x/discordeno@13.0.0-rc18/mod.ts";
+export * from "https://deno.land/x/discordeno@13.0.0/mod.ts";
 
 export interface DiscordInitOpts {
   token: string;
@@ -15,7 +15,7 @@ export interface DiscordInitOpts {
 export class Discord {
   protected static bot: any;
   protected token = '';
-  protected intents: any[] = ['Guilds', 'GuildMessages', 'GuildMembers'];
+  protected intents: any;
   protected botId = BigInt(0);
 
   /**
