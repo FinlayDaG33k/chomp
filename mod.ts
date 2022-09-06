@@ -9,6 +9,7 @@ export { Redis } from "./communication/redis.ts";
 
 export {
   Discord,
+  Intents,
   InteractionResponseTypes,
   ApplicationCommandTypes,
   ApplicationCommandOptionTypes
