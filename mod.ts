@@ -9,12 +9,11 @@ export { Redis } from "./communication/redis.ts";
 
 export {
   Discord,
-  Intents,
   InteractionResponseTypes,
   ApplicationCommandTypes,
   ApplicationCommandOptionTypes
 } from "./discord/discord.ts";
-export type { DiscordenoEmbed } from "./discord/discord.ts";
+export type { DiscordenoEmbed, Intents } from "./discord/discord.ts";
 export { EventDispatcher } from "./discord/event-dispatcher.ts";
 export { InteractionDispatcher } from "./discord/interaction-dispatcher.ts";
 
