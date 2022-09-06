@@ -11,10 +11,9 @@ export {
   Discord,
   InteractionResponseTypes,
   ApplicationCommandTypes,
-  ApplicationCommandOptionTypes,
-  Intents
+  ApplicationCommandOptionTypes
 } from "./discord/discord.ts";
-export type { DiscordEmbed } from "./discord/discord.ts";
+export type { DiscordEmbed, Intents } from "./discord/discord.ts";
 export { EventDispatcher } from "./discord/event-dispatcher.ts";
 export { InteractionDispatcher } from "./discord/interaction-dispatcher.ts";
 
