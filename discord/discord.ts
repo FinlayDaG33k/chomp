@@ -147,7 +147,7 @@ export class Discord {
           EventDispatcher.dispatch('ReactionRemoveEmoji', payload);
         },
         ready(_bot, payload, rawPayload) {
-          // Remapped to "MessageReactionRemoveAll"
+          // Remapped to "BotReady"
           // Reason: Easier to understand
           EventDispatcher.dispatch('BotReady', { payload: payload, rawPayload: rawPayload });
         },
