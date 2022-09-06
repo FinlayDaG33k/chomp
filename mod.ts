@@ -13,7 +13,7 @@ export {
   ApplicationCommandTypes,
   ApplicationCommandOptionTypes
 } from "./discord/discord.ts";
-export type { DiscordenoEmbed, Intents } from "./discord/discord.ts";
+export type { DiscordEmbed, Intents } from "./discord/discord.ts";
 export { EventDispatcher } from "./discord/event-dispatcher.ts";
 export { InteractionDispatcher } from "./discord/interaction-dispatcher.ts";
 
