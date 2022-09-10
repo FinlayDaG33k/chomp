@@ -1,4 +1,4 @@
-import { handlebarsEngine } from "https://deno.land/x/view_engine@v10.6.0/mod.ts"
+import { handlebarsEngine } from "https://raw.githubusercontent.com/FinlayDaG33k/view-engine/master/mod.ts"
 import { Logger } from "../../logging/logger.ts";
 
 export class Controller {
