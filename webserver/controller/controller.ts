@@ -1,4 +1,4 @@
-import { handlebarsEngine } from "https://raw.githubusercontent.com/FinlayDaG33k/view-engine/master/mod.ts"
+import { handlebarsEngine } from "https://raw.githubusercontent.com/FinlayDaG33k/view-engine/patch-1/mod.ts
 import { Logger } from "../../logging/logger.ts";
 
 export class Controller {
