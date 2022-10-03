@@ -1,4 +1,4 @@
-import { engineFactory } from "https://deno.land/x/view_engine@v1.4.5/mod.ts";
+import { handlebarsEngine } from "https://raw.githubusercontent.com/FinlayDaG33k/view-engine/patch-1/mod.ts";
 import { Logger } from "../../logging/logger.ts";
 
 export class Controller {
@@ -62,14 +62,11 @@ export class Controller {
       return;
     }
 
-    // Initialize our engine
-    const engine = engineFactory.getHandlebarsEngine();
-
     // Read our template
     const template = await Deno.readTextFile(`./src/templates/${this.name[0].toLowerCase() + this.name.slice(1)}/${this.action}.hbs`);
 
     // Let the engine render
-    return engine(template, this.vars);
+    return handlebarsEngine(template, this.vars);
   }
 
   public response() {
