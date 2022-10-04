@@ -51,12 +51,17 @@ export class Hash {
   private result: any;
 
   constructor(
-    private input: string,
+    private input: Uint8Array|string,
     private algo: string,
   ) {}
 
   public async digest() {
-    this.result = await crypto.subtle.digest(this.algo as DigestAlgorithm, new TextEncoder().encode(this.input));
+    if(typeof this.input === 'string') this.input = new TextEncoder().encode(this.input);
+    this.result = await crypto.subtle.digest(this.algo as DigestAlgorithm, this.input);
+  }
+
+  public bytes() {
+    return [...new Uint8Array(this.result)];
   }
 
   public hex() {
