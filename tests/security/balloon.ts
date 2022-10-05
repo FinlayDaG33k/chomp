@@ -50,7 +50,8 @@ Deno.test("Chomp/Security/Balloon", async (t) => {
   ];
 
   for(const vector of vectors) {
-    const res = await Balloon.balloon(vector.password, vector.salt, vector.space_cost, vector.time_cost, 3);
-    assertEquals(vector.output, res);
+    const balloon = new Balloon('SHA-256', vector.space_cost, vector.time_cost, 3);
+    const hash = await balloon.execute(vector.password, vector.salt);
+    assertEquals(vector.output, hash);
   }
 });
