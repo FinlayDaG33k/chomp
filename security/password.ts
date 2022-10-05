@@ -1,5 +1,6 @@
 import { Random } from "./random.ts";
 import { Algorithms, Hash, INSECURE_ALGORITHMS } from "./hash.ts";
+import { Balloon } from "./balloon.ts";
 
 /**
  *  Recommended hashing algorithm for most use-cases.
@@ -48,17 +49,20 @@ enum HASH_IDENTIFIERS {
 // Set default options for hashing
 export const DEFAULT_OPTS: IPasswordOpts = {
   cost: 10,
-  allowInsecure: false
+  allowInsecure: false,
+  noBalloon: false,
 }
 
 /**
  * Options for hashing a password
  */
 export interface IPasswordOpts {
-  /* Cost factor for hashing (2**cost) */
+  /* Cost factor for hashing */
   cost?: number;
   /* Allow the use of insecure algorithms */
   allowInsecure?: boolean;
+  /* Disable usage of Balloon Hashing */
+  noBalloon?: boolean;
 }
 
 export class Password {
@@ -74,8 +78,9 @@ export class Password {
     // Make sure we are not using an insecure algorithm
     if(INSECURE_ALGORITHMS.includes(algo) && !options.allowInsecure) throw Error('Insecure hashing algorithm selected, aborting.');
 
-    // Make sure cost is set, else, use a default
+    // Set defaults for unspecified opts
     if(typeof options.cost !== 'number' || options.cost <= 0) options.cost = DEFAULT_OPTS.cost;
+    if(typeof options.noBalloon !== 'boolean' || options.noBalloon <= 0) options.noBalloon = DEFAULT_OPTS.noBalloon;
 
     // Get our identifier
     const identifierIndex = Object.values(HASH_IDENTIFIERS).indexOf(algo as unknown as HASH_IDENTIFIERS);
@@ -84,10 +89,10 @@ export class Password {
 
     // Create our hash
     const salt = await Random.string(32);
-    const result = await Password.doHash(password, algo, salt, options.cost!);
+    const result = await Password.doHash(password, algo, salt, options.cost!, !options.noBalloon);
 
     // Return our final hash string
-    return `${identifier}!${options.cost}!${salt}!${result}`;
+    return `${identifier}${!options.noBalloon ? 'b' : ''}!${options.cost}!${salt}!${result}`;
   }
 
   /**
@@ -101,27 +106,38 @@ export class Password {
     // Then build our data
     const tokens = hash.split('!');
     if(tokens.length < 4) throw Error('Malformed input hash');
+    const algo = tokens[0].charAt(3) === 'b' ? tokens[0].slice(0, -1) : tokens[0];
     const data = {
-      algo: HASH_IDENTIFIERS[tokens[0] as keyof typeof HASH_IDENTIFIERS],
+      algo: HASH_IDENTIFIERS[algo as keyof typeof HASH_IDENTIFIERS],
       cost: Number(tokens[1]),
       salt: tokens[2],
-      hash: tokens[3]
+      hash: tokens[3],
+      balloon: tokens[0].charAt(3) === 'b',
     };
 
     // Create our hash
-    const result = await Password.doHash(password, data.algo, data.salt, data.cost);
+    const result = await Password.doHash(password, data.algo, data.salt, data.cost, data.balloon);
 
     // Compare hash and return the result
     return result === data.hash;
   }
 
-  private static async doHash(input: string, algo: string, salt: string, cost: number): Promise<string> {
+  private static async doHash(input: string, algo: string, salt: string, cost: number, balloon: boolean = true): Promise<string> {
+    // Check if we want to balloon hash
+    // If so, use the Balloon class
+    // Otherwise, use the legacy hashing
+    if(balloon) {
+      const balloon = new Balloon(algo, 2 ** cost, cost, 3);
+      return await balloon.execute(input, salt);
+    }
+
+    // Use legacy hashing
     const rounds = 2 ** cost;
     let result = input;
     for(let round = 0; round < rounds; round++) {
       const h = new Hash(`${salt}${input}`, algo);
       await h.digest();
-      result = await h.hex();
+      result = h.hex();
     }
 
     return result;
