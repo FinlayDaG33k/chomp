@@ -33,27 +33,20 @@ export class Balloon {
   }
 
   private async doHash(...args: any[]): Promise<Hash> {
-    const t = [];
+    let t: number[] = [];
 
     for(const arg of args) {
       switch(typeof arg) {
         case 'string': {
-          const encoded = new TextEncoder().encode(arg);
-          for(const byte of encoded) {
-            t.push(byte);
-          }
+          t = [...t, ...new TextEncoder().encode(arg)];
           break;
         }
         case 'number': {
-          for(const byte of Balloon.toBytes(arg)) {
-            t.push(byte);
-          }
+          t = [...t, ...Balloon.toBytes(arg)];
           break;
         }
         default: {
-          for(const byte of arg) {
-            t.push(byte);
-          }
+          t = [...t, ...arg];
         }
       }
     }
