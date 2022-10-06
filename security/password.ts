@@ -80,7 +80,7 @@ export class Password {
 
     // Set defaults for unspecified opts
     if(typeof options.cost !== 'number' || options.cost <= 0) options.cost = DEFAULT_OPTS.cost;
-    if(typeof options.noBalloon !== 'boolean' || options.noBalloon <= 0) options.noBalloon = DEFAULT_OPTS.noBalloon;
+    if(typeof options.noBalloon !== 'boolean' || options.noBalloon !== false) options.noBalloon = DEFAULT_OPTS.noBalloon;
 
     // Get our identifier
     const identifierIndex = Object.values(HASH_IDENTIFIERS).indexOf(algo as unknown as HASH_IDENTIFIERS);
