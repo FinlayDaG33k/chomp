@@ -59,29 +59,28 @@ export class Balloon {
 
   private async expand(): Promise<void> {
     for(let s = 1; s < this.space_cost; s++) {
-      this.buffer.push(await this.doHash(this.counter, this.buffer[s - 1].bytes()));
-      this.counter++;
+      this.buffer.push(await this.doHash(this.counter++, this.buffer[s - 1].bytes()));
     }
   }
 
   private async mix(salt: string): Promise<void> {
+    performance.measure("start mix");
     for(let t = 0; t < this.time_cost; t++) {
       for(let s = 0; s < this.space_cost; s++) {
         if(typeof this.buffer.at(s-1) === 'undefined' || typeof this.buffer.at(s) === 'undefined') {
           throw Error('Buffer too short! (this is a bug!)');
         }
-        this.buffer[s] = await this.doHash(this.counter, this.buffer.at(s-1)!.bytes(), this.buffer.at(s)!.bytes());
-        this.counter++;
+        this.buffer[s] = await this.doHash(this.counter++, this.buffer.at(s-1)!.bytes(), this.buffer.at(s)!.bytes());
         for(let i = 0; i < this.delta; i++) {
           const idx_block = await this.doHash(t, s, i);
-          const h = await this.doHash(this.counter, salt, idx_block.bytes());
+          const h = await this.doHash(this.counter++, salt, idx_block.bytes());
           const other = Number(Balloon.toNumber(h.bytes()) % BigInt(this.space_cost));
-          this.counter++;
-          this.buffer[s] = await this.doHash(this.counter, this.buffer[s].bytes(), this.buffer[other].bytes());
-          this.counter++;
+          this.buffer[s] = await this.doHash(this.counter++, this.buffer[s].bytes(), this.buffer[other].bytes());
         }
       }
     }
+    performance.measure("end mix");
+    console.log(performance.getEntriesByType("measure"));
   }
 
   private extract(): string {
@@ -106,3 +105,6 @@ export class Balloon {
     return BigInt('0x' + byteArray.map((byte: any) => byte.toString(16).padStart(2, '0')).join(''));
   }
 }
+
+const balloon = new Balloon('SHA-256', 1024, 3, 3);
+const hash = await balloon.execute("examplepassword", "examplesalt");
