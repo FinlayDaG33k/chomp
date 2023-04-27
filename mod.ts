@@ -16,6 +16,7 @@ export {
 export type { DiscordEmbed, Intents } from "./discord/discord.ts";
 export { EventDispatcher } from "./discord/event-dispatcher.ts";
 export { InteractionDispatcher } from "./discord/interaction-dispatcher.ts";
+export { snowflakeToDate } from "./discord/util/snowflake-to-date.ts";
 
 export { Logger } from "./logging/logger.ts";
 export { Queue, Scheduler } from "./queue/queue.ts";
