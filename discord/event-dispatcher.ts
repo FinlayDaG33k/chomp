@@ -6,7 +6,7 @@ interface EventConfig {
 }
 
 export interface Event {
-  execute(opts: any): Promise<void>;
+  execute(opts: unknown): Promise<void>;
 }
 
 export class EventDispatcher {
@@ -18,13 +18,13 @@ export class EventDispatcher {
    *
    * @returns EventConfig[]
    */
-  public static getEvents() { return EventDispatcher.list; }
+  public static getEvents(): EventConfig[] { return EventDispatcher.list; }
 
   /**
    * Find an Event by name
    *
    * @param name
-   * @returns IEvent|undefined
+   * @returns EvenConfig|undefined
    */
   public static getHandler(name: string): EventConfig|undefined {
     return EventDispatcher.list.find((event: EventConfig) => event.name === name);
@@ -32,14 +32,22 @@ export class EventDispatcher {
 
   /**
    * Import an event handler and add it to the list of handlers
+   * TODO: Make sure class implements Event
    *
-   * @param event
+   * @param EventConfig event
    * @returns Promise<void>
    */
   public static async add(event: EventConfig): Promise<void> {
     try {
-      // Import the event handler
-      EventDispatcher.handlers[event.handler] = await import(`file://${Deno.cwd()}/src/events/${event.handler}.ts`)
+      // Import the source file
+      const handler = await import(`file://${Deno.cwd()}/src/events/${event.handler}.ts`);
+
+      // Make sure source file has required class
+      if(!(`${event.name}Event` in handler)) throw Error(`No class named "${event.name}Event" could be found!`);
+      
+      
+      // Register handler
+      EventDispatcher.handlers[event.handler] = handler;
     } catch(e) {
       Logger.error(`Could not register event handler for "${event.name}": ${e.message}`, e.stack);
       return;
@@ -51,8 +59,8 @@ export class EventDispatcher {
   /**
    * Run an instance of the Feature handler
    *
-   * @param event
-   * @param data
+   * @param string Event
+   * @param any data
    * @returns Promise<void>
    */
   public static async dispatch(event: string, data: any = {}): Promise<void> {
