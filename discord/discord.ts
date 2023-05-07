@@ -7,7 +7,7 @@ export * from "https://deno.land/x/discordeno@13.0.0/mod.ts";
 
 export interface DiscordInitOpts {
   token: string;
-  intents: any[];
+  intents: number;
   botId: bigint|number;
   withCache?: boolean;
 }
