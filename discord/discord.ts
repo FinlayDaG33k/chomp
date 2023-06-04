@@ -10,6 +10,7 @@ export interface DiscordInitOpts {
   intents: number;
   botId: bigint|number;
   withCache?: boolean;
+  withSweeper?: boolean;
 }
 
 export class Discord {
@@ -215,13 +216,7 @@ export class Discord {
     });
 
     // Enable cache if required
-    if(opts.withCache === true) {
-      const bot = enableCachePlugin(baseBot);
-      enableCacheSweepers(bot);
-      Discord.bot = bot;
-    } else {
-      Discord.bot = baseBot;
-    }
+    Discord.bot = Discord.enableCache(baseBot, opts);
   }
 
   /**
@@ -231,5 +226,25 @@ export class Discord {
    */
   public async start(): Promise<void> {
     await startBot(Discord.bot);
+  }
+
+  /**
+   * Checks whether cache needs to be enabled.
+   * Add both cache and sweeper if required.
+   * TODO: Find out type of bot
+   * 
+   * @param opts
+   */
+  private static enableCache(bot: any, opts: DiscordInitOpts): any {
+    // Return the bot if no cache needs to be enabled
+    // Otherwise enable the cache
+    if (!opts.withCache) return bot;
+    bot = enableCachePlugin(bot);
+    
+    // Return the bot if no sweeper needs to be enabled
+    // Otherwise enable the sweeper and return the final bot
+    if(!opts.withSweeper) return bot;
+    enableCacheSweepers(bot);
+    return bot;
   }
 }
