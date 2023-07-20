@@ -76,7 +76,7 @@ export class InteractionDispatcher {
     // Get the handler
     const handler = InteractionDispatcher.getHandler(interaction);
     if(!handler) {
-      Logger.warning(`Interaction "${interaction}" does not exist! (did you register it?)`);
+      Logger.debug(`Interaction "${interaction}" does not exist! (did you register it?)`);
       return;
     }
 
