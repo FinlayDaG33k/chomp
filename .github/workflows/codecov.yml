@@ -4,7 +4,12 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: denoland/setup-deno@v1
+      - name: Clone repository
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+      - name: Set up Deno  
+        uses: denoland/setup-deno@v1
         with:
           deno-version: "1.30.0"
       - name: Run tests
