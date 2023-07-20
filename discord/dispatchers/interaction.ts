@@ -3,6 +3,7 @@ import { Discord } from "../discord.ts";
 import { Logger } from "../../logging/logger.ts";
 import { isTs } from "../../util/is-ts.ts";
 import { folderExists } from "../../util/folder-exists.ts";
+import { Inflector } from "../../util/inflector.ts";
 
 export interface InteractionConfig {
   name: string;
@@ -81,7 +82,7 @@ export class InteractionDispatcher {
     }
 
     // Create an instance of the handler
-    const controller = new InteractionDispatcher.handlers[handler.handler][`${interaction[0].toUpperCase() + interaction.slice(1)}Interaction`](data);
+    const controller = new InteractionDispatcher.handlers[handler.handler][`${Inflector.pascalize(interaction)}Interaction`](data);
 
     // Execute the handler's execute method
     try {
