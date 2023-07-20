@@ -1,4 +1,7 @@
 import { Logger } from "../../logging/logger.ts";
+import { folderExists } from "../../util/folder-exists.ts";
+import { isTs } from "../../util/is-ts.ts";
+import { Inflector } from "../../util/inflector.ts";
 
 interface EventConfig {
   name: string;
@@ -45,7 +48,6 @@ export class EventDispatcher {
       // Make sure source file has required class
       if(!(`${event.name}Event` in handler)) throw Error(`No class named "${event.name}Event" could be found!`);
       
-      
       // Register handler
       EventDispatcher.handlers[event.handler] = handler;
     } catch(e) {
@@ -77,5 +79,57 @@ export class EventDispatcher {
     } catch(e) {
       Logger.error(`Could not dispatch event "${event}": "${e.message}"`, e.stack);
     }
+  }
+
+  /**
+   * Load all events from the required directory.
+   * By convention, this will be "src/events".
+   */
+  public static async load(): Promise<void> {
+    // Create our directory string
+    const dir = `${Deno.cwd()}/src/events`;
+    Logger.debug(`Loading events from "${dir}"...`);
+
+    // Make sure the interactions directory exists
+    if(!folderExists(dir)) {
+      Logger.warning(`"${dir}" does not exist, no events to load.`);
+      return;
+    }
+
+    // Get a list of all files
+    const files = await Deno.readDir(dir);
+
+    // Load all interactions
+    const promiseQueue: Promise<void>[] = [];
+    for await(const file of files) {
+      if(!isTs(file.name)) {
+        Logger.debug(`File "${file.name}" is not a TS file, skipping...`);
+        continue;
+      }
+
+      // Import the file as a module
+      Logger.debug(`Loading "${file.name}"...`);
+      const module = await import(`file:///${dir}/${file.name}`);
+      
+      // Make sure the file contains a valid handler
+      const name = file.name.replace('.ts', '');
+      const eventName = Inflector.pascalize(name, '-');
+      const className = `${eventName}Event`;
+      if(!(className in module)) {
+        Logger.warning(`Could not find ${className} in "${file.name}", skipping...`);
+        continue;
+      }
+
+      // Register in the dispatcher
+      promiseQueue.push(
+        EventDispatcher.add({
+          name: eventName,
+          handler: name,
+        })
+      );
+    }
+
+    // Wait until the promise queue has cleared
+    await Promise.all(promiseQueue);
   }
 }

@@ -228,6 +228,7 @@ export class Discord {
    */
   public async start(): Promise<void> {
     if(!Discord.bot) throw Error('Bot is not configured!');
+    await EventDispatcher.load();
     await InteractionDispatcher.load();
     await startBot(Discord.bot);
   }
