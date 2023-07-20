@@ -1,6 +1,6 @@
 import { Discord } from "./discord.ts";
 
-export default class Interaction {
+export class Interaction {
   protected interaction: unknown;
   private _hasReplied: boolean = false;
   

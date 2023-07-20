@@ -1,6 +1,8 @@
 export * from "./dispatchers/mod.ts";
 export * from "./util/mod.ts";
 
+export { Interaction } from "./interaction.ts";
+
 export {
   Discord,
   InteractionResponseTypes,

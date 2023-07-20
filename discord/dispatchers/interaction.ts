@@ -1,6 +1,6 @@
 import {ApplicationCommandOption, ApplicationCommandTypes} from "https://deno.land/x/discordeno@13.0.0/mod.ts";
-import { Discord } from "./discord.ts";
-import { Logger } from "../logging/logger.ts";
+import { Discord } from "../discord.ts";
+import { Logger } from "../../logging/logger.ts";
 
 export interface InteractionConfig {
   name: string;
@@ -8,10 +8,6 @@ export interface InteractionConfig {
   type: ApplicationCommandTypes;
   options?: ApplicationCommandOption[];
   handler: string;
-}
-
-export interface Interaction {
-  execute(): Promise<void>;
 }
 
 export class InteractionDispatcher {
