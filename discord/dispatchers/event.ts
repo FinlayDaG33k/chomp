@@ -112,8 +112,7 @@ export class EventDispatcher {
       const module = await import(`file:///${dir}/${file.name}`);
       
       // Make sure the file contains a valid handler
-      const name = file.name.replace('.ts', '');
-      const eventName = Inflector.pascalize(name, '-');
+      const eventName = Inflector.pascalize(file.name.replace('.ts', ''), '-');
       const className = `${eventName}Event`;
       if(!(className in module)) {
         Logger.warning(`Could not find ${className} in "${file.name}", skipping...`);
