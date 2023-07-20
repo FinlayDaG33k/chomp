@@ -2,11 +2,21 @@
  * Idea and code primarily based on CakePHP's code.
  */
 export class Inflector {
-  
+
+  /**
+   * Return input string with first character uppercased.
+   *
+   * @param input
+   */
   public static ucfirst(input: string): string {
     return input.charAt(0).toUpperCase() + input.slice(1);
   }
-  
+
+  /**
+   * Return input string with first character lowercased.
+   * 
+   * @param input
+   */
   public static lcfirst(input: string): string {
     return input.charAt(0).toLowerCase() + input.slice(1);
   }
