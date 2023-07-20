@@ -6,7 +6,7 @@ on:
     
 jobs:
   test:
-    name: Code Coverage Report
-    uses: codecov/codecov-action@v3
-    env:
-      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+    - name: Code Coverage Report
+      uses: codecov/codecov-action@v3
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
