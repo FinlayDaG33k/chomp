@@ -1,5 +1,9 @@
-import { createBot, startBot } from "https://deno.land/x/discordeno@13.0.0/mod.ts";
-import { enableCachePlugin, enableCacheSweepers } from "https://deno.land/x/discordeno@13.0.0/plugins/cache/mod.ts";
+import { createBot, startBot, Bot } from "https://deno.land/x/discordeno@13.0.0/mod.ts";
+import {
+  BotWithCache,
+  enableCachePlugin,
+  enableCacheSweepers
+} from "https://deno.land/x/discordeno@13.0.0/plugins/cache/mod.ts";
 import { EventDispatcher } from "./dispatchers/event.ts";
 import { Logger } from "../logging/logger.ts";
 
@@ -14,18 +18,15 @@ export interface DiscordInitOpts {
 }
 
 export class Discord {
-  protected static bot: any;
+  protected static bot: Bot|undefined;
   protected token = '';
   protected intents: any;
   protected botId = BigInt(0);
 
   /**
    * Return the instance of the Discord bot connection
-   * TODO: Find out type of Discord.bot
-   *
-   * @returns any
    */
-  public static getBot(): any { return Discord.bot; }
+  public static getBot(): Bot|undefined { return Discord.bot; }
 
   public constructor(opts: DiscordInitOpts) {
     // Make sure required parameters are present
@@ -225,17 +226,18 @@ export class Discord {
    * @returns Promise<void>
    */
   public async start(): Promise<void> {
+    if(!Discord.bot) throw Error('Bot is not configured!');
     await startBot(Discord.bot);
   }
 
   /**
    * Checks whether cache needs to be enabled.
    * Add both cache and sweeper if required.
-   * TODO: Find out type of bot
-   * 
+   *
+   * @param bot
    * @param opts
    */
-  private static enableCache(bot: any, opts: DiscordInitOpts): any {
+  private static enableCache(bot: Bot, opts: DiscordInitOpts): Bot|BotWithCache {
     // Return the bot if no cache needs to be enabled
     // Otherwise enable the cache
     if (!opts.withCache) return bot;
@@ -244,7 +246,7 @@ export class Discord {
     // Return the bot if no sweeper needs to be enabled
     // Otherwise enable the sweeper and return the final bot
     if(!opts.withSweeper) return bot;
-    enableCacheSweepers(bot);
+    enableCacheSweepers(bot as BotWithCache);
     return bot;
   }
 }
