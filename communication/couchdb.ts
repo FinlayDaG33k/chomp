@@ -17,7 +17,7 @@ interface CouchOverrides {
   method?: string;
 }
 
-export default class CouchDB {
+export class CouchDB {
   private auth = '';
 
   public constructor(
