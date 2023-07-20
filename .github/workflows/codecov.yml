@@ -13,9 +13,9 @@ jobs:
         with:
           deno-version: "1.30.0"
       - name: Run tests
-        run: deno test --allow-read --allow-env
+        run: deno test --coverage=./coverage --allow-read --allow-env
       - name: Generate lcov
-        run: deno coverage ./coverage/ --lcov --exclude="test\\.(ts|js)|wasm\\.js|testdata" > coverage.lcov
+        run: deno coverage ./coverage --lcov --exclude="test\\.(ts|js)|wasm\\.js|testdata" > coverage.lcov
       - name: Upload Code Coverage Report
         uses: codecov/codecov-action@v3
         env:
