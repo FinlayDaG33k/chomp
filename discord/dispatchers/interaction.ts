@@ -118,6 +118,7 @@ export class InteractionDispatcher {
       }
 
       // Import each file as a module
+      Logger.debug(`Loading "${file.name}"...`);
       const module = await import(`file:///${dir}/${file.name}`);
       
       // Make sure module has a "config" exposed
