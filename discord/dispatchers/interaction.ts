@@ -1,6 +1,8 @@
 import {ApplicationCommandOption, ApplicationCommandTypes} from "https://deno.land/x/discordeno@13.0.0/mod.ts";
 import { Discord } from "../discord.ts";
 import { Logger } from "../../logging/logger.ts";
+import { isTs } from "../../util/is-ts.ts";
+import { folderExists } from "../../util/folder-exists.ts";
 
 export interface InteractionConfig {
   name: string;
@@ -87,5 +89,49 @@ export class InteractionDispatcher {
     } catch(e) {
       Logger.error(`Could not dispatch interaction "${interaction}": "${e.message}"`, e.stack);
     }
+  }
+
+  /**
+   * Load all interactions from the required directory.
+   * By convention, this will be "src/interactions".
+   */
+  public static async load(): Promise<void> {
+    // Create our directory string
+    const dir = `${Deno.cwd()}/src/interactions`;
+    Logger.debug(`Loading interactions from "${dir}"...`);
+    
+    // Make sure the interactions directory exists
+    if(!folderExists(dir)) {
+      Logger.warning(`"${dir}" does not exist, no interactions to load`);
+      return;
+    }
+    
+    // Get a list of all files
+    const files = await Deno.readDir(dir);
+    
+    // Load all interactions
+    const promiseQueue: Promise<void>[] = [];
+    for await(const file of files) {
+      if(!isTs(file.name)) {
+        Logger.debug(`File "${file.name}" is not a TS file, skipping...`);
+        continue;
+      }
+
+      // Import each file as a module
+      const module = await import(`file:///${dir}/${file.name}`);
+      
+      // Make sure module has a "config" exposed
+      if(!('config' in module)) {
+        Logger.warning(`Could not find config in "${interaction.name}", skipping...`);
+        continue;
+      }
+      
+      // Register in the dispatcher
+      module.config['handler'] = module.config.name;
+      promiseQueue.push(InteractionDispatcher.add(module.config));
+    }
+    
+    // Wait until the promise queue has cleared
+    await Promise.all(promiseQueue);
   }
 }

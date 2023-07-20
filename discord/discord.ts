@@ -6,6 +6,7 @@ import {
 } from "https://deno.land/x/discordeno@13.0.0/plugins/cache/mod.ts";
 import { EventDispatcher } from "./dispatchers/event.ts";
 import { Logger } from "../logging/logger.ts";
+import { InteractionDispatcher } from "./dispatchers/interaction.ts";
 
 export * from "https://deno.land/x/discordeno@13.0.0/mod.ts";
 
@@ -227,6 +228,7 @@ export class Discord {
    */
   public async start(): Promise<void> {
     if(!Discord.bot) throw Error('Bot is not configured!');
+    await InteractionDispatcher.load();
     await startBot(Discord.bot);
   }
 
