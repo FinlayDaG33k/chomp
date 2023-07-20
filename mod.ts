@@ -14,9 +14,10 @@ export {
   ApplicationCommandOptionTypes
 } from "./discord/discord.ts";
 export type { DiscordEmbed, Intents } from "./discord/discord.ts";
-export { EventDispatcher } from "./discord/event-dispatcher.ts";
-export type { Event } from "./discord/event-dispatcher.ts";
-export { InteractionDispatcher } from "./discord/interaction-dispatcher.ts";
+export { EventDispatcher } from "./discord/dispatchers/event.ts";
+export type { Event } from "./discord/dispatchers/event.ts";
+export { InteractionDispatcher } from "./discord/dispatchers/interaction.ts";
+export type { InteractionConfig } from "./discord/dispatchers/interaction.ts";
 export { snowflakeToDate } from "./discord/util/snowflake-to-date.ts";
 
 export { Logger } from "./logging/logger.ts";

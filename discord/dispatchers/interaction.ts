@@ -1,11 +1,11 @@
-import { ApplicationCommandOption } from "https://deno.land/x/discordeno@13.0.0/mod.ts";
+import {ApplicationCommandOption, ApplicationCommandTypes} from "https://deno.land/x/discordeno@13.0.0/mod.ts";
 import { Discord } from "./discord.ts";
 import { Logger } from "../logging/logger.ts";
 
-interface InteractionConfig {
+export interface InteractionConfig {
   name: string;
   description: string;
-  type: any;
+  type: ApplicationCommandTypes;
   options?: ApplicationCommandOption[];
   handler: string;
 }
