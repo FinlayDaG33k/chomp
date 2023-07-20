@@ -10,4 +10,12 @@ export {
   ApplicationCommandOptionTypes
 } from "./discord.ts";
 
-export type { DiscordEmbed, Intents } from "./discord.ts";
+export {
+  Intents,
+  AuditLogEvents,
+  ApplicationCommandFlags
+} from "https://deno.land/x/discordeno@13.0.0/mod.ts";
+
+export type {
+  DiscordEmbed
+} from "https://deno.land/x/discordeno@13.0.0/mod.ts";
