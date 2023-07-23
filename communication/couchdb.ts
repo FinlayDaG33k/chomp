@@ -101,7 +101,7 @@ export class CouchDB {
   public async upsert(id: string, data: any): Promise<CouchResponse> {
     // Check if a document already exists
     // Insert a new document if not
-    const exists = await this.raw(id, null, { method: 'HEAD' });
+    const exists = await this.raw(id, null, { method: 'GET' });
     if(exists.status === 404) {
       data['_id'] = id;
       return await this.insert(data);
