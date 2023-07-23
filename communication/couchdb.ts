@@ -149,7 +149,8 @@ export class CouchDB {
 
     // Send our request and get the response
     const resp = await fetch(`${this.host}/${this.database}${endpoint}`, opts);
-    const data = await resp.json();
+    let data = null;
+    if(opts.method !== 'HEAD') data = await resp.json();
 
     // Prepare our CouchResponse
     const couchResponse = {
