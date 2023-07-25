@@ -5,7 +5,7 @@ export interface LokiStream {
   values: Array<Array<string>>;
 }
 
-export default class Loki {
+export class Loki {
   /**
    * @param host
    * @param tenant Tenant ID to use for the log item. Can be ommitted if not using multi-tenant mode.
