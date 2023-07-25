@@ -2,7 +2,7 @@ import { Logger } from "../logging/logger.ts";
 
 export interface LokiStream {
   stream: any;
-  values: Array<Array<number|string>>;
+  values: Array<Array<string>>;
 }
 
 export default class Loki {
