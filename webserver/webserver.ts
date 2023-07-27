@@ -1,5 +1,6 @@
 import { Logger } from "../logging/logger.ts";
 import { Router } from "./routing/router.ts";
+import { StatusCodes } from "./http/status-codes.ts";
 
 export class Webserver {
   private server: any = null;
@@ -36,7 +37,7 @@ export class Webserver {
           await request.respondWith(new Response(
             'The requested page could not be found.',
             {
-              status: 404,
+              status: StatusCodes.NOT_FOUND,
               headers: {
                 'Content-Type': 'text/plain'
               }
@@ -63,7 +64,7 @@ export class Webserver {
         await request.respondWith(new Response(
           'An Internal Server Error Occurred',
           {
-            status: 500,
+            status: StatusCodes.INTERNAL_SERVER_ERROR,
             headers: {
               'Content-Type': 'text/plain'
             }

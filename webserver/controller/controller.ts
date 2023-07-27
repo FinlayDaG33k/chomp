@@ -1,11 +1,12 @@
 import { handlebarsEngine } from "https://raw.githubusercontent.com/FinlayDaG33k/view-engine/patch-1/mod.ts";
 import { Logger } from "../../logging/logger.ts";
 import { Headers } from "../http/headers.ts";
+import { StatusCodes } from "../http/status-codes.ts";
 
 export class Controller {
   protected headers: Headers = new Headers();
   protected vars: any = {};
-  protected status = 200;
+  protected status: StatusCodes = StatusCodes.OK;
   protected body = '';
 
   /**
