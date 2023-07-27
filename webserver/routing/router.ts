@@ -18,6 +18,7 @@ export interface RouteArgs {
 }
 
 export class Router {
+  private static readonly _controllerDir = `file://${Deno.cwd()}/src/controller`;
   private static routes: Route[] = [];
   public static getRoutes() { return Router.routes; }
   private static _cache = {};
@@ -64,7 +65,7 @@ export class Router {
     // Import and cache controller file if need be
     if(!(args.route.controller in Router._cache)) {
       try {
-        Router._cache[args.route.controller] = await import(`file://${Deno.cwd()}/src/controller/${Inflector.lcfirst(args.route.controller)}.controller.ts`);
+        Router._cache[args.route.controller] = await import(`${Router._controllerDir}/${Inflector.lcfirst(args.route.controller)}.controller.ts`);
       } catch(e) {
         Logger.error(`Could not import "${args.route.controller}": ${e.message}`, e.stack);
         return new Response(
