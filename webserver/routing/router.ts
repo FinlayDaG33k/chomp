@@ -1,11 +1,13 @@
 import { readerFromStreamReader } from "https://deno.land/std@0.126.0/io/mod.ts";
 import { pathToRegexp } from "../pathToRegexp.ts";
+import { Inflector } from "../../util/inflector.ts";
+import { Logger } from "../../logging/logger.ts";
 
 interface Route {
   path: string;
   controller: string;
   action: string;
-  method: string;
+  method?: string;
 }
 
 export interface RouteArgs {
@@ -18,6 +20,7 @@ export interface RouteArgs {
 export class Router {
   private static routes: Route[] = [];
   public static getRoutes() { return Router.routes; }
+  private static _cache = {};
 
   /**
    * Match the controller and action to a route
@@ -58,20 +61,49 @@ export class Router {
     // Make sure a route was specified
     if(args.route === null) return null;
 
-    // Import the controller file
-    const imported = await import(`file://${Deno.cwd()}/src/controller/${args.route.controller[0].toLowerCase() + args.route.controller.slice(1)}.controller.ts`);
+    // Import and cache controller file if need be
+    if(!(args.route.controller in Router._cache)) {
+      try {
+        Router._cache[args.route.controller] = await import(`file://${Deno.cwd()}/src/controller/${Inflector.lcfirst(args.route.controller)}.controller.ts`);
+      } catch(e) {
+        Logger.error(`Could not import "${args.route.controller}": ${e.message}`, e.stack);
+        return new Response(
+          'Internal Server Error',
+          {
+            status: 500,
+            headers: {
+              'content-type': 'text/plain'
+            }
+          }
+        );
+      }
+    }
+    
+    
+    try {
+      // Instantiate the controller
+      const controller = new Router._cache[args.route.controller][`${args.route.controller}Controller`](args.route.controller, args.route.action);
 
-    // Instantiate the controller
-    const controller = new imported[`${args.route.controller}Controller`](args.route.controller, args.route.action);
+      // Execute our action
+      await controller[args.route.action](args);
 
-    // Execute our action
-    await controller[args.route.action](args);
+      // Render the body
+      await controller.render();
 
-    // Render the body
-    await controller.render();
-
-    // Return our response
-    return controller.response();
+      // Return our response
+      return controller.response();
+    } catch(e) {
+      Logger.error(`Could not execute "${args.route.controller}": ${e.message}`. e.stack);
+      return new Response(
+        'Internal Server Error',
+        {
+          status: 500,
+          headers: {
+            'content-type': 'text/plain'
+          }
+        }
+      );
+    }
   }
 
   /**
@@ -122,12 +154,14 @@ export class Router {
   }
 
   /**
-   * Add a route
+   * Add a route.
+   * Defaults to 'GET'
    *
    * @param route
    * @returns void
    */
   public static add(route: Route): void {
+    if(!('method' in route)) route.method = 'GET';
     Router.routes.push(route);
   }
 }
