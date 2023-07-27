@@ -3,11 +3,11 @@ import { Router } from "./routing/router.ts";
 
 export class Webserver {
   private server: any = null;
-  private port: number = 0;
   private router: Router = new Router();
 
-  constructor(port: number = 80) {
-    this.port = port;
+  constructor(
+    private readonly port: number = 80
+  ) {
   }
 
   public async start() {
@@ -16,6 +16,7 @@ export class Webserver {
 
     // Serve connections
     for await (const conn of this.server) {
+      // @ts-ignore Left intentionally without await
       this.serve(conn);
     }
   }
@@ -28,6 +29,8 @@ export class Webserver {
     for await(const request of httpConn) {
       Logger.debug(`Request from "${(conn.remoteAddr as Deno.NetAddr).hostname!}:${(conn.remoteAddr as Deno.NetAddr).port!}": ${request.request.method} | ${request.request.url}`);
       try {
+        // Try to find a matching route
+        // Respond with 404 if not found
         const routing = this.router.route(request.request);
         if(!routing || !routing.route) {
           await request.respondWith(new Response(
@@ -42,13 +45,19 @@ export class Webserver {
           ));
           return;
         }
+        
+        // Execute the route
         const response = await this.router.execute({
           route: routing.route,
           body: await this.router.getBody(request.request),
           params: await this.router.getParams(routing.route, routing.path ?? '/'),
           auth: this.router.getAuth(request.request)
         });
+        
+        // Check if the response was empty or not
         if(!response) throw Error('Response was empty');
+        
+        // Send our response
         await request.respondWith(response);
       } catch(e) {
         Logger.error(`Could not serve response: ${e.message}`, e.stack);
