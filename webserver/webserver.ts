@@ -28,9 +28,9 @@ export class Webserver {
     for await(const request of httpConn) {
       Logger.debug(`Request from "${(conn.remoteAddr as Deno.NetAddr).hostname!}:${(conn.remoteAddr as Deno.NetAddr).port!}": ${request.request.method} | ${request.request.url}`);
       try {
-        const routing = await this.router.route(request.request);
+        const routing = this.router.route(request.request);
         if(!routing || !routing.route) {
-          return new Response(
+          await request.respondWith(new Response(
             'The requested page could not be found.',
             {
               status: 404,
@@ -39,7 +39,8 @@ export class Webserver {
                 'Access-Control-Allow-Origin': '*'
               }
             }
-          );
+          ));
+          return;
         }
         const response = await this.router.execute({
           route: routing.route,
