@@ -79,7 +79,7 @@ export class Router {
       }
     }
     
-    
+    // Run our controller
     try {
       // Instantiate the controller
       const controller = new Router._cache[args.route.controller][`${args.route.controller}Controller`](args.route.controller, args.route.action);
