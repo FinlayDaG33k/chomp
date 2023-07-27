@@ -27,7 +27,7 @@ export class Router {
    *
    * @param request
    */
-  public async route(request: Request) {
+  public route(request: Request) {
     // Get the request path minus the domain
     const host = request.headers.get("host");
     let path = request.url
@@ -39,7 +39,7 @@ export class Router {
     // Check if it is the right method
     // Check if it's the right path
     // Return the route if route found
-    for await(let route of Router.routes) {
+    for (const route of Router.routes) {
       if(route.method !== request.method) continue;
 
       // Make sure we have a matching route
