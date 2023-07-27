@@ -38,8 +38,7 @@ export class Webserver {
             {
               status: 404,
               headers: {
-                'content-type': 'text/plain',
-                'Access-Control-Allow-Origin': '*'
+                'content-type': 'text/plain'
               }
             }
           ));
