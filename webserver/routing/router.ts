@@ -93,7 +93,7 @@ export class Router {
       // Return our response
       return controller.response();
     } catch(e) {
-      Logger.error(`Could not execute "${args.route.controller}": ${e.message}`. e.stack);
+      Logger.error(`Could not execute "${args.route.controller}": ${e.message}`, e.stack);
       return new Response(
         'Internal Server Error',
         {
