@@ -1,13 +1,24 @@
 import { handlebarsEngine } from "https://raw.githubusercontent.com/FinlayDaG33k/view-engine/patch-1/mod.ts";
 import { Logger } from "../../logging/logger.ts";
+import { Headers } from "../http/headers.ts";
 
 export class Controller {
+  protected headers: Headers = new Headers();
   protected name = ''
   protected action = '';
   protected vars: any = {};
   protected status = 200;
   protected body = '';
-  protected type = 'text/html';
+
+  /**
+   * 
+   * @deprecated Please use "Controller.headers.set()" instead.
+   * @param value
+   */
+  public set type(value: string = 'text/html') {
+    Logger.warning('Setting type on controller itself is deprecated, please use "Controller.headers.set()" instead.');
+    this.headers.set('Content-Type', value);
+  }
 
   constructor(
     name: string,
@@ -32,7 +43,7 @@ export class Controller {
    * @returns Promise<void>
    */
   public async render(): Promise<void> {
-    switch(this.type) {
+    switch(this.headers.get('Content-Type').toLowerCase()) {
       case 'application/json':
         this.body = JSON.stringify(this.vars['data']);
         break;
@@ -74,10 +85,7 @@ export class Controller {
       this.body,
       {
         status: this.status,
-        headers: {
-          'content-type': this.type,
-          'Access-Control-Allow-Origin': '*'
-        }
+        headers: this.headers.get(),
       }
     );
   }
