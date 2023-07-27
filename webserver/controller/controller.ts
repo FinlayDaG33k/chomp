@@ -2,8 +2,10 @@ import { handlebarsEngine } from "https://raw.githubusercontent.com/FinlayDaG33k
 import { Logger } from "../../logging/logger.ts";
 import { Headers } from "../http/headers.ts";
 import { StatusCodes } from "../http/status-codes.ts";
+import { Inflector } from "../../util/inflector.ts";
 
 export class Controller {
+  protected readonly _templateDir = './src/templates';
   protected headers: Headers = new Headers();
   protected vars: any = {};
   protected status: StatusCodes = StatusCodes.OK;
@@ -60,18 +62,18 @@ export class Controller {
    */
   private async handlebars(): Promise<any> {
     // Get our template location
-    const path = `./src/templates/${this.name[0].toLowerCase() + this.name.slice(1)}/${this.action}.hbs`;
+    const path = `${this._templateDir}/${Inflector.lcfirst(this.name)}/${this.action}.hbs`;
 
     // Make sure out template exists
     try {
       await Deno.stat(path);
     } catch(e) {
-      Logger.error(`Could not find template for "${this.name[0].toLowerCase() + this.name.slice(1)}#${this.action}"`, e.stack);
+      Logger.error(`Could not find template for "${Inflector.lcfirst(this.name)}#${this.action}"`, e.stack);
       return;
     }
 
     // Read our template
-    const template = await Deno.readTextFile(`./src/templates/${this.name[0].toLowerCase() + this.name.slice(1)}/${this.action}.hbs`);
+    const template = await Deno.readTextFile(`${this._templateDir}/${Inflector.lcfirst(this.name)}/${this.action}.hbs`);
 
     // Let the engine render
     return handlebarsEngine(template, this.vars);
