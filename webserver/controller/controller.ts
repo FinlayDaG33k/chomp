@@ -4,8 +4,6 @@ import { Headers } from "../http/headers.ts";
 
 export class Controller {
   protected headers: Headers = new Headers();
-  protected name = ''
-  protected action = '';
   protected vars: any = {};
   protected status = 200;
   protected body = '';
@@ -21,11 +19,9 @@ export class Controller {
   }
 
   constructor(
-    name: string,
-    action: string = 'index'
+    protected readonly name: string,
+    protected readonly action: string = 'index',
   ) {
-    this.name = name;
-    this.action = action;
   }
 
   /**
