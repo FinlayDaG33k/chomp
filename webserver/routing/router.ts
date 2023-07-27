@@ -95,11 +95,11 @@ export class Router {
     } catch(e) {
       Logger.error(`Could not execute "${args.route.controller}": ${e.message}`, e.stack);
       return new Response(
-        'Internal Server Error',
+        'An Internal Server Error Occurred',
         {
           status: 500,
           headers: {
-            'content-type': 'text/plain'
+            'Content-Type': 'text/plain'
           }
         }
       );

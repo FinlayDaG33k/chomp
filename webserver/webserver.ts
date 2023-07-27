@@ -38,7 +38,7 @@ export class Webserver {
             {
               status: 404,
               headers: {
-                'content-type': 'text/plain'
+                'Content-Type': 'text/plain'
               }
             }
           ));
@@ -60,7 +60,15 @@ export class Webserver {
         await request.respondWith(response);
       } catch(e) {
         Logger.error(`Could not serve response: ${e.message}`, e.stack);
-        await request.respondWith(new Response('Internal server error', {status: 500}));
+        await request.respondWith(new Response(
+          'An Internal Server Error Occurred',
+          {
+            status: 500,
+            headers: {
+              'Content-Type': 'text/plain'
+            }
+          }
+        ));
       }
     }
   }
