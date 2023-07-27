@@ -5,7 +5,7 @@ import { StatusCodes } from "../http/status-codes.ts";
 import { Inflector } from "../../util/inflector.ts";
 
 export class Controller {
-  protected readonly _templateDir = './src/templates';
+  protected readonly _templateDir = `file://${Deno.cwd()}/src/templates`;
   protected headers: Headers = new Headers();
   protected vars: any = {};
   protected status: StatusCodes = StatusCodes.OK;
