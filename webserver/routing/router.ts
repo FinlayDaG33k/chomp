@@ -5,6 +5,8 @@ import { Logger } from "../../logging/logger.ts";
 import { Request as ChompRequest, RequestParameters } from "../http/request.ts";
 import { StatusCodes } from "../http/status-codes.ts";
 import { Route as ChompRoute } from "./route.ts";
+import { Controller } from "../controller/controller.ts";
+import { raise } from "../../util/raise.ts";
 
 interface RouteCache {
   [key: string]: Module;
@@ -92,7 +94,21 @@ export class Router {
     // Import and cache controller file if need be
     if(!(req.getRoute().getController() in Router._cache)) {
       try {
-        Router._cache[req.getRoute().getController()] = await import(`${Router._controllerDir}/${Inflector.lcfirst(req.getRoute().getController())}.controller.ts`);
+        // Import the module
+        const module = await import(`${Router._controllerDir}/${Inflector.lcfirst(req.getRoute().getController())}.controller.ts`);
+        
+        // Make sure the controller class was found
+        if(!(`${req.getRoute().getController()}Controller` in module)) {
+          raise(`No class "${req.getRoute().getController()}Controller" could be found.`);
+        }
+        
+        // Make sure the controller class extends our base controller
+        if(!(module[`${req.getRoute().getController()}Controller`].prototype instanceof Controller)) {
+          raise(`Class "${req.getRoute().getController()}Controller" does not properly extend our controller.`);
+        }
+        
+        // Add the module to our cache
+        Router._cache[req.getRoute().getController()] = module;
       } catch(e) {
         Logger.error(`Could not import "${req.getRoute().getController()}": ${e.message}`, e.stack);
         return new Response(
