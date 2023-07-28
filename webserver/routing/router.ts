@@ -2,6 +2,7 @@ import { readerFromStreamReader } from "https://deno.land/std@0.126.0/io/mod.ts"
 import { pathToRegexp } from "../pathToRegexp.ts";
 import { Inflector } from "../../util/inflector.ts";
 import { Logger } from "../../logging/logger.ts";
+import { Request } from "../http/request.ts";
 
 interface Route {
   path: string;
@@ -82,11 +83,14 @@ export class Router {
     
     // Run our controller
     try {
+      // Create our Request object
+      const req = new Request(args);
+      
       // Instantiate the controller
-      const controller = new Router._cache[args.route.controller][`${args.route.controller}Controller`](args.route.controller, args.route.action);
+      const controller = new Router._cache[args.route.controller][`${args.route.controller}Controller`](req);
 
       // Execute our action
-      await controller[args.route.action](args);
+      await controller[args.route.action]();
 
       // Render the body
       await controller.render();

@@ -2,6 +2,7 @@ import { Logger } from "../../logging/logger.ts";
 import { Inflector } from "../../util/inflector.ts";
 import { Handlebars } from "../renderers/handlebars.ts";
 import { ResponseBuilder } from "../http/response-builder.ts";
+import { Request } from "../http/request.ts";
 
 export class Controller {
   protected static readonly _templateDir = `file://${Deno.cwd()}/src/templates`;
@@ -20,8 +21,7 @@ export class Controller {
   }
 
   constructor(
-    protected readonly name: string,
-    protected readonly action: string = 'index',
+    protected readonly request: Request,
   ) {
   }
 
