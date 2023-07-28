@@ -2,10 +2,10 @@ import { readerFromStreamReader } from "https://deno.land/std@0.126.0/io/mod.ts"
 import { pathToRegexp } from "../pathToRegexp.ts";
 import { Inflector } from "../../util/inflector.ts";
 import { Logger } from "../../logging/logger.ts";
-import { Request as ChompRequest } from "../http/request.ts";
+import { Request as ChompRequest, RequestParameters } from "../http/request.ts";
 import { StatusCodes } from "../http/status-codes.ts";
 
-interface Route {
+export interface Route {
   path: string;
   controller: string;
   action: string;
@@ -81,19 +81,19 @@ export class Router {
     }
     
     // Build our Request object
-    const req = new ChompRequest({
-      route: route.route,
-      body: await this.getBody(request),
-      params: await this.getParams(route.route, route.path),
-      auth: this.getAuth(request),
-    });
+    const req = new ChompRequest(
+      route.route,
+      await this.getBody(request),
+      await this.getParams(route.route, route.path),
+      this.getAuth(request),
+    );
 
     // Import and cache controller file if need be
-    if(!(req.args.route.controller in Router._cache)) {
+    if(!(req.route.controller in Router._cache)) {
       try {
-        Router._cache[req.args.route.controller] = await import(`${Router._controllerDir}/${Inflector.lcfirst(req.args.route.controller)}.controller.ts`);
+        Router._cache[req.route.controller] = await import(`${Router._controllerDir}/${Inflector.lcfirst(req.route.controller)}.controller.ts`);
       } catch(e) {
-        Logger.error(`Could not import "${req.args.route.controller}": ${e.message}`, e.stack);
+        Logger.error(`Could not import "${req.route.controller}": ${e.message}`, e.stack);
         return new Response(
           'Internal Server Error',
           {
@@ -109,10 +109,10 @@ export class Router {
     // Run our controller
     try {
       // Instantiate the controller
-      const controller = new Router._cache[req.args.route.controller][`${req.args.route.controller}Controller`](req);
+      const controller = new Router._cache[req.route.controller][`${req.route.controller}Controller`](req);
 
       // Execute our action
-      await controller[req.args.route.action]();
+      await controller[req.route.action]();
 
       // Render the body
       await controller.render();
@@ -120,7 +120,7 @@ export class Router {
       // Return our response
       return controller.response.build();
     } catch(e) {
-      Logger.error(`Could not execute "${req.args.route.controller}": ${e.message}`, e.stack);
+      Logger.error(`Could not execute "${req.route.controller}": ${e.message}`, e.stack);
       return new Response(
         'An Internal Server Error Occurred',
         {
@@ -140,7 +140,7 @@ export class Router {
    * @param path
    * @returns Promise<{ [key: string]: string }>
    */
-  public async getParams(route: Route, path: string): Promise<{ [key: string]: string }> {
+  public async getParams(route: Route, path: string): Promise<RequestParameters> {
     const keys: any[] = [];
     const r = pathToRegexp(route.path, keys).exec(path) || [];
 
