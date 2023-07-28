@@ -4,10 +4,14 @@ import { Handlebars } from "../renderers/handlebars.ts";
 import { ResponseBuilder } from "../http/response-builder.ts";
 import { Request } from "../http/request.ts";
 
+export interface ViewVariable {
+  [key: string]: string|number;
+}
+
 export class Controller {
   protected static readonly _templateDir = `file://${Deno.cwd()}/src/templates`;
   protected response: ResponseBuilder = new ResponseBuilder();
-  protected vars: any = {};
+  protected vars: ViewVariable = <ViewVariable>{};
 
   /**
    * Set the 'Content-Type' header
@@ -31,7 +35,7 @@ export class Controller {
    * @param key
    * @param value
    */
-  protected set(key: string, value: any) { this.vars[key] = value; }
+  protected set(key: string, value: string|number) { this.vars[key] = value; }
 
   /**
    * Render the page output

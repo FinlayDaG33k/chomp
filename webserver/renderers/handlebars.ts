@@ -1,11 +1,16 @@
 import { handlebarsEngine } from "https://raw.githubusercontent.com/FinlayDaG33k/view-engine/patch-1/mod.ts";
 import { Logger } from "../../logging/logger.ts";
 import { raise } from "../../util/raise.ts";
+import { ViewVariable } from "../controller/controller.ts";
+
+interface CacheItem {
+  [key: string]: string;
+}
 
 export class Handlebars {
-  private static _cache = {};
+  private static _cache: CacheItem = <CacheItem>{};
   
-  public static async render(path: string, vars: any = {}, cache = true): Promise<string|void> {
+  public static async render(path: string, vars: ViewVariable = <ViewVariable>{}, cache = true): Promise<string|void> {
     // Load our template
     const template = await Handlebars.getTemplate(path, cache) ?? raise('Could not load template');
 
