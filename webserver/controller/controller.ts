@@ -5,7 +5,7 @@ import { ResponseBuilder } from "../http/response-builder.ts";
 import { Request } from "../http/request.ts";
 
 export interface ViewVariable {
-  [key: string]: string|number;
+  [key: string]: string|number|unknown;
 }
 
 export class Controller {
@@ -35,7 +35,7 @@ export class Controller {
    * @param key
    * @param value
    */
-  protected set(key: string, value: string|number) { this.vars[key] = value; }
+  protected set(key: string, value: string|number|unknown) { this.vars[key] = value; }
 
   /**
    * Render the page output
