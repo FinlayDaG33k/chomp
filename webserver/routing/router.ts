@@ -83,11 +83,8 @@ export class Router {
     
     // Run our controller
     try {
-      // Create our Request object
-      const req = new Request(args);
-      
       // Instantiate the controller
-      const controller = new Router._cache[args.route.controller][`${args.route.controller}Controller`](req);
+      const controller = new Router._cache[args.route.controller][`${args.route.controller}Controller`](new Request(args));
 
       // Execute our action
       await controller[args.route.action]();
