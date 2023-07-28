@@ -49,7 +49,7 @@ export class Controller {
         this.response.withBody(JSON.stringify(this.vars['data']));
         break;
       case 'text/plain':
-        this.response.withBody(this.vars['message']);
+        this.response.withBody(this.vars['message'] as string);
         break;
       case 'text/html':
       default:
