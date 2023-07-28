@@ -3,6 +3,7 @@ import { pathToRegexp } from "../pathToRegexp.ts";
 import { Inflector } from "../../util/inflector.ts";
 import { Logger } from "../../logging/logger.ts";
 import { Request as ChompRequest } from "../http/request.ts";
+import { StatusCodes } from "../http/status-codes.ts";
 
 interface Route {
   path: string;
@@ -60,19 +61,38 @@ export class Router {
   /**
    * Execute the requested controller action
    *
-   * @param args
+   * @param request
    * @returns Promise<Response|null>
    */
-  public async execute(args: RouteArgs): Promise<Response|null> {
-    // Make sure a route was specified
-    if(args.route === null) return null;
+  public async execute(request: Request): Promise<Response> {
+    // Make sure a route was found
+    // Otherwise return a 404 response
+    const route = this.route(request);
+    if(!route || !route.route) {
+      return new Response(
+        'The requested page could not be found.',
+        {
+          status: StatusCodes.NOT_FOUND,
+          headers: {
+            'Content-Type': 'text/plain'
+          }
+        }
+      );
+    }
+    
+    const req = new ChompRequest({
+      route: route.route,
+      body: await this.getBody(request),
+      params: await this.getParams(route.route, route.path),
+      auth: this.getAuth(request),
+    });
 
     // Import and cache controller file if need be
-    if(!(args.route.controller in Router._cache)) {
+    if(!(req.args.route.controller in Router._cache)) {
       try {
-        Router._cache[args.route.controller] = await import(`${Router._controllerDir}/${Inflector.lcfirst(args.route.controller)}.controller.ts`);
+        Router._cache[req.args.route.controller] = await import(`${Router._controllerDir}/${Inflector.lcfirst(req.args.route.controller)}.controller.ts`);
       } catch(e) {
-        Logger.error(`Could not import "${args.route.controller}": ${e.message}`, e.stack);
+        Logger.error(`Could not import "${req.args.route.controller}": ${e.message}`, e.stack);
         return new Response(
           'Internal Server Error',
           {
@@ -88,10 +108,10 @@ export class Router {
     // Run our controller
     try {
       // Instantiate the controller
-      const controller = new Router._cache[args.route.controller][`${args.route.controller}Controller`](new ChompRequest(args));
+      const controller = new Router._cache[req.args.route.controller][`${req.args.route.controller}Controller`](req);
 
       // Execute our action
-      await controller[args.route.action]();
+      await controller[req.args.route.action]();
 
       // Render the body
       await controller.render();
@@ -99,7 +119,7 @@ export class Router {
       // Return our response
       return controller.response.build();
     } catch(e) {
-      Logger.error(`Could not execute "${args.route.controller}": ${e.message}`, e.stack);
+      Logger.error(`Could not execute "${req.args.route.controller}": ${e.message}`, e.stack);
       return new Response(
         'An Internal Server Error Occurred',
         {
@@ -155,8 +175,7 @@ export class Router {
   public getAuth(request: Request): string {
     // Get our authorization header
     // Return it or empty string if none found
-    const header = request.headers.get("authorization");
-    return header ?? '';
+    return request.headers.get("authorization") ?? '';
   }
 
   /**
@@ -167,7 +186,13 @@ export class Router {
    * @returns void
    */
   public static add(route: Route): void {
+    // Check if a method was set, use default if not
     if(!('method' in route)) route.method = 'GET';
+    
+    // Pascalize the controller
+    route.controller = Inflector.pascalize(route.controller);
+    
+    // Add the route to our routes
     Router.routes.push(route);
   }
 }

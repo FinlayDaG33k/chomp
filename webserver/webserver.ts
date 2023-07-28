@@ -30,32 +30,8 @@ export class Webserver {
     for await(const request of httpConn) {
       Logger.debug(`Request from "${(conn.remoteAddr as Deno.NetAddr).hostname!}:${(conn.remoteAddr as Deno.NetAddr).port!}": ${request.request.method} | ${request.request.url}`);
       try {
-        // Try to find a matching route
-        // Respond with 404 if not found
-        const routing = this.router.route(request.request);
-        if(!routing || !routing.route) {
-          await request.respondWith(new Response(
-            'The requested page could not be found.',
-            {
-              status: StatusCodes.NOT_FOUND,
-              headers: {
-                'Content-Type': 'text/plain'
-              }
-            }
-          ));
-          return;
-        }
-        
-        // Execute the route
-        const response = await this.router.execute({
-          route: routing.route,
-          body: await this.router.getBody(request.request),
-          params: await this.router.getParams(routing.route, routing.path ?? '/'),
-          auth: this.router.getAuth(request.request)
-        });
-        
-        // Check if the response was empty or not
-        if(!response) throw Error('Response was empty');
+        // Run the required route
+        const response: Response = await this.router.execute(request.request);
         
         // Send our response
         await request.respondWith(response);
