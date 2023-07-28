@@ -1,5 +1,9 @@
 import { StatusCodes } from "./status-codes.ts";
 
+interface ResponseHeader {
+  [key: string]: string;
+}
+
 export class ResponseBuilder {
   private readonly _headers: Map<string, Array<string>> = new Map<string, Array<string>>();
   private _status = StatusCodes.OK;
@@ -104,11 +108,13 @@ export class ResponseBuilder {
    * Build our final response that can be sent back to the client.
    */
   public build(): Response {
-    const headers: any = {};
-    for(const [name, value] of this.getHeaders()) {
-      headers[name] = value;
+    // Build our headers
+    const headers: ResponseHeader = <ResponseHeader>{};
+    for(const name of this.getHeaders().keys()) {
+      headers[name] = this.getHeaderLine(name);
     }
     
+    // Return our final response
     return new Response(
       this._body,
       {
