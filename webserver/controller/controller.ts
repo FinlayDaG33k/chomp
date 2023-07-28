@@ -1,15 +1,12 @@
 import { Logger } from "../../logging/logger.ts";
-import { Headers } from "../http/headers.ts";
-import { StatusCodes } from "../http/status-codes.ts";
 import { Inflector } from "../../util/inflector.ts";
 import { Handlebars } from "../renderers/handlebars.ts";
+import { ResponseBuilder } from "../http/response-builder.ts";
 
 export class Controller {
   protected static readonly _templateDir = `file://${Deno.cwd()}/src/templates`;
-  protected headers: Headers = new Headers();
+  protected response: ResponseBuilder = new ResponseBuilder();
   protected vars: any = {};
-  protected status: StatusCodes = StatusCodes.OK;
-  protected body = '';
 
   /**
    * Set the 'Content-Type' header
@@ -17,9 +14,9 @@ export class Controller {
    * @deprecated Please use "Controller.headers.set()" instead.
    * @param value
    */
-  public set type(value: string = 'text/html') {
+  public set type(value = 'text/html') {
     Logger.warning('Setting type on controller itself is deprecated, please use "Controller.headers.set()" instead.');
-    this.headers.set('Content-Type', value);
+    this.response.withHeader('Content-Type', value);
   }
 
   constructor(
@@ -43,26 +40,17 @@ export class Controller {
    * @returns Promise<void>
    */
   public async render(): Promise<void> {
-    switch(this.headers.get('Content-Type').toLowerCase()) {
+    switch(this.response.getHeaderLine('Content-Type').toLowerCase()) {
       case 'application/json':
-        this.body = JSON.stringify(this.vars['data']);
+        this.response.withBody(JSON.stringify(this.vars['data']));
         break;
       case 'text/plain':
-        this.body = this.vars['message'];
+        this.response.withBody(this.vars['message']);
         break;
       case 'text/html':
       default:
-        this.body = await Handlebars.render(`${Controller._templateDir}/${Inflector.lcfirst(this.name)}/${this.action}.hbs`, this.vars) ?? '';
+        const body = await Handlebars.render(`${Controller._templateDir}/${Inflector.lcfirst(this.name)}/${this.action}.hbs`, this.vars) ?? '';
+        this.response.withBody(body);
     }
-  }
-
-  public response() {
-    return new Response(
-      this.body,
-      {
-        status: this.status,
-        headers: this.headers.get(),
-      }
-    );
   }
 }

@@ -92,7 +92,7 @@ export class Router {
       await controller.render();
 
       // Return our response
-      return controller.response();
+      return controller.response.build();
     } catch(e) {
       Logger.error(`Could not execute "${args.route.controller}": ${e.message}`, e.stack);
       return new Response(
