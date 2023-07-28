@@ -11,7 +11,7 @@ export class Controller {
   /**
    * Set the 'Content-Type' header
    * 
-   * @deprecated Please use "Controller.headers.set()" instead.
+   * @deprecated Please use "Controller.response.withHeader()" instead.
    * @param value
    */
   public set type(value = 'text/html') {
