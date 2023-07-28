@@ -104,7 +104,7 @@ export class Router {
         
         // Make sure the controller class extends our base controller
         if(!(module[`${req.getRoute().getController()}Controller`].prototype instanceof Controller)) {
-          raise(`Class "${req.getRoute().getController()}Controller" does not properly extend our controller.`);
+          raise(`Class "${req.getRoute().getController()}Controller" does not properly extend Chomp's controller.`);
         }
         
         // Add the module to our cache
