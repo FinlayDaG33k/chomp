@@ -1,4 +1,4 @@
-export async function folderExists(path: string): boolean {
+export async function folderExists(path: string): Promise<boolean> {
   try {
     const target = await Deno.stat(path);
     return target.isDirectory;
