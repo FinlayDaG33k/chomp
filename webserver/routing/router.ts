@@ -11,6 +11,10 @@ interface Route {
   method?: string;
 }
 
+interface RouteCache {
+  [key: string]: Module;
+}
+
 export interface RouteArgs {
   route: Route;
   body: string;
@@ -22,7 +26,7 @@ export class Router {
   private static readonly _controllerDir = `file://${Deno.cwd()}/src/controller`;
   private static routes: Route[] = [];
   public static getRoutes() { return Router.routes; }
-  private static _cache = {};
+  private static _cache: RouteCache = <RouteCache>{};
 
   /**
    * Match the controller and action to a route
