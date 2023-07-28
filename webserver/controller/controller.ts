@@ -1,17 +1,18 @@
-import { handlebarsEngine } from "https://raw.githubusercontent.com/FinlayDaG33k/view-engine/patch-1/mod.ts";
 import { Logger } from "../../logging/logger.ts";
 import { Headers } from "../http/headers.ts";
 import { StatusCodes } from "../http/status-codes.ts";
 import { Inflector } from "../../util/inflector.ts";
+import { Handlebars } from "../renderers/handlebars.ts";
 
 export class Controller {
-  protected readonly _templateDir = `file://${Deno.cwd()}/src/templates`;
+  protected static readonly _templateDir = `file://${Deno.cwd()}/src/templates`;
   protected headers: Headers = new Headers();
   protected vars: any = {};
   protected status: StatusCodes = StatusCodes.OK;
   protected body = '';
 
   /**
+   * Set the 'Content-Type' header
    * 
    * @deprecated Please use "Controller.headers.set()" instead.
    * @param value
@@ -51,32 +52,8 @@ export class Controller {
         break;
       case 'text/html':
       default:
-        this.body = await this.handlebars();
+        this.body = await Handlebars.render(`${Controller._templateDir}/${Inflector.lcfirst(this.name)}/${this.action}.hbs`, this.vars) ?? '';
     }
-  }
-
-  /**
-   * Render Handlebars templates
-   *
-   * @returns Promise<any>
-   */
-  private async handlebars(): Promise<any> {
-    // Get our template location
-    const path = `${this._templateDir}/${Inflector.lcfirst(this.name)}/${this.action}.hbs`;
-
-    // Make sure out template exists
-    try {
-      await Deno.stat(path);
-    } catch(e) {
-      Logger.error(`Could not find template for "${Inflector.lcfirst(this.name)}#${this.action}"`, e.stack);
-      return;
-    }
-
-    // Read our template
-    const template = await Deno.readTextFile(`${this._templateDir}/${Inflector.lcfirst(this.name)}/${this.action}.hbs`);
-
-    // Let the engine render
-    return handlebarsEngine(template, this.vars);
   }
 
   public response() {
