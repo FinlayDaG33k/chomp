@@ -6,8 +6,8 @@ interface ResponseHeader {
 
 export class ResponseBuilder {
   private readonly _headers: Map<string, Array<string>> = new Map<string, Array<string>>();
-  private _status = StatusCodes.OK;
-  private _body: string = '';
+  private _status: StatusCodes = StatusCodes.OK;
+  private _body = '';
   
   public constructor() {
     // Set default headers
