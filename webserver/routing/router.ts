@@ -19,13 +19,6 @@ interface Route {
   method?: string;
 }
 
-export interface RouteArgs {
-  route: ChompRoute;
-  body: string;
-  params: { [key: string]: string; };
-  auth?: string;
-}
-
 export class Router {
   private static readonly _controllerDir = `file://${Deno.cwd()}/src/controller`;
   private static routes: ChompRoute[] = [];
