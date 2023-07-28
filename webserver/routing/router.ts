@@ -4,20 +4,21 @@ import { Inflector } from "../../util/inflector.ts";
 import { Logger } from "../../logging/logger.ts";
 import { Request as ChompRequest, RequestParameters } from "../http/request.ts";
 import { StatusCodes } from "../http/status-codes.ts";
+import { Route as ChompRoute } from "./route.ts";
 
-export interface Route {
+interface RouteCache {
+  [key: string]: Module;
+}
+
+interface Route {
   path: string;
   controller: string;
   action: string;
   method?: string;
 }
 
-interface RouteCache {
-  [key: string]: Module;
-}
-
 export interface RouteArgs {
-  route: Route;
+  route: ChompRoute;
   body: string;
   params: { [key: string]: string; };
   auth?: string;
@@ -25,7 +26,7 @@ export interface RouteArgs {
 
 export class Router {
   private static readonly _controllerDir = `file://${Deno.cwd()}/src/controller`;
-  private static routes: Route[] = [];
+  private static routes: ChompRoute[] = [];
   public static getRoutes() { return Router.routes; }
   private static _cache: RouteCache = <RouteCache>{};
 
@@ -47,10 +48,10 @@ export class Router {
     // Check if it's the right path
     // Return the route if route found
     for (const route of Router.routes) {
-      if(route.method !== request.method) continue;
+      if(route.getMethod() !== request.method) continue;
 
       // Make sure we have a matching route
-      const matches = pathToRegexp(route.path).exec(path);
+      const matches = pathToRegexp(route.getPath()).exec(path);
       if(matches) return {
         route: route,
         path: path
@@ -89,11 +90,11 @@ export class Router {
     );
 
     // Import and cache controller file if need be
-    if(!(req.route.controller in Router._cache)) {
+    if(!(req.getRoute().getController() in Router._cache)) {
       try {
-        Router._cache[req.route.controller] = await import(`${Router._controllerDir}/${Inflector.lcfirst(req.route.controller)}.controller.ts`);
+        Router._cache[req.getRoute().getController()] = await import(`${Router._controllerDir}/${Inflector.lcfirst(req.getRoute().getController())}.controller.ts`);
       } catch(e) {
-        Logger.error(`Could not import "${req.route.controller}": ${e.message}`, e.stack);
+        Logger.error(`Could not import "${req.getRoute().getController()}": ${e.message}`, e.stack);
         return new Response(
           'Internal Server Error',
           {
@@ -109,18 +110,18 @@ export class Router {
     // Run our controller
     try {
       // Instantiate the controller
-      const controller = new Router._cache[req.route.controller][`${req.route.controller}Controller`](req);
+      const controller = new Router._cache[req.getRoute().getController()][`${req.getRoute().getController()}Controller`](req);
 
       // Execute our action
-      await controller[req.route.action]();
+      await controller[req.getRoute().getAction()]();
 
       // Render the body
       await controller.render();
 
       // Return our response
-      return controller.response.build();
+      return controller.getResponse().build();
     } catch(e) {
-      Logger.error(`Could not execute "${req.route.controller}": ${e.message}`, e.stack);
+      Logger.error(`Could not execute "${req.getRoute().getController()}": ${e.message}`, e.stack);
       return new Response(
         'An Internal Server Error Occurred',
         {
@@ -140,9 +141,9 @@ export class Router {
    * @param path
    * @returns Promise<{ [key: string]: string }>
    */
-  public async getParams(route: Route, path: string): Promise<RequestParameters> {
+  public async getParams(route: ChompRoute, path: string): Promise<RequestParameters> {
     const keys: any[] = [];
-    const r = pathToRegexp(route.path, keys).exec(path) || [];
+    const r = pathToRegexp(route.getPath(), keys).exec(path) || [];
 
     return keys.reduce((acc, key, i) => ({ [key.name]: r[i + 1], ...acc }), {});
   }
@@ -187,13 +188,11 @@ export class Router {
    * @returns void
    */
   public static add(route: Route): void {
-    // Check if a method was set, use default if not
-    if(!('method' in route)) route.method = 'GET';
-    
-    // Pascalize the controller
-    route.controller = Inflector.pascalize(route.controller);
-    
-    // Add the route to our routes
-    Router.routes.push(route);
+    Router.routes.push(new ChompRoute(
+      route.path,
+      Inflector.pascalize(route.controller),
+      route.action,
+      route.method ?? 'GET',
+    ));
   }
 }
