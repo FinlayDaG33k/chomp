@@ -19,7 +19,7 @@ interface RouteCache {
 export interface RouteArgs {
   route: Route;
   body: string;
-  params: any;
+  params: { [key: string]: string; };
   auth?: string;
 }
 
