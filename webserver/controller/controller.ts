@@ -53,7 +53,7 @@ export class Controller {
         break;
       case 'text/html':
       default:
-        const body = await Handlebars.render(`${Controller._templateDir}/${Inflector.lcfirst(this.name)}/${this.action}.hbs`, this.vars) ?? '';
+        const body = await Handlebars.render(`${Controller._templateDir}/${Inflector.lcfirst(this.request.args.route.controller)}/${this.request.args.route.action}.hbs`, this.vars) ?? '';
         this.response.withBody(body);
     }
   }
