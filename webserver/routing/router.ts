@@ -80,6 +80,7 @@ export class Router {
       );
     }
     
+    // Build our Request object
     const req = new ChompRequest({
       route: route.route,
       body: await this.getBody(request),
