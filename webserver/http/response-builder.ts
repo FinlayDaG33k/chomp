@@ -85,6 +85,16 @@ export class ResponseBuilder {
   }
 
   /**
+   * Set the response MIME
+   * 
+   * @param mime
+   */
+  public withType(mime = 'text/html'): ResponseBuilder {
+    this.withHeader('Content-Type', mime);
+    return this;
+  }
+
+  /**
    * Set our response status.
    * 
    * @param status

@@ -16,11 +16,11 @@ export class Controller {
   /**
    * Set the 'Content-Type' header
    * 
-   * @deprecated Please use "Controller.response.withHeader()" instead.
+   * @deprecated Please use "Controller.response.withType()" instead.
    * @param value
    */
   public set type(value = 'text/html') {
-    Logger.warning('Setting type on controller itself is deprecated, please use "Controller.response.withHeader()" instead.');
+    Logger.warning('Setting type on controller itself is deprecated, please use "Controller.response.withType()" instead.');
     this.response.withHeader('Content-Type', value);
   }
 
