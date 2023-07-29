@@ -1,4 +1,5 @@
 import { StatusCodes } from "./status-codes.ts";
+import { T as TimeString } from "../../util/time-string.ts";
 
 interface ResponseHeader {
   [key: string]: string;
@@ -111,6 +112,34 @@ export class ResponseBuilder {
    */
   public withBody(body: string): ResponseBuilder {
     this._body = body;
+    return this;
+  }
+
+  /**
+   * Add headers to enable client caching
+   *
+   * @param duration
+   */
+  public withCache(duration = '+1 day'): ResponseBuilder {
+    const now = new Date();
+    this
+      .withHeader('Date', now.toUTCString())
+      .withHeader('Last-Modified', now.toUTCString())
+      .withHeader('Expires', new Date(now.getTime() + TimeString`${duration}`).toUTCString())
+      .withHeader( 'max-age', (Math.round(TimeString`${duration}` / 1000)).toString())
+    
+    return this;
+  }
+
+  /**
+   * Add headers to instruct the client not to cache the response.
+   */
+  public withDisabledCache(): ResponseBuilder {
+    this
+      .withHeader('Expires', 'Mon, 26 Jul 1997 05:00:00 GMT')
+      .withHeader('Last-Modified', new Date().toUTCString())
+      .withHeader('Cache-Control', 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
+    
     return this;
   }
 
