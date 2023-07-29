@@ -9,7 +9,7 @@ export interface ViewVariable {
 }
 
 export class Controller {
-  private static readonly _templateDir = `file://${Deno.cwd()}/src/templates`;
+  private static readonly _templateDir = `./src/templates`;
   private _response: ResponseBuilder = new ResponseBuilder();
   private _vars: ViewVariable = <ViewVariable>{};
 
