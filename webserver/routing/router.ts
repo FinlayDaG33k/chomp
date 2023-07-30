@@ -30,7 +30,7 @@ export class Router {
    *
    * @param request
    */
-  public route(request: Request) {
+  public static route(request: Request) {
     // Get the request path minus the domain
     const host = request.headers.get("host");
     let path = request.url
@@ -60,10 +60,10 @@ export class Router {
    * @param request
    * @returns Promise<Response|null>
    */
-  public async execute(request: Request): Promise<Response> {
+  public static async execute(request: Request): Promise<Response> {
     // Make sure a route was found
     // Otherwise return a 404 response
-    const route = this.route(request);
+    const route = Router.route(request);
     if(!route || !route.route) {
       return new Response(
         'The requested page could not be found.',
@@ -79,9 +79,9 @@ export class Router {
     // Build our Request object
     const req = new ChompRequest(
       route.route,
-      await this.getBody(request),
-      await this.getParams(route.route, route.path),
-      this.getAuth(request),
+      await Router.getBody(request),
+      await Router.getParams(route.route, route.path),
+      Router.getAuth(request),
     );
 
     // Import and cache controller file if need be
@@ -150,7 +150,7 @@ export class Router {
    * @param path
    * @returns Promise<{ [key: string]: string }>
    */
-  public async getParams(route: ChompRoute, path: string): Promise<RequestParameters> {
+  public static async getParams(route: ChompRoute, path: string): Promise<RequestParameters> {
     const keys: any[] = [];
     const r = pathToRegexp(route.getPath(), keys).exec(path) || [];
 
@@ -163,7 +163,7 @@ export class Router {
    * @param request
    * @returns Promise<string>
    */
-  public async getBody(request: Request): Promise<string> {
+  public static async getBody(request: Request): Promise<string> {
     // Make sure a body is set
     if(request.body === null) return '';
 
@@ -183,7 +183,7 @@ export class Router {
    * @param request
    * @returns string
    */
-  public getAuth(request: Request): string {
+  public static getAuth(request: Request): string {
     // Get our authorization header
     // Return it or empty string if none found
     return request.headers.get("authorization") ?? '';
