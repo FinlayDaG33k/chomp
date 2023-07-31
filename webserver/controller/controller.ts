@@ -3,6 +3,8 @@ import { Inflector } from "../../util/inflector.ts";
 import { Handlebars } from "../renderers/handlebars.ts";
 import { ResponseBuilder } from "../http/response-builder.ts";
 import { Request } from "../http/request.ts";
+import { raise } from "../../util/raise.ts";
+import { Component } from "./component.ts";
 
 export interface ViewVariable {
   [key: string]: string|number|unknown;
@@ -10,6 +12,7 @@ export interface ViewVariable {
 
 export class Controller {
   private static readonly _templateDir = `./src/templates`;
+  private static readonly _componentDir = `file:///${Deno.cwd()}/src/controller/component`;
   private _response: ResponseBuilder = new ResponseBuilder();
   private _vars: ViewVariable = <ViewVariable>{};
 
@@ -47,6 +50,25 @@ export class Controller {
     return this._response;
   }
 
+  protected async loadComponent(name: string): Promise<Controller> {
+    // Import the module
+    const module = await import(`${Controller._componentDir}/${Inflector.lcfirst(name)}.ts`);
+
+    // Make sure the component class was found
+    if(!(`${Inflector.ucfirst(name)}Component` in module)) {
+      raise(`No class "${Inflector.ucfirst(name)}Component" could be found.`);
+    }
+
+    // Make sure the component class extends our base controller
+    if(!(module[`${Inflector.ucfirst(name)}Component`].prototype instanceof Component)) {
+      raise(`Class "${Inflector.ucfirst(name)}Component" does not properly extend Chomp's component.`);
+    }
+    
+    this[Inflector.lcfirst(name)] = new module[`${Inflector.ucfirst(name)}Component`](this);
+    
+    return this;
+  }
+  
   /**
    * Set a view variable
    *
