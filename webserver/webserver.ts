@@ -4,7 +4,6 @@ import { StatusCodes } from "./http/status-codes.ts";
 
 export class Webserver {
   private server: any = null;
-  private router: Router = new Router();
 
   constructor(
     private readonly port: number = 80
@@ -31,7 +30,7 @@ export class Webserver {
       Logger.debug(`Request from "${(conn.remoteAddr as Deno.NetAddr).hostname!}:${(conn.remoteAddr as Deno.NetAddr).port!}": ${request.request.method} | ${request.request.url}`);
       try {
         // Run the required route
-        const response: Response = await this.router.execute(request.request);
+        const response: Response = await Router.execute(request.request);
         
         // Send our response
         await request.respondWith(response);
