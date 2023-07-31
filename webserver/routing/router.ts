@@ -9,10 +9,6 @@ import { Controller } from "../controller/controller.ts";
 import { Registry } from "../registry/registry.ts";
 import { raise } from "../../util/raise.ts";
 
-interface RouteCache {
-  [key: string]: Module;
-}
-
 interface Route {
   path: string;
   controller: string;
@@ -24,7 +20,6 @@ export class Router {
   private static readonly _controllerDir = `file://${Deno.cwd()}/src/controller`;
   private static routes: ChompRoute[] = [];
   public static getRoutes() { return Router.routes; }
-  private static _cache: RouteCache = <RouteCache>{};
 
   /**
    * Match the controller and action to a route
