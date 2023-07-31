@@ -5,7 +5,8 @@ import { ResponseBuilder } from "../http/response-builder.ts";
 import { Request } from "../http/request.ts";
 import { raise } from "../../util/raise.ts";
 import { Component } from "./component.ts";
-import {Registry} from "../registry/registry.ts";
+import { Registry } from "../registry/registry.ts";
+import { compress as compressBrotli } from "https://deno.land/x/brotli@v0.1.4/mod.ts";
 
 export interface ViewVariable {
   [key: string]: string|number|unknown;
@@ -105,19 +106,31 @@ export class Controller {
    * @returns Promise<void>
    */
   public async render(): Promise<void> {
+    let body = '';
+    let canCompress = true;
     switch(this.getResponse().getHeaderLine('Content-Type').toLowerCase()) {
       case 'application/json':
-        this.getResponse().withBody(JSON.stringify(this._vars['data']));
+        body = JSON.stringify(this._vars['data']);
         break;
       case 'text/plain':
-        this.getResponse().withBody(this._vars['message'] as string);
+        body = this._vars['message'] as string;
         break;
       case 'text/html':
-      default:
         const controller = Inflector.lcfirst(this.getRequest().getRoute().getController());
         const action = this.getRequest().getRoute().getAction();
-        const body = await Handlebars.render(`${Controller._templateDir}/${controller}/${action}.hbs`, this._vars) ?? '';
-        this.getResponse().withBody(body);
+        body = await Handlebars.render(`${Controller._templateDir}/${controller}/${action}.hbs`, this._vars);
     }
+    
+    // Check if we can compress with Brotli
+    // TODO: Hope that Deno will make this obsolete.
+    if(this.getRequest().getHeaders().get('accept-encoding').includes('br') && canCompress && body.length > 1024) {
+      Logger.debug(`Compressing body with brotli: ${body.length}-bytes`);
+      body = compressBrotli(new TextEncoder().encode(body));
+      Logger.debug(`Compressed body with brotli: ${body.length}-bytes`);
+      this.getResponse().withHeader('Content-Encoding', 'br');
+    }
+    
+    // Set our final body
+    this.getResponse().withBody(body);
   }
 }

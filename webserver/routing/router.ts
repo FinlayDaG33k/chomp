@@ -78,6 +78,7 @@ export class Router {
       request.url,
       request.method,
       route.route,
+      request.headers,
       await Router.getBody(request),
       await Router.getParams(route.route, route.path),
       Router.getAuth(request),

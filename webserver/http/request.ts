@@ -9,6 +9,7 @@ export class Request {
     private readonly url: string,
     private readonly method: string,
     private readonly route: Route,
+    private readonly headers: Headers,
     private readonly body: string,
     private readonly params: RequestParameters,
     private readonly auth: string,
@@ -21,6 +22,8 @@ export class Request {
   public getMethod(): typeof this.method { return this.method; }
   
   public getRoute(): typeof this.route { return this.route; }
+  
+  public getHeaders(): typeof this.headers { return this.headers ;}
   
   public getBody(): typeof this.body { return this.body; }
   
