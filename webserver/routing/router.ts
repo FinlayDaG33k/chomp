@@ -58,9 +58,10 @@ export class Router {
    * Execute the requested controller action
    *
    * @param request
+   * @param clientIp
    * @returns Promise<Response|null>
    */
-  public static async execute(request: Request): Promise<Response> {
+  public static async execute(request: Request, clientIp: string): Promise<Response> {
     // Make sure a route was found
     // Otherwise return a 404 response
     const route = Router.route(request);
@@ -78,10 +79,13 @@ export class Router {
     
     // Build our Request object
     const req = new ChompRequest(
+      request.url,
+      request.method,
       route.route,
       await Router.getBody(request),
       await Router.getParams(route.route, route.path),
       Router.getAuth(request),
+      clientIp
     );
 
     // Import and cache controller file if need be
@@ -121,6 +125,9 @@ export class Router {
       // Instantiate the controller
       const controller = new Router._cache[req.getRoute().getController()][`${req.getRoute().getController()}Controller`](req);
 
+      // Run the controller's initializer
+      await controller.initialize();
+      
       // Execute our action
       await controller[req.getRoute().getAction()]();
 

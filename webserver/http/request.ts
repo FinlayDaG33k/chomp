@@ -6,12 +6,19 @@ export interface RequestParameters {
 
 export class Request {
   constructor(
+    private readonly url: string,
+    private readonly method: string,
     private readonly route: Route,
     private readonly body: string,
     private readonly params: RequestParameters,
     private readonly auth: string,
+    private readonly ip: string|null = null,
   ) {
   }
+  
+  public getUrl(): typeof this.url { return this.url; }
+  
+  public getMethod(): typeof this.method { return this.method; }
   
   public getRoute(): typeof this.route { return this.route; }
   
@@ -25,4 +32,6 @@ export class Request {
   }
   
   public getAuth(): typeof this.auth { return this.auth; }
+  
+  public getIp(): typeof this.ip { return this.ip; }
 }

@@ -33,6 +33,14 @@ export class Controller {
   }
 
   /**
+   * Initialize the controller.
+   * Literally does nothing at this moment except exist to prevent errors.
+   * 
+   * @protected
+   */
+  public async initialize(): Promise<void> {}
+  
+  /**
    * Get the request object for this controller
    *
    * @protected
@@ -64,7 +72,8 @@ export class Controller {
       raise(`Class "${Inflector.ucfirst(name)}Component" does not properly extend Chomp's component.`);
     }
     
-    this[Inflector.lcfirst(name)] = new module[`${Inflector.ucfirst(name)}Component`](this);
+    // Add the module as class property
+    this[Inflector.ucfirst(name)] = new module[`${Inflector.ucfirst(name)}Component`](this);
     
     return this;
   }

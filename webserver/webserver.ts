@@ -30,7 +30,7 @@ export class Webserver {
       Logger.debug(`Request from "${(conn.remoteAddr as Deno.NetAddr).hostname!}:${(conn.remoteAddr as Deno.NetAddr).port!}": ${request.request.method} | ${request.request.url}`);
       try {
         // Run the required route
-        const response: Response = await Router.execute(request.request);
+        const response: Response = await Router.execute(request.request, (conn.remoteAddr as Deno.NetAddr).hostname!);
         
         // Send our response
         await request.respondWith(response);
