@@ -5,6 +5,7 @@ import { ResponseBuilder } from "../http/response-builder.ts";
 import { Request } from "../http/request.ts";
 import { raise } from "../../util/raise.ts";
 import { Component } from "./component.ts";
+import {Registry} from "../registry/registry.ts";
 
 export interface ViewVariable {
   [key: string]: string|number|unknown;
@@ -59,6 +60,14 @@ export class Controller {
   }
 
   protected async loadComponent(name: string): Promise<Controller> {
+    // Check if we already loaded the component before
+    // Use that if so
+    if(Registry.has(`${Inflector.ucfirst(name)}Component`)) {
+      const module = Registry.get(`${Inflector.ucfirst(name)}Component`);
+      this[Inflector.ucfirst(name)] = new module[`${Inflector.ucfirst(name)}Component`](this);
+      return this;
+    }
+    
     // Import the module
     const module = await import(`${Controller._componentDir}/${Inflector.lcfirst(name)}.ts`);
 
@@ -71,6 +80,9 @@ export class Controller {
     if(!(module[`${Inflector.ucfirst(name)}Component`].prototype instanceof Component)) {
       raise(`Class "${Inflector.ucfirst(name)}Component" does not properly extend Chomp's component.`);
     }
+    
+    // Add the component to the registry
+    Registry.add(`${Inflector.ucfirst(name)}Component`, module);
     
     // Add the module as class property
     this[Inflector.ucfirst(name)] = new module[`${Inflector.ucfirst(name)}Component`](this);

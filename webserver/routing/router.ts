@@ -6,6 +6,7 @@ import { Request as ChompRequest, RequestParameters } from "../http/request.ts";
 import { StatusCodes } from "../http/status-codes.ts";
 import { Route as ChompRoute } from "./route.ts";
 import { Controller } from "../controller/controller.ts";
+import { Registry } from "../registry/registry.ts";
 import { raise } from "../../util/raise.ts";
 
 interface RouteCache {
@@ -89,7 +90,7 @@ export class Router {
     );
 
     // Import and cache controller file if need be
-    if(!(req.getRoute().getController() in Router._cache)) {
+    if(!Registry.has(req.getRoute().getController())) {
       try {
         // Import the module
         const module = await import(`${Router._controllerDir}/${Inflector.lcfirst(req.getRoute().getController())}.controller.ts`);
@@ -104,8 +105,8 @@ export class Router {
           raise(`Class "${req.getRoute().getController()}Controller" does not properly extend Chomp's controller.`);
         }
         
-        // Add the module to our cache
-        Router._cache[req.getRoute().getController()] = module;
+        // Add the module to our registry
+        Registry.add(`${req.getRoute().getController()}Controller`, module);
       } catch(e) {
         Logger.error(`Could not import "${req.getRoute().getController()}": ${e.message}`, e.stack);
         return new Response(
@@ -123,7 +124,8 @@ export class Router {
     // Run our controller
     try {
       // Instantiate the controller
-      const controller = new Router._cache[req.getRoute().getController()][`${req.getRoute().getController()}Controller`](req);
+      const module = Registry.get(`${req.getRoute().getController()}Controller`) ?? raise(`"${req.getRoute().getController()}Controller" was not found in registry.`)
+      const controller = new module[`${req.getRoute().getController()}Controller`](req);
 
       // Run the controller's initializer
       await controller.initialize();
