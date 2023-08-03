@@ -1,7 +1,7 @@
 import { Logger } from "../../logging/logger.ts";
-import { folderExists } from "../../util/folder-exists.ts";
-import { isTs } from "../../util/is-ts.ts";
-import { Inflector } from "../../util/inflector.ts";
+import { Folder } from "../../filesystem/folder.ts";
+import { File } from "../../filesystem/file.ts";
+import { Inflector } from "../../utility/inflector.ts";
 
 interface EventConfig {
   name: string;
@@ -91,7 +91,7 @@ export class EventDispatcher {
     Logger.debug(`Loading events from "${dir}"...`);
 
     // Make sure the interactions directory exists
-    if(!folderExists(dir)) {
+    if(!await new Folder(dir).exists()) {
       Logger.warning(`"${dir}" does not exist, no events to load.`);
       return;
     }
@@ -102,7 +102,7 @@ export class EventDispatcher {
     // Load all interactions
     const promiseQueue: Promise<void>[] = [];
     for await(const file of files) {
-      if(!isTs(file.name)) {
+      if(new File(`${dir}/${file.name}`).ext() === 'ts') {
         Logger.debug(`File "${file.name}" is not a TS file, skipping...`);
         continue;
       }

@@ -1,13 +1,13 @@
 import { readerFromStreamReader } from "https://deno.land/std@0.126.0/io/mod.ts";
 import { pathToRegexp } from "../pathToRegexp.ts";
-import { Inflector } from "../../util/inflector.ts";
+import { Inflector } from "../../utility/inflector.ts";
 import { Logger } from "../../logging/logger.ts";
 import { Request as ChompRequest, RequestParameters } from "../http/request.ts";
 import { StatusCodes } from "../http/status-codes.ts";
 import { Route as ChompRoute } from "./route.ts";
 import { Controller } from "../controller/controller.ts";
 import { Registry } from "../registry/registry.ts";
-import { raise } from "../../util/raise.ts";
+import { raise } from "../../utility/raise.ts";
 
 interface Route {
   path: string;

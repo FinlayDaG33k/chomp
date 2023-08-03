@@ -2,7 +2,7 @@ import { WebSocketServer, WebSocketAcceptedClient } from "https://deno.land/x/we
 import { Logger } from "../logging/logger.ts";
 import { Events } from "./events.ts";
 import { Authenticator } from "./authenticator.ts";
-import { Configure } from "../common/configure.ts";
+import { Configure } from "../core/configure.ts";
 
 export class Websocket {
   private readonly port: number = 80;

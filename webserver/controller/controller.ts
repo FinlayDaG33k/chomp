@@ -1,9 +1,9 @@
 import { Logger } from "../../logging/logger.ts";
-import { Inflector } from "../../util/inflector.ts";
+import { Inflector } from "../../utility/inflector.ts";
 import { Handlebars } from "../renderers/handlebars.ts";
 import { ResponseBuilder } from "../http/response-builder.ts";
 import { Request } from "../http/request.ts";
-import { raise } from "../../util/raise.ts";
+import { raise } from "../../utility/raise.ts";
 import { Component } from "./component.ts";
 import { Registry } from "../registry/registry.ts";
 import { compress as compressBrotli } from "https://deno.land/x/brotli@v0.1.4/mod.ts";
@@ -106,7 +106,7 @@ export class Controller {
    * @returns Promise<void>
    */
   public async render(): Promise<void> {
-    let body = '';
+    let body: string|Uint8Array = '';
     let canCompress = true;
     switch(this.getResponse().getHeaderLine('Content-Type').toLowerCase()) {
       case 'application/json':
@@ -118,7 +118,7 @@ export class Controller {
       case 'text/html':
         const controller = Inflector.lcfirst(this.getRequest().getRoute().getController());
         const action = this.getRequest().getRoute().getAction();
-        body = await Handlebars.render(`${Controller._templateDir}/${controller}/${action}.hbs`, this._vars);
+        body = await Handlebars.render(`${Controller._templateDir}/${controller}/${action}.hbs`, this._vars) ?? raise('Could not render handlebars');
     }
     
     // Check if we can compress with Brotli

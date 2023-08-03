@@ -1,9 +1,9 @@
 import {ApplicationCommandOption, ApplicationCommandTypes} from "https://deno.land/x/discordeno@13.0.0/mod.ts";
 import { Discord } from "../discord.ts";
 import { Logger } from "../../logging/logger.ts";
-import { isTs } from "../../util/is-ts.ts";
-import { folderExists } from "../../util/folder-exists.ts";
-import { Inflector } from "../../util/inflector.ts";
+import { File } from "../../filesystem/file.ts";
+import { Folder } from "../../filesystem/folder.ts";
+import { Inflector } from "../../utility/inflector.ts";
 
 export interface InteractionConfig {
   name: string;
@@ -14,6 +14,7 @@ export interface InteractionConfig {
 }
 
 export class InteractionDispatcher {
+  private static _interactionsDir = `${Deno.cwd()}/src/interactions`;
   private static list: InteractionConfig[] = [];
   private static handlers: any = {};
 
@@ -57,7 +58,7 @@ export class InteractionDispatcher {
   public static async add(interaction: InteractionConfig): Promise<void> {
     try {
       // Import the interaction handler
-      InteractionDispatcher.handlers[interaction.handler] = await import(`file://${Deno.cwd()}/src/interactions/${interaction.handler}.ts`)
+      InteractionDispatcher.handlers[interaction.handler] = await import(`file://${InteractionDispatcher._interactionsDir}/${interaction.handler}.ts`)
     } catch(e) {
       Logger.error(`Could not register interaction handler for "${interaction}": ${e.message}`);
       return;
@@ -98,29 +99,28 @@ export class InteractionDispatcher {
    */
   public static async load(): Promise<void> {
     // Create our directory string
-    const dir = `${Deno.cwd()}/src/interactions`;
-    Logger.debug(`Loading interactions from "${dir}"...`);
+    Logger.debug(`Loading interactions from "${InteractionDispatcher._interactionsDir}"...`);
     
     // Make sure the interactions directory exists
-    if(!folderExists(dir)) {
-      Logger.warning(`"${dir}" does not exist, no interactions to load`);
+    if(!await new Folder(InteractionDispatcher._interactionsDir).exists()) {
+      Logger.warning(`"${InteractionDispatcher._interactionsDir}" does not exist, no interactions to load`);
       return;
     }
     
     // Get a list of all files
-    const files = await Deno.readDir(dir);
+    const files = await Deno.readDir(InteractionDispatcher._interactionsDir);
     
     // Load all interactions
     const promiseQueue: Promise<void>[] = [];
     for await(const file of files) {
-      if(!isTs(file.name)) {
+      if(new File(`${InteractionDispatcher._interactionsDir}/${file.name}`).ext() === 'ts') {
         Logger.debug(`File "${file.name}" is not a TS file, skipping...`);
         continue;
       }
 
       // Import each file as a module
       Logger.debug(`Loading "${file.name}"...`);
-      const module = await import(`file:///${dir}/${file.name}`);
+      const module = await import(`file:///${InteractionDispatcher._interactionsDir}/${file.name}`);
       
       // Make sure module has a "config" exposed
       if(!('config' in module)) {

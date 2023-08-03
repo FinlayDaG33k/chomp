@@ -1,5 +1,5 @@
 import { StatusCodes } from "./status-codes.ts";
-import { T as TimeString } from "../../util/time-string.ts";
+import { T as TimeString } from "../../utility/time-string.ts";
 
 interface ResponseHeader {
   [key: string]: string;

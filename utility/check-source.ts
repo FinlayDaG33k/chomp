@@ -1,4 +1,5 @@
 import { Logger } from "../logging/logger.ts";
+import { File } from "../filesystem/file.ts";
 
 export interface ExclusionConfig {
   directories?: string[];
@@ -18,7 +19,7 @@ export class CheckSource {
     // Get list of files
     await this.getFiles(this.path);
 
-    // Checkk all files found
+    // Check all files found
     Logger.info(`Checking "${this.files.length}" files...`);
     await this.checkFiles();
 
@@ -53,7 +54,7 @@ export class CheckSource {
           Logger.debug(`Skipping excluded file "${path}/${entry.name}"...`);
           continue;
         }
-        if(!this.isTs(entry.name)) {
+        if(new File(`${path}/${entry.name}`).ext() !== 'ts') {
           Logger.debug(`Skipping non-ts file...`);
           continue;
         }
@@ -85,16 +86,5 @@ export class CheckSource {
         this.errors++;
       }
     }
-  }
-
-  /**
-   * Checks whether the file is a ".ts" file
-   *
-   * @returns boolean
-   */
-  private isTs(name: string): boolean {
-    const pos = name.lastIndexOf(".");
-    if(pos < 1) return false;
-    return name.slice(pos + 1) === 'ts';
   }
 }

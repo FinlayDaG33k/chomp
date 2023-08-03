@@ -14,7 +14,7 @@ export class Inflector {
 
   /**
    * Return input string with first character lowercased.
-   * 
+   *
    * @param input
    */
   public static lcfirst(input: string): string {
@@ -23,7 +23,7 @@ export class Inflector {
 
   /**
    * Turn a string into PascalCase.
-   * 
+   *
    * @param input
    */
   public static pascalize(input: string, delimiter: string = '_'): string {
@@ -35,7 +35,7 @@ export class Inflector {
   /**
    * Return the input lower_case_delimited_string as "A Human Readable String".
    * (Underscores are replaced by spaces and capitalized following words.)
-   * 
+   *
    * @param input
    * @param delimiter
    */
@@ -43,12 +43,12 @@ export class Inflector {
     // Split our string into tokens
     const tokens: string[] = input
       .split(delimiter);
-    
+
     // Uppercase each of the tokens
     for(let i = 0; i < tokens.length; i++) {
       tokens[i] = Inflector.ucfirst(tokens[i]);
     }
-    
+
     // Join tokens into a string and return
     return tokens.join(' ');
   }

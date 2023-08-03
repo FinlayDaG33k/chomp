@@ -1,5 +1,5 @@
-import { Time } from "../common/time.ts";
-import { Configure } from "../common/configure.ts";
+import { Time } from "../utility/time.ts";
+import { Configure } from "../core/configure.ts";
 import { cyan, yellow, red, magenta, bold } from "https://deno.land/std@0.117.0/fmt/colors.ts";
 
 export class Logger {
