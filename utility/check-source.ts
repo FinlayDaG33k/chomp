@@ -54,7 +54,7 @@ export class CheckSource {
           Logger.debug(`Skipping excluded file "${path}/${entry.name}"...`);
           continue;
         }
-        if(new File(`${path}/${entry.name}`).ext() !== 'ts') {
+        if(new File(`${path}/${entry.name}`).ext() !== '.ts') {
           Logger.debug(`Skipping non-ts file...`);
           continue;
         }

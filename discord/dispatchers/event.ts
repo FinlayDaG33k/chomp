@@ -102,7 +102,7 @@ export class EventDispatcher {
     // Load all interactions
     const promiseQueue: Promise<void>[] = [];
     for await(const file of files) {
-      if(new File(`${dir}/${file.name}`).ext() === 'ts') {
+      if(new File(`${dir}/${file.name}`).ext() === '.ts') {
         Logger.debug(`File "${file.name}" is not a TS file, skipping...`);
         continue;
       }

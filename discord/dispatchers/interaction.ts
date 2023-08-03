@@ -113,7 +113,7 @@ export class InteractionDispatcher {
     // Load all interactions
     const promiseQueue: Promise<void>[] = [];
     for await(const file of files) {
-      if(new File(`${InteractionDispatcher._interactionsDir}/${file.name}`).ext() === 'ts') {
+      if(new File(`${InteractionDispatcher._interactionsDir}/${file.name}`).ext() === '.ts') {
         Logger.debug(`File "${file.name}" is not a TS file, skipping...`);
         continue;
       }
