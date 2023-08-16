@@ -94,7 +94,7 @@ export class Discord {
           EventDispatcher.dispatch('GuildMemberUpdate', { member: member, user: user });
         },
         guildUpdate(_bot, guild) {
-          EventDispatcher.dispatch('InteractionCreate', guild);
+          EventDispatcher.dispatch('GuildUpdate', guild);
         },
         integrationCreate(_bot, integration) {
           EventDispatcher.dispatch('IntegrationCreate', integration);
