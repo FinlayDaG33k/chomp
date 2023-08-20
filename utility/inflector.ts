@@ -25,9 +25,10 @@ export class Inflector {
    * Turn a string into PascalCase.
    *
    * @param input
+   * @param delimiter Optional delimiter by which to split the string
    */
   public static pascalize(input: string, delimiter: string = '_'): string {
-    return Inflector
+    return this
       .humanize(input, delimiter)
       .replaceAll(' ', '');
   }
@@ -56,7 +57,7 @@ export class Inflector {
 
     // Uppercase each of the tokens
     for(let i = 0; i < tokens.length; i++) {
-      tokens[i] = Inflector.ucfirst(tokens[i]);
+      tokens[i] = this.ucfirst(tokens[i]);
     }
 
     // Join tokens into a string and return
