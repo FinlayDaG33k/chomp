@@ -33,6 +33,16 @@ export class Inflector {
   }
 
   /**
+   * Turn a string into camelCase
+   * 
+   * @param input
+   * @param delimiter Optional delimiter by which to split the string
+   */
+  public static camelize(input: string, delimiter: string = '_'): string {
+    return this.lcfirst(this.pascalize(input, delimiter));
+  }
+
+  /**
    * Return the input lower_case_delimited_string as "A Human Readable String".
    * (Underscores are replaced by spaces and capitalized following words.)
    *
