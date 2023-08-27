@@ -1,6 +1,6 @@
 import { Logger } from "../logging/logger.ts";
 
-enum Precision {
+export enum Precision {
   s,
   ms,
   us,
