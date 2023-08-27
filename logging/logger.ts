@@ -67,7 +67,7 @@ export class Logger {
    * @returns void
    */
   public static trace(stacktrace: any): void {
-    Logger.warning('Use of Logger#stack is deprecated, please pass trace to Logger#error instead.');
+    Logger.warning('Use of Logger#trace is deprecated, please pass trace to Logger#error instead.');
     console.error(stacktrace);
   }
 
