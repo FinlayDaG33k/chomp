@@ -47,7 +47,7 @@ export class Controller {
    *
    * @protected
    */
-  protected getRequest(): typeof this.request {
+  protected getRequest(): Request {
     return this.request;
   }
   
@@ -56,7 +56,7 @@ export class Controller {
    * 
    * @protected
    */
-  protected getResponse(): typeof this._response {
+  protected getResponse(): ResponseBuilder {
     return this._response;
   }
 
@@ -123,7 +123,7 @@ export class Controller {
     
     // Check if we can compress with Brotli
     // TODO: Hope that Deno will make this obsolete.
-    if(this.getRequest().getHeaders().get('accept-encoding').includes('br') && canCompress && body.length > 1024) {
+    if(this.getRequest().getHeaders().get('accept-encoding')?.includes('br') && canCompress && body.length > 1024) {
       Logger.debug(`Compressing body with brotli: ${body.length}-bytes`);
       body = compressBrotli(new TextEncoder().encode(body));
       Logger.debug(`Compressed body with brotli: ${body.length}-bytes`);
