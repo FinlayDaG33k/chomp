@@ -2,7 +2,7 @@ import { readerFromStreamReader } from "https://deno.land/std@0.126.0/io/mod.ts"
 import { pathToRegexp } from "../pathToRegexp.ts";
 import { Inflector } from "../../utility/inflector.ts";
 import { Logger } from "../../logging/logger.ts";
-import { Request as ChompRequest, RequestParameters } from "../http/request.ts";
+import {QueryParameters, Request as ChompRequest, RequestParameters} from "../http/request.ts";
 import { StatusCodes } from "../http/status-codes.ts";
 import { Route as ChompRoute } from "./route.ts";
 import { Controller } from "../controller/controller.ts";
@@ -33,6 +33,9 @@ export class Router {
       .replace("http://", "")
       .replace("https://", "");
     if(host !== null) path = path.replace(host, "");
+    
+    // Escape query params
+    path = path.replace("?", "%3F");
 
     // Loop over each route
     // Check if it is the right method
@@ -81,9 +84,12 @@ export class Router {
       request.headers,
       await Router.getBody(request),
       await Router.getParams(route.route, route.path),
+      await Router.getQuery(route.path),
       Router.getAuth(request),
       clientIp
     );
+    
+    console.log(req);
 
     // Import and cache controller file if need be
     if(!Registry.has(req.getRoute().getController())) {
@@ -156,12 +162,29 @@ export class Router {
    * @returns Promise<{ [key: string]: string }>
    */
   public static async getParams(route: ChompRoute, path: string): Promise<RequestParameters> {
+    // Strip off query parameters
+    path = path.split("%3F");
+    path = path[0];
+    
     const keys: any[] = [];
     const r = pathToRegexp(route.getPath(), keys).exec(path) || [];
 
     return keys.reduce((acc, key, i) => ({ [key.name]: r[i + 1], ...acc }), {});
   }
 
+  /**
+   * Get the query parameters for the given route
+   * 
+   * @param path
+   * @returns Promise<QueryParameters>
+   */
+  public static async getQuery(path: string): Promise<QueryParameters> {
+    path = path.split("%3F");
+    path = path[1];
+    const params = new URLSearchParams(path);
+    return Object.fromEntries(params.entries());
+  }
+  
   /**
    * Get the body from the request
    *

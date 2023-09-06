@@ -4,6 +4,10 @@ export interface RequestParameters {
   [name: string]: string;
 }
 
+export interface QueryParameters {
+  [name: string]: string;
+}
+
 export class Request {
   constructor(
     private readonly url: string,
@@ -12,29 +16,37 @@ export class Request {
     private readonly headers: Headers,
     private readonly body: string,
     private readonly params: RequestParameters,
+    private readonly query: QueryParameters,
     private readonly auth: string,
     private readonly ip: string|null = null,
   ) {
   }
   
-  public getUrl(): typeof this.url { return this.url; }
+  public getUrl(): string { return this.url; }
   
-  public getMethod(): typeof this.method { return this.method; }
+  public getMethod(): string { return this.method; }
   
-  public getRoute(): typeof this.route { return this.route; }
+  public getRoute(): Route { return this.route; }
   
-  public getHeaders(): typeof this.headers { return this.headers ;}
+  public getHeaders(): Headers { return this.headers ;}
   
-  public getBody(): typeof this.body { return this.body; }
+  public getBody(): string { return this.body; }
   
-  public getParams(): typeof this.params { return this.params; }
+  public getParams(): RequestParameters { return this.params; }
   
   public getParam(name: string): string|null { 
     if(name in this.params) return this.params[name];
     return null;
   }
+
+  public getQueryParams(): QueryParameters { return this.query; }
   
-  public getAuth(): typeof this.auth { return this.auth; }
+  public getQuery(name: string): string|null {
+    if(name in this.query) return this.query[name];
+    return null;
+  }
   
-  public getIp(): typeof this.ip { return this.ip; }
+  public getAuth(): string { return this.auth; }
+  
+  public getIp(): string|null { return this.ip; }
 }
