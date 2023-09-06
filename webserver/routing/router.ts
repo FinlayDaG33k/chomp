@@ -88,8 +88,6 @@ export class Router {
       Router.getAuth(request),
       clientIp
     );
-    
-    console.log(req);
 
     // Import and cache controller file if need be
     if(!Registry.has(req.getRoute().getController())) {
