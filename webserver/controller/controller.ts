@@ -119,6 +119,10 @@ export class Controller {
         const controller = Inflector.lcfirst(this.getRequest().getRoute().getController());
         const action = this.getRequest().getRoute().getAction();
         body = await Handlebars.render(`${Controller._templateDir}/${controller}/${action}.hbs`, this._vars) ?? raise('Could not render handlebars');
+        break;
+      case 'application/octet-stream':
+        body = this._vars['data'] as Uint8Array;
+        break;
     }
     
     // Check if we can compress with Brotli
