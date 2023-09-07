@@ -1,4 +1,5 @@
 export class File {
+
   public constructor(
     private readonly path: string
   ) {
@@ -26,5 +27,13 @@ export class File {
     const pos = this.path.lastIndexOf(".");
     if(pos < 1) return '';
     return this.path.slice(pos + 1);
+  }
+  
+  public async readTextFile() {
+    return await Deno.readTextFile(this.path);
+  }
+  
+  public async readFile() {
+    return await Deno.readFile(this.path);
   }
 }
