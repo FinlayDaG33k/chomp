@@ -1,4 +1,4 @@
-import { Discord } from "./discord.ts";
+import { Discord } from "../discord.ts";
 
 export class Interaction {
   protected interaction: unknown;
@@ -9,12 +9,19 @@ export class Interaction {
   }
 
   /**
+   * Main logic for the interaction.
+   * 
+   * @returns Promise<void>
+   */
+  public async execute?(): Promise<void>;
+
+  /**
    * Respond to the interaction.
    * This method will automatically edit the original reply if already replied.
    * 
    * @param data
    */
-  public async respond(data: unknown): Promise<void> {
+  protected async respond(data: unknown): Promise<void> {
     if(!this._hasReplied) {
       await Discord.getBot().helpers.sendInteractionResponse(
         this.interaction.id,
