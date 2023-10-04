@@ -38,7 +38,7 @@ export class InteractionBuilder {
   }
 
   public addOption(option: (option: InteractionOptionBuilder) => void): InteractionBuilder {
-    this._options.push(option);
+    this._options.push(option(new InteractionOptionBuilder()));
 
     return this;
   }
