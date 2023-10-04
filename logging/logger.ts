@@ -6,7 +6,7 @@ type LogLevels = "info"|"warning"|"error"|"debug";
 type Handlers = {
   info: (message: string) => any;
   warning: (message: string) => any;
-  error: (message: string, stack:string|null = null) => any;
+  error: (message: string, stack: string|null) => any;
   debug: (message: string) => any;
 };
 
