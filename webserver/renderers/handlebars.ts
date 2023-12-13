@@ -1,6 +1,6 @@
 import { default as hbs } from "https://jspm.dev/handlebars@4.7.6";
 import { Logger } from "../../logging/logger.ts";
-import { raise } from "../../utility/raise.ts";
+import { raise } from "../../error/raise.ts";
 import { ViewVariable } from "../controller/controller.ts";
 
 interface CacheItem {
