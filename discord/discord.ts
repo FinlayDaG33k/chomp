@@ -19,7 +19,7 @@ export interface DiscordInitOpts {
 }
 
 export class Discord {
-  protected static bot: Bot|undefined;
+  protected static bot: Bot|BotWithCache|undefined;
   protected token = '';
   protected intents: any;
   protected botId = BigInt(0);
@@ -27,7 +27,7 @@ export class Discord {
   /**
    * Return the instance of the Discord bot connection
    */
-  public static getBot(): Bot|undefined { return Discord.bot; }
+  public static getBot(): Bot|BotWithCache|undefined { return Discord.bot; }
 
   public constructor(opts: DiscordInitOpts) {
     // Make sure required parameters are present
