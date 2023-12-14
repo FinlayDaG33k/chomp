@@ -8,10 +8,11 @@ import empty from "../../utility/empty.ts";
  *
  * @param guild
  * @param roleName
+ * @param expiry Expiry time. Pass null to disable caching.
  * @returns Promise<unknown>
  */
 export async function findRoleByName(guild: BigInt, roleName: string, expiry: string|null = `+1 hour`): Promise<Role|null> {
-  if(!empty(expiry) && Cache.exists(`role name ${roleName}`)) {
+  if(!empty(expiry) && !Cache.expired(`role name ${roleName}`)) {
     return Cache.get(`role name ${roleName}`) as Role;
   }
   
@@ -34,6 +35,6 @@ export async function findRoleByName(guild: BigInt, roleName: string, expiry: st
   }
   
   // Set the cache
-  Cache.set(`role name ${roleName}`, role, expiry);
+  if(!empty(expiry)) Cache.set(`role name ${roleName}`, role, expiry);
   return role;
 }

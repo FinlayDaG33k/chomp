@@ -44,7 +44,8 @@ export class Cache {
   }
 
   /**
-   * Check whether an item exists in the cache
+   * Check whether an item exists in the cache.
+   * This does *not* check whether the item has expired or not.
    *
    * @param key
    */
