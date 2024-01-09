@@ -87,11 +87,7 @@ export class InteractionDispatcher {
     const controller = new InteractionDispatcher.handlers[handler.handler][`${Inflector.pascalize(interaction)}Interaction`](data);
 
     // Execute the handler's execute method
-    try {
-      await controller['execute']();
-    } catch(e) {
-      Logger.error(`Could not dispatch interaction "${interaction}": "${e.message}"`, e.stack);
-    }
+    await controller['execute']();
   }
 
   /**
