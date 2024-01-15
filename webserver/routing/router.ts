@@ -34,8 +34,8 @@ export class Router {
       .replace("https://", "");
     if(host !== null) path = path.replace(host, "");
     
-    // Escape query params
-    path = path.replace("?", "%3F");
+    // Ignore query parameters
+    path = path.split("?", 1)[0];
 
     // Loop over each route
     // Check if it is the right method
@@ -84,7 +84,7 @@ export class Router {
       request.headers,
       await Router.getBody(request),
       await Router.getParams(route.route, route.path),
-      await Router.getQuery(route.path),
+      await Router.getQuery(request.url),
       Router.getAuth(request),
       clientIp
     );
@@ -177,9 +177,7 @@ export class Router {
    * @returns Promise<QueryParameters>
    */
   public static async getQuery(path: string): Promise<QueryParameters> {
-    path = path.split("%3F");
-    path = path[1];
-    const params = new URLSearchParams(path);
+    const params = new URLSearchParams(path.split("?")[1]);
     return Object.fromEntries(params.entries());
   }
   
