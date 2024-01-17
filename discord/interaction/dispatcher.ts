@@ -1,4 +1,4 @@
-import { ApplicationCommandOption, ApplicationCommandTypes } from "https://deno.land/x/discordeno@13.0.0/mod.ts";
+import { ApplicationCommandOption, ApplicationCommandTypes } from "https://deno.land/x/discordeno@18.0.0/mod.ts";
 import { Discord } from "../discord.ts";
 import { Logger } from "../../logging/logger.ts";
 import { File } from "../../filesystem/file.ts";
@@ -44,7 +44,7 @@ export class InteractionDispatcher {
    */
   public static async update(opts: any): Promise<void> {
     try {
-      await Discord.getBot().helpers.upsertApplicationCommands(InteractionDispatcher.getInteractions(), opts.guildId);
+      await Discord.getBot()?.helpers.upsertGuildApplicationCommands(opts.guildId, InteractionDispatcher.getInteractions());
     } catch(e) {
       Logger.error(`Could not update interactions: ${e.message}`);
     }
