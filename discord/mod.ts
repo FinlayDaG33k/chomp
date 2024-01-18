@@ -14,8 +14,8 @@ export {
   Intents,
   AuditLogEvents,
   ApplicationCommandFlags
-} from "https://deno.land/x/discordeno@13.0.0/mod.ts";
+} from "https://deno.land/x/discordeno@18.0.0/mod.ts";
 
 export type {
   DiscordEmbed
-} from "https://deno.land/x/discordeno@13.0.0/mod.ts";
+} from "https://deno.land/x/discordeno@18.0.0/mod.ts";
