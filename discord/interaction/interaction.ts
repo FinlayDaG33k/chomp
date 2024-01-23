@@ -32,7 +32,7 @@ export class Interaction {
       return;
     }
     
-    await Discord.getBot().helpers.editInteractionResponse(
+    await Discord.getBot().helpers.editOriginalInteractionResponse(
       this.interaction.token,
       data
     );
