@@ -34,7 +34,7 @@ import * from "https://deno.land/x/chomp/webserver/mod.ts";
 import * from "https://deno.land/x/chomp/websocket/mod.ts";
 ```
 
-Additionally, you can visit the [Deno.land](https://doc.deno.land/https://deno.land/x/chomp/mod.ts) to see what Chomp is capable off!
+Additionally, you can visit the [docs](/docs) or [Deno.land](https://doc.deno.land/https://deno.land/x/chomp/mod.ts) to see what Chomp is capable off!
 
 ## Versioning
 
