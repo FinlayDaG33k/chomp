@@ -1,26 +1,15 @@
 # Chomp
-Library of (arguably) useful Deno classes.  
+Library of (arguably) useful stuff.  
 Should work just fine but comes with no warranties whatsoever.  
 
 ## Usage
-Add the following to your file:
-```ts
-import * from "https://deno.land/x/chomp/mod.ts";
-```
 
-That's it!  
-You can visit the [documentation](https://doc.deno.land/https://deno.land/x/chomp/mod.ts) to see what Chomp is capable off!  
-Someday I'll write a better usage guide.
+You can read the [Getting Started](docs/getting-started.md) to see how to use Chomp.  
+Additionally, you can visit the [Deno.land](https://doc.deno.land/https://deno.land/x/chomp/mod.ts) to see what Chomp is capable off!
 
+## Versioning
 
-## Compatibility
-Below a chart indicating for which Deno version this library is built and tested.  
-Compatibility may be more flexible, however, chances are this library may not work with older or newer versions than indicated.
-
-| Library Version | Deno Version |
-|-----------------|--------------|
-| main            | 1.30.0       |
-| 1.1.0           | 1.24.0       |
-| 1.0.0           | 1.15.3       |
-| 0.0.2           | ???          |
-| 0.0.1           | ???          |
+Versions adhere to the following versioning system of `x.y.z` where:
+- `x` means a breaking change (eg. removal of a function, breaking upgrade of an upstream dependency etc.).
+- `y` means an addition or non-breaking update.
+- `z` means a typos, bug-fix etc.
