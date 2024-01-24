@@ -8,8 +8,8 @@ export { EventDispatcher } from "./event/dispatcher.ts";
 export type { Event } from "./event/event.ts";
 
 // Export InteractionDispatcher
-export { InteractionBuilder } from "./interaction/builder.ts";
-export { InteractionDispatcher } from "./interaction/dispatcher.ts";
+export * from "./interaction/builder.ts";
+export * from "./interaction/dispatcher.ts";
 export type { InteractionConfig } from "./interaction/dispatcher.ts";
 export { Interaction } from "./interaction/interaction.ts";
 
