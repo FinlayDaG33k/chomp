@@ -25,7 +25,7 @@ You can then import any of the "extras" as you need:
 ```ts
 import * from "https://deno.land/x/chomp/discord/mod.ts";
 ```
-- Weberver:
+- Webserver:
 ```ts 
 import * from "https://deno.land/x/chomp/webserver/mod.ts";
 ```
