@@ -1,4 +1,4 @@
-import {ApplicationCommandOptionTypes, ApplicationCommandTypes} from "../discord.ts";
+import {ApplicationCommandOptionTypes, ApplicationCommandTypes} from "../mod.ts";
 
 type OptionTypes =
   | ((command: InteractionSubcommandBuilder) => void)

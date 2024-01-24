@@ -1,4 +1,4 @@
-import { ApplicationCommandOption, ApplicationCommandTypes } from "https://deno.land/x/discordeno@18.0.0/mod.ts";
+import { ApplicationCommandOption, ApplicationCommandTypes } from "../mod.ts";
 import { Discord } from "../discord.ts";
 import { Logger } from "../../logging/logger.ts";
 import { File } from "../../filesystem/file.ts";

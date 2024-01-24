@@ -1,5 +1,5 @@
 import { Cache } from "../../core/cache.ts";
-import { Discord, Role } from "../discord.ts";
+import { Discord, Role } from "../mod.ts";
 import { Logger } from "../../logging/logger.ts";
 import empty from "../../utility/empty.ts";
 

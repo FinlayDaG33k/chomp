@@ -1,4 +1,4 @@
-import { Discord } from "../discord.ts";
+import { Discord } from "../mod.ts";
 import { Logger } from "../../logging/logger.ts";
 
 /**

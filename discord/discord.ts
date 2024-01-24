@@ -1,14 +1,14 @@
-import { createBot, startBot, Bot } from "https://deno.land/x/discordeno@18.0.0/mod.ts";
-import {
+import { 
+  createBot, 
+  startBot, 
+  Bot, 
   BotWithCache,
   enableCachePlugin,
-  enableCacheSweepers
-} from "https://deno.land/x/discordeno@18.0.0/plugins/cache/mod.ts";
-import { EventDispatcher } from "./dispatchers/event.ts";
+  enableCacheSweepers,
+  EventDispatcher,
+  InteractionDispatcher
+} from "./mod.ts";
 import { Logger } from "../logging/logger.ts";
-import { InteractionDispatcher } from "./dispatchers/interaction.ts";
-
-export * from "https://deno.land/x/discordeno@18.0.0/mod.ts";
 
 export interface DiscordInitOpts {
   token: string;

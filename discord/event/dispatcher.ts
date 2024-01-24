@@ -8,10 +8,6 @@ interface EventConfig {
   handler: string;
 }
 
-export interface Event {
-  execute(opts: unknown): Promise<void>;
-}
-
 export class EventDispatcher {
   private static list: EventConfig[] = [];
   private static handlers: any = {};
@@ -47,7 +43,7 @@ export class EventDispatcher {
 
       // Make sure source file has required class
       if(!(`${event.name}Event` in handler)) throw Error(`No class named "${event.name}Event" could be found!`);
-      
+
       // Register handler
       EventDispatcher.handlers[event.handler] = handler;
     } catch(e) {
@@ -110,7 +106,7 @@ export class EventDispatcher {
       // Import the file as a module
       Logger.debug(`Loading "${file.name}"...`);
       const module = await import(`file:///${dir}/${file.name}`);
-      
+
       // Make sure the file contains a valid handler
       const name = file.name.replace('.ts', '');
       const eventName = Inflector.pascalize(name, '-');
