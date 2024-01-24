@@ -11,30 +11,30 @@ import * from "https://deno.land/x/chomp/mod.ts";
 ```
 
 This includes (list might not always be up-to-date):
-- `Cache`
-- `Configure`
-- `Logger`
-- `raise`
-- `File`
-- `Folder`
-- `CheckSource`
+- [Cache](docs/core/cache.md)
+- [Configure](docs/core/configure.md)
+- [Logger](docs/logging/logger.md)
+- [raise](docs/error/raise.md)
+- [File](docs/filesystem/file.md)
+- [Folder](docs/filesystem/folder.md)
+- [CheckSource](docs/utility/check-source.md)
 
 You can then import any of the "extras" as you need:
 
-- Discord Bot (Discordeno Wrapper):
+- [Discord Bot](docs/discord/README.md) (Discordeno Wrapper):
 ```ts
 import * from "https://deno.land/x/chomp/discord/mod.ts";
 ```
-- Webserver:
+- [Webserver](docs/webserver/README.md):
 ```ts 
 import * from "https://deno.land/x/chomp/webserver/mod.ts";
 ```
-- Websocket Server:
+- [Websocket Server](docs/websocket/README.md):
 ```ts 
 import * from "https://deno.land/x/chomp/websocket/mod.ts";
 ```
 
-Additionally, you can visit the [docs](/docs) or [Deno.land](https://doc.deno.land/https://deno.land/x/chomp/mod.ts) to see what Chomp is capable off!
+Additionally, you can visit the [docs](/docs) or [Deno.land](https://doc.deno.land/https://deno.land/x/chomp/mod.ts) to see what more Chomp is capable off!
 
 ## Versioning
 
