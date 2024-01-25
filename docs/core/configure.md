@@ -4,7 +4,7 @@ Allows easily setting application configs using JSON rather than environment-var
 
 ## Getting Started
 
-First, create a file `config.json` at your application's root.
+First, create a file `config.json` at your application's root.  
 By default `debug` and `error_log` are set to these values.  
 If you want to change them, this is the place where to do it!
 ```json
