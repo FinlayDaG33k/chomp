@@ -1,10 +1,12 @@
 import { Logger } from "../logging/logger.ts";
 
+const defaults = [
+  ['debug', false],
+  ['error_log', `${Deno.cwd()}/logs/error.log`]
+];
+
 export class Configure {
-  private static config = new Map<string, any>([
-    ['debug', false],
-    ['error_log', `${Deno.cwd()}/logs/error.log`]
-  ]);
+  private static config = new Map<string, any>(defaults);
   private static hasLoaded = false;
 
   /**
@@ -114,11 +116,20 @@ export class Configure {
   }
 
   /**
-   * Clear all items in the configure (including defaults)
+   * Clear all items in the configure (including defaults).
+   * If you want to keep the defaults, use "Configure.reset()" instead.
    *
    * @returns void
    */
   public static clear(): void {
     Configure.config.clear();
+  }
+
+  /**
+   * Resets the configure to the defaults.
+   * If you do not want to keep the defaults, use "Configure.clear()" instead.
+   */
+  public static reset(): void {
+    Configure.config = new Map<string, any>(defaults);
   }
 }
