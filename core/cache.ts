@@ -1,4 +1,6 @@
 import { T as TimeString } from "../utility/time-string.ts";
+import { Logger } from "../logging/logger.ts";
+import { Cron } from "../utility/cron.ts";
 
 interface CacheItem {
   data: unknown;
@@ -104,4 +106,44 @@ export class Cache {
   public static dump(): Map<string, CacheItem> {
     return Cache._items;
   }
+
+  /**
+   * Scan the cache and clean up expired items while keeping optimistic caching in tact.
+   */
+  public static sweep(): void {
+    // Set the start time of this sweep
+    // Set an optimistic boundary
+    // TODO: Allow configuring of optimistic boundary
+    const now = new Date();
+    const start = new Date(now.getTime() + TimeString`-1 hour -1 second`);
+    const boundary = new Date(now.getTime() + TimeString`-1 hour -1 minute`);
+    
+    // Loop over each item in the cache
+    for(const [key, value] of Cache._items) {
+      // Keep items that do not expire
+      if(!value.expires) {
+        Logger.debug(`Keeping cache item "${key}": Does not expire`);
+        continue;
+      }
+      
+      // Keep items that have not yet expired
+      if(value.expires >= start) {
+        Logger.debug(`Keeping cache item "${key}": Has not expired`);
+        continue;
+      }
+
+      // Keep items that may be served optimistically
+      if(value.expires >= boundary) {
+        Logger.debug(`Keeping cache item "${key}": Keep for optimistic caching`);
+        continue;
+      }
+
+      // Clean up items that have expired
+      Logger.debug(`Removing expired cache item "${key}"`);
+      Cache._items.delete(key);
+    }
+  }
 }
+
+// Sweep cache every hour
+Cron('1 0 * * * *', () => Cache.sweep());
