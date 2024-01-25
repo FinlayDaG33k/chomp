@@ -96,4 +96,12 @@ export class Cache {
     // Delete our item
     Cache._items.delete(key);
   }
+
+  /**
+   * Dumps the raw cache contents.
+   * Should only be used for debugging purposes.
+   */
+  public static dump(): Map<string, CacheItem> {
+    return Cache._items;
+  }
 }
