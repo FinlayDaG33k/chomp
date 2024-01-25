@@ -92,7 +92,6 @@ export class Cache {
    * @param key
    */
   public static remove(key: string): void {
-    // Delete our item
     Cache._items.delete(key);
   }
 
