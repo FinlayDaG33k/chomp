@@ -1,14 +1,12 @@
 import { T as TimeString } from "../utility/time-string.ts";
 
 interface CacheItem {
-  [key: string]: {
-    data: unknown;
-    expires: Date|null;
-  }
+  data: unknown;
+  expires: Date|null;
 }
 
 export class Cache {
-  private static _items: CacheItem = <CacheItem>{};
+  private static _items: Map<string, CacheItem> = new Map<string, CacheItem>();
 
   /**
    * Add an item to the cache.
@@ -21,26 +19,27 @@ export class Cache {
     let expiresAt = null;
     if(expiry) expiresAt = new Date(new Date().getTime() + TimeString`${expiry}`)
     
-    Cache._items[key] = {
+    Cache._items.set(key, {
       data: value,
       expires: expiresAt,
-    };
+    });
   }
 
   /**
    * Get an item from the cache
    *
    * @param key
+   * @param optimistic Whether to serve expired items from the cache
    */
-  public static get(key: string): unknown|null {
+  public static get(key: string, optimistic = false): unknown|null {
     // Return null if the item doesn't exist
     if(!Cache.exists(key)) return null;
 
     // Return null if the item expired
-    if(Cache.expired(key)) return null;
+    if(Cache.expired(key) && !optimistic) return null;
 
     // Return the item's data
-    return Cache._items[key].data;
+    return Cache._items.get(key)?.data;
   }
 
   /**
@@ -50,7 +49,7 @@ export class Cache {
    * @param key
    */
   public static exists(key: string): boolean {
-    return key in Cache._items;
+    return Cache._items.has(key);
   }
 
   /**
@@ -63,8 +62,26 @@ export class Cache {
     if(!Cache.exists(key)) return true;
 
     // Check if the expiry date is before our current date
-    if(!Cache._items[key].expires) return false;
-    return Cache._items[key].expires! < new Date();
+    if(!Cache._items.get(key)?.expires) return false;
+    return Cache._items.get(key)?.expires! < new Date();
+  }
+
+  /**
+   * Consume an item from the cache.
+   * Differs from "Cache.get()" in that it removes the item afterwards.
+   * 
+   * @param key
+   * @param optimistic Whether to serve expired items from the cache
+   */
+  public static consume(key: string, optimistic = false): unknown|null {
+    // Copy item from cache
+    const data = Cache.get(key, optimistic);
+    
+    // Remove item from cache
+    Cache.remove(key);
+    
+    // Return the item
+    return data;
   }
 
   /**
@@ -77,6 +94,6 @@ export class Cache {
     if(!Cache.exists(key)) return;
 
     // Delete our item
-    delete Cache._items[key];
+    Cache._items.delete(key);
   }
 }
