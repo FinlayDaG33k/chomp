@@ -2,6 +2,7 @@ import { Logger } from "../logging/logger.ts";
 
 export class Configure {
   private static config = new Map<string, any>([
+    ['debug', false],
     ['error_log', `${Deno.cwd()}/logs/error.log`]
   ]);
   private static hasLoaded = false;
