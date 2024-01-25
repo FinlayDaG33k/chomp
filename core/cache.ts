@@ -92,9 +92,6 @@ export class Cache {
    * @param key
    */
   public static remove(key: string): void {
-    // Return if the item doesn't exist
-    if(!Cache.exists(key)) return;
-
     // Delete our item
     Cache._items.delete(key);
   }
