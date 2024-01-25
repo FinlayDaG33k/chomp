@@ -14,7 +14,6 @@ This includes (list might not always be up-to-date):
 - [Cache](docs/core/cache.md)
 - [Configure](docs/core/configure.md)
 - [Logger](docs/logging/logger.md)
-- [raise](docs/error/raise.md)
 - [File](docs/filesystem/file.md)
 - [Folder](docs/filesystem/folder.md)
 - [CheckSource](docs/utility/check-source.md)
