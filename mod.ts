@@ -1,6 +1,6 @@
 /**
  * These are just the exports you'll most commonly use.
- * You can view the "README.md" to see what else there is!
+ * You can view the "docs"-directory to see what else there is!
  */
 export { Cache } from "./core/cache.ts";
 export { Configure } from "./core/configure.ts";
