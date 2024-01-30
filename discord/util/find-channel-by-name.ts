@@ -10,7 +10,7 @@ import { Logger } from "../../logging/logger.ts";
  * @param guild
  * @param name
  */
-export async function findChannelByName(guild: BigInt, name: string): Promise<Channel|null> {
+export async function findChannelByName(guild: bigint, name: string): Promise<Channel|null> {
   const channels = await Discord.getBot().helpers.getChannels(guild.toString());
   if(!channels) {
     Logger.error(`Could not obtain channels for guild! (this is a bug!)`);
