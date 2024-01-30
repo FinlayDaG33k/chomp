@@ -33,14 +33,15 @@ export class Websocket {
     });
   }
 
-  public async broadcast(eventString: string, data: any) {
+  // deno-lint-ignore no-explicit-any -- Any arbitrary data may be used
+  public broadcast(eventString: string, data: any) {
     // Make sure the server has started
     if(!this.server) return;
 
     // Loop over each client
     // Check whether they are still alive
     // Send the event to the clients that are still alive
-    for(let client of this.server.clients) {
+    for(const client of this.server.clients) {
       if(!client) continue;
       if(client.isClosed) continue;
       client.send(JSON.stringify({
@@ -74,7 +75,8 @@ export class Websocket {
     }
   }
 
-  private async handleEvent(event: string, data: any = []) {
+  // deno-lint-ignore no-explicit-any -- Any arbitrary data may be used
+  private async handleEvent(event: string, data: any = {}) {
     const handler = Events.getHandler(event);
     if(!handler) return Logger.warning(`Event "${event}" does not exists! (did you register it?)`);
 

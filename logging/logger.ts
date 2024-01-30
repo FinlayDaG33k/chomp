@@ -4,10 +4,10 @@ import { cyan, yellow, red, magenta, bold } from "https://deno.land/std@0.117.0/
 
 type LogLevels = "info"|"warning"|"error"|"debug";
 type Handlers = {
-  info: (message: string) => any;
-  warning: (message: string) => any;
-  error: (message: string, stack: string|null) => any;
-  debug: (message: string) => any;
+  info: (message: string) => void;
+  warning: (message: string) => void;
+  error: (message: string, stack: string|null) => void;
+  debug: (message: string) => void;
 };
 
 const handlers: Handlers = {
@@ -50,7 +50,8 @@ export class Logger {
    * @param level {LogLevels}
    * @param handler {any}
    */
-  public static setHandler(level: LogLevels, handler: any): void { Logger._handlers[level] = handler; }
+  // deno-lint-ignore ban-types -- TODO
+  public static setHandler(level: LogLevels, handler: Function): void { Logger._handlers[level] = handler; }
   
   /**
    * Write an info message to the console

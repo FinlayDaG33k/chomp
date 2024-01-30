@@ -19,6 +19,7 @@ Deno.test("Configure Test", () => {
   // Make sure clearing works
   Configure.set('test3', 'chomp');
   Configure.clear();
+  // deno-lint-ignore no-explicit-any -- Arbitrary data may be used
   assertEquals(Configure.dump(), new Map<string, any>());
 
   // Make sure default values work on get and consume

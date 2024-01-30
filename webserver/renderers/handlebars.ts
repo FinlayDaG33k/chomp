@@ -3,6 +3,7 @@ import { raise } from "../../error/raise.ts";
 import { ViewVariable } from "../controller/controller.ts";
 
 interface CacheItem {
+  // deno-lint-ignore ban-types -- TODO
   [key: string]: Function;
 }
 

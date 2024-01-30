@@ -3,7 +3,7 @@ import { Router } from "./routing/router.ts";
 import { StatusCodes } from "./http/status-codes.ts";
 
 export class Webserver {
-  private server: any = null;
+  private server: Deno.Listener|null = null;
 
   constructor(
     private readonly port: number = 80
@@ -23,6 +23,7 @@ export class Webserver {
 
   private async serve(conn: Deno.Conn) {
     // Upgrade the connection to HTTP
+    // deno-lint-ignore no-deprecated-deno-api -- TODO
     const httpConn: Deno.HttpConn = Deno.serveHttp(conn);
 
     // Handle each request for this connection

@@ -1,10 +1,9 @@
 export class Druid {
-  // TODO: Find out types of spec
-  // deno-lint-ignore no-explicit-any -- Will be added later
+  // deno-lint-ignore no-explicit-any -- TODO
   private spec: any = null;
-  // deno-lint-ignore no-explicit-any -- Will be added later
+  // deno-lint-ignore no-explicit-any -- TODO
   public set setSpec(spec: any) { this.spec = spec; }
-  // deno-lint-ignore no-explicit-any -- Will be added later
+  // deno-lint-ignore no-explicit-any -- TODO
   public get getSpec(): any { return this.spec; }
 
   public constructor(

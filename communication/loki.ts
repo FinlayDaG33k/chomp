@@ -1,6 +1,7 @@
 import { Logger } from "../logging/logger.ts";
 
 export interface LokiStream {
+  // deno-lint-ignore no-explicit-any -- TODO
   stream: any;
   values: Array<Array<string>>;
 }

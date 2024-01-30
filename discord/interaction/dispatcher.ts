@@ -1,4 +1,4 @@
-import { ApplicationCommandOption, ApplicationCommandTypes } from "../mod.ts";
+import {ApplicationCommandOption, ApplicationCommandTypes, BigString} from "../mod.ts";
 import { Discord } from "../discord.ts";
 import { Logger } from "../../logging/logger.ts";
 import { File } from "../../filesystem/file.ts";
@@ -17,6 +17,7 @@ export interface InteractionConfig {
 export class InteractionDispatcher {
   private static _interactionsDir = `${Deno.cwd()}/src/interactions`;
   private static list: InteractionConfig[] = [];
+  // deno-lint-ignore no-explicit-any -- TODO
   private static handlers: any = {};
 
   /**
@@ -42,9 +43,9 @@ export class InteractionDispatcher {
    * @param opts
    * @returns Promise<void>
    */
-  public static async update(opts: any): Promise<void> {
+  public static async update(opts: {guildId: bigint|BigString}): Promise<void> {
     try {
-      await Discord.getBot()?.helpers.upsertGuildApplicationCommands(opts.guildId, InteractionDispatcher.getInteractions());
+      await Discord.getBot()?.helpers.upsertGuildApplicationCommands(opts.guildId.toString(), InteractionDispatcher.getInteractions());
     } catch(e) {
       Logger.error(`Could not update interactions: ${e.message}`);
     }
@@ -75,6 +76,7 @@ export class InteractionDispatcher {
    * @param data
    * @returns Promise<void>
    */
+  // deno-lint-ignore no-explicit-any -- TODO
   public static async dispatch(interaction: string, data: any = {}): Promise<void> {
     // Get the handler
     const handler = InteractionDispatcher.getHandler(interaction);

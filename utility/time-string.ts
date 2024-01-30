@@ -73,7 +73,8 @@ function parseNumberFormat(digit: string, unit: string): number {
  * @param parts
  * @returns number
  */
-export function T(strIn: TemplateStringsArray, ...parts: any[]) {
+// deno-lint-ignore no-explicit-any -- TODO
+export function T(strIn: TemplateStringsArray, ...parts: any[]): number {
   const str = String.raw(strIn, parts).toLowerCase().replace(/\s/g, '');
   const parsed = [...str.matchAll(TimeRegexp)];
   if (parsed.length === 0)
@@ -87,11 +88,12 @@ export function T(strIn: TemplateStringsArray, ...parts: any[]) {
 
 /**
  * Takes a time string and turns it into round seconds
- *
+ * 
  * @param strIn
  * @param parts
  * @returns number
  */
-export function _T(strIn: TemplateStringsArray, ...parts: any[]) {
+// deno-lint-ignore no-explicit-any -- TODO
+export function _T(strIn: TemplateStringsArray, ...parts: any[]): number {
   return Math.round(T(strIn, parts) / 1000);
 }

@@ -6,6 +6,7 @@ const defaults = [
 ];
 
 export class Configure {
+  // deno-lint-ignore no-explicit-any -- Arbitrary data may be used
   private static config = new Map<string, any>(defaults);
   private static hasLoaded = false;
 
@@ -23,7 +24,7 @@ export class Configure {
     // Make sure our file exists
     try {
       await Deno.stat(`${Deno.cwd()}/config.json`);
-    } catch(e) {
+    } catch(_e) {
       Logger.warning(`Could not find file "config.json" at "${Deno.cwd()}". Configure will be empty!`);
       Configure.hasLoaded = true;
       return;
@@ -53,6 +54,7 @@ export class Configure {
    * @param defaultValue Default value to return when no result was found
    * @returns any
    */
+  // deno-lint-ignore no-explicit-any -- Any arbitrary data may be used
   public static get(key: string, defaultValue: any = null): any {
     // Check if the key exists.
     // If not: return the default value
@@ -68,6 +70,7 @@ export class Configure {
    * @param value
    * @returns void
    */
+  // deno-lint-ignore no-explicit-any -- Any arbitrary data may be used
   public static set(key: string, value: any): void {
     Configure.config.set(key, value);
   }
@@ -82,6 +85,7 @@ export class Configure {
     return Configure.config.has(key);
   }
 
+  // deno-lint-ignore no-explicit-any -- Any arbitrary data may be used
   public static consume(key: string, defaultValue: any = null): any {
     // Check if the key exists, if not, return the default value
     if(!Configure.config.has(key)) return defaultValue;
@@ -111,6 +115,7 @@ export class Configure {
    *
    * @returns ConfigureItem[]
    */
+  // deno-lint-ignore no-explicit-any -- Any arbitrary data may be used
   public static dump(): Map<string, any> {
     return Configure.config;
   }
@@ -130,6 +135,7 @@ export class Configure {
    * If you do not want to keep the defaults, use "Configure.clear()" instead.
    */
   public static reset(): void {
+    // deno-lint-ignore no-explicit-any -- Any arbitrary data may be used
     Configure.config = new Map<string, any>(defaults);
   }
 }

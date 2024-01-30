@@ -60,6 +60,7 @@ export class Discord {
         channelUpdate(_bot, channel) {
           EventDispatcher.dispatch('ChannelUpdate', channel);
         },
+        // deno-lint-ignore no-explicit-any -- Set by Discordeno
         debug(text, ...args: any[]) {
           EventDispatcher.dispatch('Debug', { text: text, args: args });
         },

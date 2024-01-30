@@ -109,20 +109,24 @@ export class Controller {
     let body: string|Uint8Array = '';
     const canCompress = true;
     switch(this.getResponse().getHeaderLine('Content-Type').toLowerCase()) {
-      case 'application/json':
+      case 'application/json': {
         body = JSON.stringify(this._vars['data']);
         break;
-      case 'text/plain':
+      }
+      case 'text/plain': {
         body = this._vars['message'] as string;
         break;
-      case 'text/html':
+      }
+      case 'text/html': {
         const controller = Inflector.lcfirst(this.getRequest().getRoute().getController());
         const action = this.getRequest().getRoute().getAction();
-        body = await Handlebars.render(`${Controller._templateDir}/${controller}/${action}.hbs`, this._vars) ?? raise('Could not render handlebars');
+        body = await Handlebars.render(`${Controller._templateDir}/${controller}/${action}.hbs`, this._vars);
         break;
-      case 'application/octet-stream':
+      }
+      case 'application/octet-stream': {
         body = this._vars['data'] as Uint8Array;
         break;
+      }
     }
     
     // Check if we can compress with Brotli

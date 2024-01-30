@@ -2,6 +2,7 @@ import { Logger } from "../logging/logger.ts";
 
 interface QueueItem {
   weight?: number;
+  // deno-lint-ignore no-explicit-any -- Any arbitrary data may be used
   data: any;
 }
 
@@ -86,21 +87,21 @@ export class Queue {
     // Add item to the queue based on the scheduler used
     switch(this.scheduler) {
       case Scheduler.FIFO:
-        if(item.hasOwnProperty('weight')) {
+        if('weight' in item) {
           Logger.debug('A weight was set without the weighted scheduler, removing it...');
           delete item.weight;
         }
         this.items.push(item);
         break;
       case Scheduler.LIFO:
-        if(item.hasOwnProperty('weight')) {
+        if('weight' in item) {
           Logger.debug('A weight was set without the weighted scheduler, removing it...');
           delete item.weight;
         }
         this.items.unshift(item);
         break;
       case Scheduler.WEIGHTED:
-        if(!item.hasOwnProperty('weight')) {
+        if(!('weight' in item)) {
           Logger.debug('No weight was set with weighted scheduler, defaulting to 0...');
           item.weight = 0;
         }
@@ -135,6 +136,7 @@ export class Queue {
 
       // Check if all keys exists and if they have the same value
       for(const key of itemKeys) {
+        // deno-lint-ignore no-prototype-builtins -- TODO
         if(!queued.data.hasOwnProperty(key)) return false;
         if(queued.data[key] !== item.data[key]) return false;
       }

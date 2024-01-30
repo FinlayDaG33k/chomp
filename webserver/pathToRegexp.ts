@@ -274,7 +274,8 @@ export function tokensToFunction<P extends object = object>(
       return new RegExp(`^(?:${token.pattern})$`, reFlags);
     }
   });
-
+  
+  // deno-lint-ignore no-explicit-any -- TODO
   return (data: Record<string, any> | null | undefined) => {
     let path = "";
 

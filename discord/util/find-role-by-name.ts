@@ -11,7 +11,7 @@ import empty from "../../utility/empty.ts";
  * @param expiry Expiry time. Pass null to disable caching.
  * @returns Promise<unknown>
  */
-export async function findRoleByName(guild: BigInt, roleName: string, expiry: string|null = `+1 hour`): Promise<Role|null> {
+export async function findRoleByName(guild: bigint, roleName: string, expiry: string|null = `+1 hour`): Promise<Role|null> {
   if(!empty(expiry) && !Cache.expired(`role name ${roleName}`)) {
     return Cache.get(`role name ${roleName}`) as Role;
   }

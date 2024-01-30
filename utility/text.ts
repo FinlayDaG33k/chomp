@@ -15,7 +15,7 @@ export class Text {
   public static tokenize(input: string, limit = 3): string[] {
     const tokens = input.split(" ");
     if(tokens.length > limit) {
-      let ret = tokens.splice(0, limit);
+      const ret = tokens.splice(0, limit);
       ret.push(tokens.join(" "));
       return ret;
     }

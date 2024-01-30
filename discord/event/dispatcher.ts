@@ -10,6 +10,7 @@ interface EventConfig {
 
 export class EventDispatcher {
   private static list: EventConfig[] = [];
+  // deno-lint-ignore no-explicit-any -- TODO
   private static handlers: any = {};
 
   /**
@@ -33,7 +34,7 @@ export class EventDispatcher {
    * Import an event handler and add it to the list of handlers
    * TODO: Make sure class implements Event
    *
-   * @param EventConfig event
+   * @param event
    * @returns Promise<void>
    */
   public static async add(event: EventConfig): Promise<void> {
@@ -57,10 +58,11 @@ export class EventDispatcher {
   /**
    * Run an instance of the Feature handler
    *
-   * @param string Event
-   * @param any data
+   * @param event
+   * @param data
    * @returns Promise<void>
    */
+  // deno-lint-ignore no-explicit-any -- TODO
   public static async dispatch(event: string, data: any = {}): Promise<void> {
     // Get the event handler
     const handler = EventDispatcher.getHandler(event);

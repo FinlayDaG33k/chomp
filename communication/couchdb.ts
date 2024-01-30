@@ -6,8 +6,9 @@ interface Auth {
 export interface CouchResponse {
   status: number;
   statusText: string;
-  data?: any;
-  error?: {
+  // deno-lint-ignore no-explicit-any -- Any arbitrary data may be used
+  data: any|null;
+  error: null|{
     error: string;
     reason: string;
   };
@@ -70,6 +71,7 @@ export class CouchDB {
    *
    * @param data
    */
+  // deno-lint-ignore no-explicit-any -- Any arbitrary data may be used
   public async insert(data: any): Promise<CouchResponse> {
     return await this.raw('', data);
   }
@@ -82,6 +84,7 @@ export class CouchDB {
    * @param revision
    * @param data
    */
+  // deno-lint-ignore no-explicit-any -- Any arbitrary data may be used
   public async update(id: string, revision: string, data: any): Promise<CouchResponse> {
     // Make sure the id and revision are set in the data
     if(!data['_id'] || data['_id'] !== id) data['_id'] = id;
@@ -98,6 +101,7 @@ export class CouchDB {
    * @param id
    * @param data
    */
+  // deno-lint-ignore no-explicit-any -- Any arbitrary data may be used
   public async upsert(id: string, data: any): Promise<CouchResponse> {
     // Check if a document already exists
     // Insert a new document if not
@@ -115,6 +119,7 @@ export class CouchDB {
    * Delete a document from the database.
    *
    * @param id
+   * @param revision
    */
   public async delete(id: string, revision: string): Promise <CouchResponse> {
     return await this.raw(`${id}?rev=${revision}`, null, { method: 'DELETE' });
@@ -128,9 +133,10 @@ export class CouchDB {
    * @param body
    * @param overrides
    */
+  // deno-lint-ignore no-explicit-any -- Any arbitrary data may be used
   public async raw(endpoint: string, body: any = null, overrides: CouchOverrides = {}): Promise<CouchResponse> {
     // Start building opts
-    const opts: any = {
+    const opts = {
       method: overrides['method'] ? overrides['method'] : 'GET',
       headers: {
         Authorization: `Basic ${this.auth}`,
@@ -153,9 +159,11 @@ export class CouchDB {
     if(opts.method !== 'HEAD') data = await resp.json();
 
     // Prepare our CouchResponse
-    const couchResponse = {
+    const couchResponse: CouchResponse = {
       status: resp.status,
       statusText: resp.statusText,
+      data: null,
+      error: null,
     };
 
     // Check whether we have an error

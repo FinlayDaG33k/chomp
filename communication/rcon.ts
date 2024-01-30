@@ -86,7 +86,6 @@ export class RCON {
   private async recv(): Promise<string> {
     const data = new Buffer(2048); // TODO: Fix
     await this.conn.read(data);
-    const length = data.readInt32LE(0);
     const id = data.readInt32LE(4);
     const type = data.readInt32LE(8);
 
