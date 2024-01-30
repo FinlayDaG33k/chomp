@@ -1,4 +1,4 @@
-export const DISCORD_EPOCH = 1420070400000;
+import { DISCORD_EPOCH } from "../mod.ts";
 
 /**
  * Turn a Discord snowflake into a date object.
@@ -7,7 +7,6 @@ export const DISCORD_EPOCH = 1420070400000;
  * @param snowflake
  * @param epoch
  */
-export function snowflakeToDate(snowflake: any, epoch: number = DISCORD_EPOCH): Date {
-  const milliseconds = BigInt(snowflake) >> 22n;
-  return new Date(Number(milliseconds) + epoch);
+export function snowflakeToDate(snowflake: bigint, epoch: number = DISCORD_EPOCH): Date {
+  return new Date(Number(snowflake >> 22n) + epoch);
 }

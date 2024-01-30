@@ -21,4 +21,5 @@ export { snowflakeToDate } from "./util/snowflake-to-date.ts";
 // Export Discord class
 export { Discord } from "./discord.ts";
 
-
+// Export Constants
+export const DISCORD_EPOCH: number = 1_420_070_400_000;
