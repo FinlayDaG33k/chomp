@@ -1,4 +1,5 @@
 import { readerFromStreamReader } from "https://deno.land/std@0.126.0/io/mod.ts";
+import { readAll } from "https://deno.land/std@0.213.0/io/read_all.ts";
 import { pathToRegexp } from "../pathToRegexp.ts";
 import { Inflector } from "../../utility/inflector.ts";
 import { Logger } from "../../logging/logger.ts";
@@ -195,7 +196,7 @@ export class Router {
     const reader = readerFromStreamReader(request.body.getReader());
 
     // Read all bytes
-    const buf: Uint8Array = await Deno.readAll(reader);
+    const buf: Uint8Array = await readAll(reader);
 
     // Decode and return
     return new TextDecoder("utf-8").decode(buf);
