@@ -107,7 +107,7 @@ export class Controller {
    */
   public async render(): Promise<void> {
     let body: string|Uint8Array = '';
-    let canCompress = true;
+    const canCompress = true;
     switch(this.getResponse().getHeaderLine('Content-Type').toLowerCase()) {
       case 'application/json':
         body = JSON.stringify(this._vars['data']);
