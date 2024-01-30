@@ -55,10 +55,11 @@ export class Websocket {
     if(!message) return;
 
     // Decode the message
-    let data = JSON.parse(message);
+    const data = JSON.parse(message);
+    
     // Get the Event
     let event = data.event;
-    let tokens = [];
+    const tokens = [];
     for(let token of event.split('_')) {
       token = token.toLowerCase();
       token = token[0].toUpperCase() + token.slice(1);
