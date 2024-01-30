@@ -15,7 +15,7 @@ jobs:
       - name: Set up Deno  
         uses: denoland/setup-deno@v1
         with:
-          deno-version: "1.30.0"
+          deno-version: "1.40.0"
       - name: Lint
         run: deno lint
       - name: Run tests
