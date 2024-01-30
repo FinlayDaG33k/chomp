@@ -21,7 +21,7 @@ export interface DiscordInitOpts {
 export class Discord {
   protected static bot: Bot|BotWithCache|undefined;
   protected token = '';
-  protected intents: any;
+  protected intents: number;
   protected botId = BigInt(0);
 
   /**
@@ -37,7 +37,7 @@ export class Discord {
       Logger.error('No Discord bot token was provided!');
       Deno.exit(1);
     }
-    if('intents' in opts) this.intents = opts.intents;
+    this.intents = 'intents' in opts ? opts.intents : 0;
     if('botId' in opts) this.botId = BigInt(opts.botId);
 
     const baseBot = createBot({
