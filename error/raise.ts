@@ -5,7 +5,7 @@
  * @param err
  * @param type
  */
-// deno-lint-ignore no-explicit-any ban-types -- TODO
+// deno-lint-ignore no-explicit-any -- TODO
 export function raise<TError extends Error>(err: string, type: string|(new (...args: any[]) => TError)|'Error' = 'Error'){
   // Check if we want to throw a regular error
   if(type === "Error") throw new Error(err);
