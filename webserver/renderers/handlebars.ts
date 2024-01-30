@@ -20,7 +20,7 @@ export class Handlebars {
     // Compile our template
     // Cache it if need be
     const compiled = hbs.compile(template) ?? raise('Could not compile template');
-    if(cache) if(cache) Handlebars._cache[path] = compiled;
+    if(cache) Handlebars._cache[path] = compiled;
 
     // Let the engine render
     return compiled(vars);
