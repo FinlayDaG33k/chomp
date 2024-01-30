@@ -84,8 +84,8 @@ export class Router {
       route.route,
       request.headers,
       await Router.getBody(request),
-      await Router.getParams(route.route, route.path),
-      await Router.getQuery(request.url),
+      Router.getParams(route.route, route.path),
+      Router.getQuery(request.url),
       Router.getAuth(request),
       clientIp
     );
@@ -158,14 +158,14 @@ export class Router {
    *
    * @param route
    * @param path
-   * @returns Promise<{ [key: string]: string }>
+   * @returns RequestParameters
    */
-  public static async getParams(route: ChompRoute, path: string): Promise<RequestParameters> {
+  public static getParams(route: ChompRoute, path: string): RequestParameters {
     // Strip off query parameters
-    path = path.split("%3F");
-    path = path[0];
+    const pathSplit = path.split("%3F");
+    path = pathSplit[0];
     
-    const keys: any[] = [];
+    const keys: string[] = [];
     const r = pathToRegexp(route.getPath(), keys).exec(path) || [];
 
     return keys.reduce((acc, key, i) => ({ [key.name]: r[i + 1], ...acc }), {});
@@ -175,9 +175,9 @@ export class Router {
    * Get the query parameters for the given route
    * 
    * @param path
-   * @returns Promise<QueryParameters>
+   * @returns QueryParameters
    */
-  public static async getQuery(path: string): Promise<QueryParameters> {
+  public static getQuery(path: string): QueryParameters {
     const params = new URLSearchParams(path.split("?")[1]);
     return Object.fromEntries(params.entries());
   }
