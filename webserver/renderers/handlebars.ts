@@ -1,5 +1,4 @@
 import { default as hbs } from "https://jspm.dev/handlebars@4.7.6";
-import { Logger } from "../../logging/logger.ts";
 import { raise } from "../../error/raise.ts";
 import { ViewVariable } from "../controller/controller.ts";
 
@@ -26,19 +25,15 @@ export class Handlebars {
     return compiled(vars);
   }
   
-  private static async getTemplate(path: string): Promise<string|void> {
+  private static async getTemplate(path: string): Promise<string> {
     // Make sure out template exists
     try {
       await Deno.stat(path);
     } catch(e) {
-      Logger.error(`Could not render handlebars template: Could not read template at "${path}"`, e.stack);
-      return;
+      throw new Error(`Could not render handlebars template: Could not read template at "${path}"`, e.stack);
     }
 
-    // Read our template
-    const template = await Deno.readTextFile(path);
-    
-    // Return the template
-    return template;
+    // Read and our template
+    return await Deno.readTextFile(path);
   }
 }
