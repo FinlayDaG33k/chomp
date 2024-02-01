@@ -76,7 +76,7 @@ export class InteractionDispatcher {
    * @param data
    * @returns Promise<void>
    */
-  public static async dispatch(interaction: string, data: DiscordInteraction = {}): Promise<void> {
+  public static async dispatch(interaction: string, data: DiscordInteraction): Promise<void> {
     // Get the handler
     const handler = InteractionDispatcher.getHandler(interaction);
     if(!handler) {
