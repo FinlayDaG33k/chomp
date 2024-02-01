@@ -17,7 +17,8 @@ export async function findRoleByName(guild: bigint, roleName: string, expiry: st
   }
   
   // Get a list of all roles for the guild
-  const roles = Discord.getBot().roles
+  // @ts-ignore Using null-coalescing to check whether cache is enabled
+  const roles = Discord.getBot().guilds.get(guild)?.roles
     ?? await Discord.getBot().helpers.getRoles(guild);
   if(!roles) {
     Logger.error(`Could not obtain roles for guild! (this is a bug!)`);
