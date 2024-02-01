@@ -27,7 +27,10 @@ export class Discord {
   /**
    * Return the instance of the Discord bot connection
    */
-  public static getBot(): Bot|BotWithCache|undefined { return Discord.bot; }
+  public static getBot(): Bot|BotWithCache {
+    if(!Discord.bot) throw new Error('Bot was not properly initialized!');
+    return Discord.bot; 
+  }
 
   public constructor(opts: DiscordInitOpts) {
     // Make sure required parameters are present
