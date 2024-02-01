@@ -1,13 +1,13 @@
 import { Logger } from "../logging/logger.ts";
 
-const defaults = [
+const defaults = new Map<string, any>([
   ['debug', false],
-  ['error_log', `${Deno.cwd()}/logs/error.log`]
-];
+  ['error_log', `${Deno.cwd()}/logs/error.log`],
+]);
 
 export class Configure {
   // deno-lint-ignore no-explicit-any -- Arbitrary data may be used
-  private static config = new Map<string, any>(defaults);
+  private static config: Map<string, any> = defaults;
   private static hasLoaded = false;
 
   /**
@@ -136,6 +136,6 @@ export class Configure {
    */
   public static reset(): void {
     // deno-lint-ignore no-explicit-any -- Any arbitrary data may be used
-    Configure.config = new Map<string, any>(defaults);
+    Configure.config = defaults;
   }
 }
