@@ -82,9 +82,6 @@ export class Discord {
         guildEmojisUpdate(_bot, payload) {
           EventDispatcher.dispatch('guildEmojisUpdate', payload);
         },
-        guildLoaded(_bot, data) {
-          EventDispatcher.dispatch('GuildLoaded', data);
-        },
         guildMemberAdd(_bot, member, user) {
           EventDispatcher.dispatch('GuildMemberAdd', { member: member, user: user });
         },
@@ -202,9 +199,6 @@ export class Discord {
         },
         typingStart(_bot, payload) {
           EventDispatcher.dispatch('TypingStart', payload);
-        },
-        voiceChannelLeave(_bot, voiceState, guild, channel) {
-          EventDispatcher.dispatch('VoiceChannelLeave', { voiceState: voiceState, guild: guild, channel: channel });
         },
         voiceServerUpdate(_bot, payload) {
           EventDispatcher.dispatch('VoiceServerUpdate', payload);
