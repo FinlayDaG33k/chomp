@@ -9,6 +9,7 @@ type Handlers = {
   error: (message: string, stack: string|null) => void;
   debug: (message: string) => void;
 };
+type LogLevels = keyof Handlers;
 
 const handlers: Handlers = {
   info: (message: string): void => { console.log(`[${Logger.time()}] ${cyan('INFO')}  > ${message}`); },
