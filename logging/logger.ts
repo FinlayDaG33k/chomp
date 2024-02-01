@@ -96,7 +96,7 @@ export class Logger {
    *
    * @returns {string} The formatted time
    */
-  protected static time(): string {
+  public static time(): string {
     return new Time().format(Configure.get('logger.timeformat', 'yyyy/MM/dd HH:mm:ss'));
   }
 }
