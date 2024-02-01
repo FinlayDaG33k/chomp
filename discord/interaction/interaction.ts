@@ -1,10 +1,10 @@
-import { Discord } from "../mod.ts";
+import {Discord, DiscordInteraction, InteractionCallbackData, InteractionResponse} from "../mod.ts";
 
 export class Interaction {
-  protected interaction: unknown;
+  protected interaction: DiscordInteraction;
   private _hasReplied: boolean = false;
   
-  public constructor(opts: unknown) {
+  public constructor(opts: {interaction: DiscordInteraction}) {
     this.interaction = opts.interaction;
   }
 
@@ -21,12 +21,12 @@ export class Interaction {
    * 
    * @param data
    */
-  protected async respond(data: unknown): Promise<void> {
+  protected async respond(data: InteractionResponse|InteractionCallbackData): Promise<void> {
     if(!this._hasReplied) {
       await Discord.getBot().helpers.sendInteractionResponse(
         this.interaction.id,
         this.interaction.token,
-        data
+        data as InteractionResponse
       );
       this._hasReplied = true;
       return;
@@ -34,7 +34,7 @@ export class Interaction {
     
     await Discord.getBot().helpers.editOriginalInteractionResponse(
       this.interaction.token,
-      data
+      data as InteractionCallbackData
     );
   }
 }
