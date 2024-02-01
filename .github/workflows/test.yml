@@ -30,4 +30,4 @@ jobs:
         with:
           deno-version: "1.40.0"
       - name: Run tests
-        run: deno test --allow-read --allow-env
+        run: deno test --allow-read
