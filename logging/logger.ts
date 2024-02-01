@@ -2,7 +2,6 @@ import { Time } from "../utility/time.ts";
 import { Configure } from "../core/configure.ts";
 import { cyan, yellow, red, magenta, bold } from "https://deno.land/std@0.117.0/fmt/colors.ts";
 
-type LogLevels = "info"|"warning"|"error"|"debug";
 type Handlers = {
   info: (message: string) => void;
   warning: (message: string) => void;
