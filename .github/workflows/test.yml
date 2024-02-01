@@ -5,7 +5,7 @@ on:
   pull_request:
     branches: [main]
 jobs:
-  test:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - name: Clone repository
@@ -18,5 +18,16 @@ jobs:
           deno-version: "1.40.0"
       - name: Lint
         run: deno lint
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+      - name: Set up Deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: "1.40.0"
       - name: Run tests
         run: deno test --allow-read --allow-env
