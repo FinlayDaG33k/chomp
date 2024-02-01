@@ -1,4 +1,4 @@
-import {ApplicationCommandOption, ApplicationCommandTypes, BigString} from "../mod.ts";
+import {ApplicationCommandOption, ApplicationCommandTypes, BigString, DiscordInteraction} from "../mod.ts";
 import { Discord } from "../discord.ts";
 import { Logger } from "../../logging/logger.ts";
 import { File } from "../../filesystem/file.ts";
@@ -76,8 +76,7 @@ export class InteractionDispatcher {
    * @param data
    * @returns Promise<void>
    */
-  // deno-lint-ignore no-explicit-any -- TODO
-  public static async dispatch(interaction: string, data: any = {}): Promise<void> {
+  public static async dispatch(interaction: string, data: DiscordInteraction = {}): Promise<void> {
     // Get the handler
     const handler = InteractionDispatcher.getHandler(interaction);
     if(!handler) {
