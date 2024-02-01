@@ -35,7 +35,7 @@ const handlers: Handlers = {
     console.error(output);
   },
   debug: (message: string): void => {
-    if(Deno.env.get('DEBUG') == "true" || Configure.get('debug', false)) {
+    if(Configure.get('debug', false)) {
       console.log(`[${Logger.time()}] ${magenta('DEBUG')} > ${message}`);
     }
   }
