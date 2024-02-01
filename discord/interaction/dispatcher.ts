@@ -133,7 +133,7 @@ export class InteractionDispatcher {
 
       // Make sure module has a "config" exposed
       if(!('config' in module)) {
-        Logger.warning(`Could not find config in "${interaction.name}", skipping...`);
+        Logger.warning(`Could not find config in "${name}Interaction", skipping...`);
         continue;
       }
       
