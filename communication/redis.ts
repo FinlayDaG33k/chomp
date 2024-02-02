@@ -1,8 +1,8 @@
-import { connect as redisConnect } from "https://deno.land/x/redis@v0.25.2/mod.ts"
+import { connect as redisConnect, Redis as RedisConn } from "https://deno.land/x/redis@v0.25.2/mod.ts"
 import { Logger } from "../logging/logger.ts";
 
 export class Redis {
-  private static connection: any = null;
+  private static connection: RedisConn|null = null;
 
   /**
    * Connect to a Redis node
@@ -20,12 +20,11 @@ export class Redis {
 
   /**
    * Return the redis connection
-   * TODO: Find out type of Redis.connection
    *
    * @return any
    */
-  public static getConnection(): any {
+  public static getConnection(): RedisConn {
     if(!Redis.connection) Logger.error(`Redis connection requested before connecting!`);
-    return Redis.connection;
+    return Redis.connection!;
   }
 }

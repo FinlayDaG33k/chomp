@@ -7,6 +7,7 @@ interface IEvent {
 
 export class Events {
   private static list: IEvent[] = [];
+  // deno-lint-ignore no-explicit-any -- TODO
   private static handlers: any = {};
   public static getEvents() { return Events.list; }
 
@@ -26,6 +27,7 @@ export class Events {
     Events.list.push(event);
   }
 
+  // deno-lint-ignore no-explicit-any -- TODO
   public static async dispatch(event: string, data: any = {}) {
     // Get the event handler
     const handler = Events.getHandler(event);

@@ -1,30 +1,36 @@
-import { createBot, startBot } from "https://deno.land/x/discordeno@13.0.0/mod.ts";
-import { enableCachePlugin, enableCacheSweepers } from "https://deno.land/x/discordeno@13.0.0/plugins/cache/mod.ts";
-import { EventDispatcher } from "./event-dispatcher.ts";
+import { 
+  createBot, 
+  startBot, 
+  Bot, 
+  BotWithCache,
+  enableCachePlugin,
+  enableCacheSweepers,
+  EventDispatcher,
+  InteractionDispatcher
+} from "./mod.ts";
 import { Logger } from "../logging/logger.ts";
-
-export * from "https://deno.land/x/discordeno@13.0.0/mod.ts";
 
 export interface DiscordInitOpts {
   token: string;
-  intents: any[];
+  intents: number;
   botId: bigint|number;
   withCache?: boolean;
+  withSweeper?: boolean;
 }
 
 export class Discord {
-  protected static bot: any;
+  protected static bot: Bot|BotWithCache|undefined;
   protected token = '';
-  protected intents: any;
+  protected intents: number;
   protected botId = BigInt(0);
 
   /**
    * Return the instance of the Discord bot connection
-   * TODO: Find out type of Discord.bot
-   *
-   * @returns any
    */
-  public static getBot(): any { return Discord.bot; }
+  public static getBot(): Bot|BotWithCache {
+    if(!Discord.bot) throw new Error('Bot was not properly initialized!');
+    return Discord.bot; 
+  }
 
   public constructor(opts: DiscordInitOpts) {
     // Make sure required parameters are present
@@ -34,7 +40,7 @@ export class Discord {
       Logger.error('No Discord bot token was provided!');
       Deno.exit(1);
     }
-    if('intents' in opts) this.intents = opts.intents;
+    this.intents = 'intents' in opts ? opts.intents : 0;
     if('botId' in opts) this.botId = BigInt(opts.botId);
 
     const baseBot = createBot({
@@ -57,6 +63,7 @@ export class Discord {
         channelUpdate(_bot, channel) {
           EventDispatcher.dispatch('ChannelUpdate', channel);
         },
+        // deno-lint-ignore no-explicit-any -- Set by Discordeno
         debug(text, ...args: any[]) {
           EventDispatcher.dispatch('Debug', { text: text, args: args });
         },
@@ -78,9 +85,6 @@ export class Discord {
         guildEmojisUpdate(_bot, payload) {
           EventDispatcher.dispatch('guildEmojisUpdate', payload);
         },
-        guildLoaded(_bot, data) {
-          EventDispatcher.dispatch('GuildLoaded', data);
-        },
         guildMemberAdd(_bot, member, user) {
           EventDispatcher.dispatch('GuildMemberAdd', { member: member, user: user });
         },
@@ -91,7 +95,7 @@ export class Discord {
           EventDispatcher.dispatch('GuildMemberUpdate', { member: member, user: user });
         },
         guildUpdate(_bot, guild) {
-          EventDispatcher.dispatch('InteractionCreate', guild);
+          EventDispatcher.dispatch('GuildUpdate', guild);
         },
         integrationCreate(_bot, integration) {
           EventDispatcher.dispatch('IntegrationCreate', integration);
@@ -199,9 +203,6 @@ export class Discord {
         typingStart(_bot, payload) {
           EventDispatcher.dispatch('TypingStart', payload);
         },
-        voiceChannelLeave(_bot, voiceState, guild, channel) {
-          EventDispatcher.dispatch('VoiceChannelLeave', { voiceState: voiceState, guild: guild, channel: channel });
-        },
         voiceServerUpdate(_bot, payload) {
           EventDispatcher.dispatch('VoiceServerUpdate', payload);
         },
@@ -215,13 +216,7 @@ export class Discord {
     });
 
     // Enable cache if required
-    if(opts.withCache === true) {
-      const bot = enableCachePlugin(baseBot);
-      enableCacheSweepers(bot);
-      Discord.bot = bot;
-    } else {
-      Discord.bot = baseBot;
-    }
+    Discord.bot = Discord.enableCache(baseBot, opts);
   }
 
   /**
@@ -230,6 +225,29 @@ export class Discord {
    * @returns Promise<void>
    */
   public async start(): Promise<void> {
+    if(!Discord.bot) throw Error('Bot is not configured!');
+    await EventDispatcher.load();
+    await InteractionDispatcher.load();
     await startBot(Discord.bot);
+  }
+
+  /**
+   * Checks whether cache needs to be enabled.
+   * Add both cache and sweeper if required.
+   *
+   * @param bot
+   * @param opts
+   */
+  private static enableCache(bot: Bot, opts: DiscordInitOpts): Bot|BotWithCache {
+    // Return the bot if no cache needs to be enabled
+    // Otherwise enable the cache
+    if (!opts.withCache) return bot;
+    bot = enableCachePlugin(bot);
+    
+    // Return the bot if no sweeper needs to be enabled
+    // Otherwise enable the sweeper and return the final bot
+    if(!opts.withSweeper) return bot;
+    enableCacheSweepers(bot as BotWithCache);
+    return bot;
   }
 }

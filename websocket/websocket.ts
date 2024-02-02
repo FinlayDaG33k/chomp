@@ -2,7 +2,7 @@ import { WebSocketServer, WebSocketAcceptedClient } from "https://deno.land/x/we
 import { Logger } from "../logging/logger.ts";
 import { Events } from "./events.ts";
 import { Authenticator } from "./authenticator.ts";
-import { Configure } from "../common/configure.ts";
+import { Configure } from "../core/configure.ts";
 
 export class Websocket {
   private readonly port: number = 80;
@@ -33,14 +33,15 @@ export class Websocket {
     });
   }
 
-  public async broadcast(eventString: string, data: any) {
+  // deno-lint-ignore no-explicit-any -- Any arbitrary data may be used
+  public broadcast(eventString: string, data: any) {
     // Make sure the server has started
     if(!this.server) return;
 
     // Loop over each client
     // Check whether they are still alive
     // Send the event to the clients that are still alive
-    for(let client of this.server.clients) {
+    for(const client of this.server.clients) {
       if(!client) continue;
       if(client.isClosed) continue;
       client.send(JSON.stringify({
@@ -55,10 +56,11 @@ export class Websocket {
     if(!message) return;
 
     // Decode the message
-    let data = JSON.parse(message);
+    const data = JSON.parse(message);
+    
     // Get the Event
     let event = data.event;
-    let tokens = [];
+    const tokens = [];
     for(let token of event.split('_')) {
       token = token.toLowerCase();
       token = token[0].toUpperCase() + token.slice(1);
@@ -73,7 +75,8 @@ export class Websocket {
     }
   }
 
-  private async handleEvent(event: string, data: any = []) {
+  // deno-lint-ignore no-explicit-any -- Any arbitrary data may be used
+  private async handleEvent(event: string, data: any = {}) {
     const handler = Events.getHandler(event);
     if(!handler) return Logger.warning(`Event "${event}" does not exists! (did you register it?)`);
 

@@ -1,25 +1,43 @@
 # Chomp
-Library of (arguably) useful Deno classes.  
+Library of (arguably) useful stuff.  
 Should work just fine but comes with no warranties whatsoever.  
 
 ## Usage
-Add the following to your file:
+
+Chomp is structured in such a way that you can import just what you need for your app.  
+A good start would be to import the most common things you might use:
 ```ts
 import * from "https://deno.land/x/chomp/mod.ts";
 ```
 
-That's it!  
-You can visit the [documentation](https://doc.deno.land/https://deno.land/x/chomp/mod.ts) to see what Chomp is capable off!  
-Someday I'll write a better usage guide.
+This includes (list might not always be up-to-date):
+- [Cache](docs/core/cache.md)
+- [Configure](docs/core/configure.md)
+- [Logger](docs/logging/logger.md)
+- [File](docs/filesystem/file.md)
+- [Folder](docs/filesystem/folder.md)
+- [CheckSource](docs/utility/check-source.md)
 
+You can then import any of the "extras" as you need:
 
-## Compatibility
-Below a chart indicating for which Deno version this library is built and tested.  
-Compatibility may be more flexible, however, chances are this library may not work with older of newer versions than indicated.
+- [Discord Bot](docs/discord/README.md) (Discordeno Wrapper):
+```ts
+import * from "https://deno.land/x/chomp/discord/mod.ts";
+```
+- [Webserver](docs/webserver/README.md):
+```ts 
+import * from "https://deno.land/x/chomp/webserver/mod.ts";
+```
+- [Websocket Server](docs/websocket/README.md):
+```ts 
+import * from "https://deno.land/x/chomp/websocket/mod.ts";
+```
 
-| Library Version | Deno Version |
-|-----------------|--------------|
-| 1.1.0           | 1.24.0       |
-| 1.0.0           | 1.15.3       |
-| 0.0.2           | ???          |
-| 0.0.1           | ???          |
+Additionally, you can explore the [docs](/docs) or [Deno.land](https://doc.deno.land/https://deno.land/x/chomp/mod.ts) to see what more Chomp is capable off!
+
+## Versioning
+
+Versions adhere to the following versioning system of `x.y.z` where:
+- `x` means a breaking change (eg. removal of a function, breaking upgrade of an upstream dependency etc.).
+- `y` means an addition or non-breaking update.
+- `z` means a typos, bug-fix etc.

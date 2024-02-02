@@ -1,5 +1,5 @@
 import { Logger } from "../logging/logger.ts";
-import { Configure } from "../common/configure.ts";
+import { Configure } from "../core/configure.ts";
 
 export class Authenticator {
   /**
