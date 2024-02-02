@@ -43,15 +43,53 @@ const myConst = Configure.get('app configure item', 'default value');
 
 ## Setting or updating an item in the Configure
 
+Sometimes you may want to set or update an item during runtime.  
+You can do so as follows:
+```ts
+Configure.set('app configure item', 'my value');
+```
+
 **NOTE**: Changes made here do not persist between restarts of your app.
 
 ## Checking whether an item exists
 
+To check whether an item exists, just run the following:
+```ts
+const exists = Configure.check('app configure item');
+```
+
 ## Consume a Configure item
+
+Consuming a Configure item will return the item and then remove it.  
+```ts
+const myConst = Configure.consume('app configure item', 'default value');
+```
 
 ## Delete a Configure item
 
+Deleting a configure item will remove it from the Configure.
+
+```ts
+Configure.delete('app configure item');
+```
+
+**NOTE**: Changes made here do not persist between restarts of your app.
+
 ## Dump all Configure items
+
+Sometimes it is useful to know all the items that are currently in the Configure.  
+In this case, you can simply dump all the contents:
+```ts
+console.log(Configure.dump());
+```
+
+```ts
+Map(3) {
+  "debug" => false,
+  "error_log" => "/path/to/logs/error.log",
+  "app configuration key" => "app configuration value"
+}
+```
 
 **NOTE**: This should only be done for debugging purposes as it may leak sensitive information!
 
@@ -92,4 +130,11 @@ Map(2) {
   "debug" => false, 
   "error_log" => "/path/to/logs/error.log"
 }
+```
+
+However, the default state is coded into Chomp itself and is *not* your app's defaults.  
+If instead, you want to use your app's defaults, you must first clear/reset then force a load:
+```ts
+Configure.clear(); // Or reset depending on your needs
+await Configure.load(true); // Force the configure to reload
 ```
