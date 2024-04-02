@@ -117,6 +117,7 @@ export class CouchDB {
 
   /**
    * Delete a document from the database.
+   * TODO: Automatically find revision.
    *
    * @param id
    * @param revision
