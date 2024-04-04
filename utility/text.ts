@@ -22,4 +22,21 @@ export class Text {
 
     return tokens;
   }
+
+  /**
+   * Replace special characters with their HTML entities.
+   * TODO: Add support for diacritical marks.
+   *
+   * @param str
+   * @returns string
+   */
+  public static htmlentities(str: string): string {
+    return str.replace(/[&<>'"]/g, (tag: string) => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      "'": '&#39;',
+      '"': '&quot;',
+    }[tag] ?? tag))
+  }
 }
