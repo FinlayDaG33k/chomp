@@ -33,14 +33,21 @@ export class InfluxDB {
   }
 
   /**
-   * Write our datapoint to InfluxDB
-   * 
-   * @param point
+   * Write our datapoint(s) to InfluxDB
+   *
+   * @param data
    */
-  public async write(point: Point): Promise<boolean> {
-    // Convert point to Line Protocol entry
-    const line = point.toLine(this._api.precision);
-    
+  public async write(data: Point|Point[]): Promise<boolean> {
+    // Convert point(s) to Line Protocol entry
+    let points = '';
+    if(Array.isArray(data)) {
+      for await(const point of data) {
+        points += `${point.toLine(this._api.precision)}\n`;
+      }
+    } else {
+      points = data.toLine(this._api.precision);
+    }
+
     // Write line to InfluxDB
     try {
       const resp = await fetch(this._api.url, {
@@ -49,11 +56,11 @@ export class InfluxDB {
           'Content-Type': 'text/plain',
         },
         method: 'POST',
-        body: line,
+        body: points,
       });
       return resp.ok;
     } catch(e) {
-      Logger.error(`Could not write point to InfluxDB`, e.stack);
+      Logger.error(`Could not write point(s) to InfluxDB`, e.stack);
       return false;
     }
   }
