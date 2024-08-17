@@ -11,13 +11,15 @@ export class CheckSource {
   private errors = 0;
 
   constructor(
-    private readonly path: string,
+    private readonly paths: string[],
     private readonly exclusions: ExclusionConfig = { directories: [], files: [] }
   ) {}
 
   public async run(): Promise<void> {
-    // Get list of files
-    await this.getFiles(this.path);
+    // Get all files in all paths
+    for(const path of this.paths) {
+      await this.getFiles(path);
+    }
 
     // Check all files found
     Logger.info(`Checking "${this.files.length}" files...`);
@@ -28,7 +30,7 @@ export class CheckSource {
       Logger.info(`Finished checking files with ${this.errors} errors!\r\nPlease check the logs above for more information.`);
       Deno.exit(1);
     }
-    Logger.info(`Finished checking files!`);
+    Logger.info(`Finished checking files without errors!`);
     Deno.exit(0);
   }
 
