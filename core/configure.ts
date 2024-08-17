@@ -49,23 +49,23 @@ export class Configure {
   }
 
   /**
-   * Obtain the value of a key in the configure
+   * Obtain the value of a key in the configure.
+   *
    *
    * @param key Key to look for
    * @param defaultValue Default value to return when no result was found
-   * @returns any
+   * @returns any|null
    */
   // deno-lint-ignore no-explicit-any -- Any arbitrary data may be used
-  public static get(key: string, defaultValue: any = null): any {
-    // Check if the key exists.
-    // If not: return the default value
-    // Else: return the value in the Configure
+  public static get(key: string, defaultValue: any = null): any|null {
+    // Return null if we do not have the key
     if(!Configure.config.has(key)) return defaultValue;
     return Configure.config.get(key);
   }
 
   /**
    * Set a configure item
+   * It is not possible to store null values
    *
    * @param key
    * @param value
@@ -73,6 +73,7 @@ export class Configure {
    */
   // deno-lint-ignore no-explicit-any -- Any arbitrary data may be used
   public static set(key: string, value: any): void {
+    if(value === null || typeof value === 'undefined') return;
     Configure.config.set(key, value);
   }
 
