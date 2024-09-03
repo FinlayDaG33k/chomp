@@ -21,6 +21,26 @@ interface CouchOverrides {
 export class CouchDB {
   private auth = '';
 
+  /**
+   *
+   * @example
+   * ```ts
+   * import { CouchDB } from "https://deno.land/x/chomp/communication/couchdb.ts";
+   *
+   * const couchdb = new CouchDB(
+   *   'http://localhost:5984',
+   *   'my_database',
+   *   {
+   *     username: 'couchuser',
+   *     password: 'lamepassword'
+   *   }
+   * );
+   * ```
+   *
+   * @param host
+   * @param database
+   * @param auth
+   */
   public constructor(
     private readonly host: string = 'http://localhost:5984',
     private readonly database: string,
@@ -33,9 +53,17 @@ export class CouchDB {
    * Update the username for this instance.
    * This does *not* update the username on the server.
    *
+   * @example
+   * ```ts
+   * import { CouchDB } from "https://deno.land/x/chomp/communication/couchdb.ts";
+   *
+   * const couchdb = new CouchDB();
+   * couchdb.username = 'couchuser';
+   * ```
+   *
    * @param username
    */
-  public set username(username: string): void {
+  public set username(username: string) {
     // Get the password from the data
     const password = atob(this.auth).split(':')[1];
 
@@ -47,9 +75,17 @@ export class CouchDB {
    * Update the password for this instance.
    * This does *not* update the password on the server.
    *
+   * @example
+   * ```ts
+   * import { CouchDB } from "https://deno.land/x/chomp/communication/couchdb.ts";
+   *
+   * const couchdb = new CouchDB();
+   * couchdb.password = 'lamepassword';
+   * ```
+   *
    * @param password
    */
-  public set password(password: string): void {
+  public set password(password: string) {
     // Get the password from the data
     const username = atob(this.auth).split(':')[0];
 
@@ -60,6 +96,18 @@ export class CouchDB {
   /**
    * Get a document from the database.
    *
+   * @example
+   * ```ts
+   * import { CouchDB } from "https://deno.land/x/chomp/communication/couchdb.ts";
+   *
+   * const couchdb = new CouchDB(...);
+   * const existing = await couchdb.get('my-key');
+   *
+   * if(existing.status === 404) {
+   *   // Handle non-existing document
+   * }
+   * ```
+   *
    * @param id
    */
   public async get(id: string): Promise<CouchResponse> {
@@ -68,6 +116,24 @@ export class CouchDB {
 
   /**
    * Insert a document into the database.
+   *
+   * Any document passed to the method will be attempted to insert "as-is".
+   * The more convenient "{@linkcode CouchDB.upsert()}" method should be used most of the time.
+   *
+   * @example
+   * ```ts
+   * import { CouchDB } from "https://deno.land/x/chomp/communication/couchdb.ts";
+   *
+   * const couchdb = new CouchDB(...);
+   * const resp = await couchdb.insert({
+   *   '_id': 'my-key',
+   *   'data': 'my-data',
+   * });
+   *
+   * if(resp.status !== 201) {
+   *   // Handle insert error
+   * }
+   * ```
    *
    * @param data
    */
@@ -78,7 +144,21 @@ export class CouchDB {
 
   /**
    * Update a document in the database.
-   * This is only useful if you know the latest revision, otherwise see the "upsert" method instead.
+   *
+   * This is only useful if you know the latest revision.
+   * The more convenient "{@linkcode CouchDB.upsert()}" should be used most of the time.
+   *
+   * @example
+   * ```ts
+   * import { CouchDB } from "https://deno.land/x/chomp/communication/couchdb.ts";
+   *
+   * const couchdb = new CouchDB(...);
+   * const resp = await couchdb.update(`my-key`, '1-abcdef', 'my-data');
+   *
+   * if(resp.status !== 201) {
+   *   // Handle update error
+   * }
+   * ```
    *
    * @param id
    * @param revision
@@ -97,6 +177,18 @@ export class CouchDB {
    * Update or insert a document into the database.
    * This method will automatically check if an existing document exists and try to update it.
    * If no document exists, it will be created instead.
+   *
+   * @example
+   * ```ts
+   * import { CouchDB } from "https://deno.land/x/chomp/communication/couchdb.ts";
+   *
+   * const couchdb = new CouchDB(...);
+   * const resp = await couchdb.upsert(`my-key`, 'my-data');
+   *
+   * if(resp.status !== 201) {
+   *   // Handle upsert error
+   * }
+   * ```
    *
    * @param id
    * @param data
@@ -119,6 +211,20 @@ export class CouchDB {
    * Delete a document from the database.
    * TODO: Automatically find revision.
    *
+   * @example
+   * ```ts
+   * import { CouchDB } from "https://deno.land/x/chomp/communication/couchdb.ts";
+   *
+   * const couchdb = new CouchDB(...);
+   * const existing = await couchdb.get('my-key');
+   * if(existing.status === 404) return;
+   * const resp = await couchdb.delete('my-key', existing.data['_rev']);
+   *
+   * if(resp.status !== 200) {
+   *   // Handle deletion error
+   * }
+   * ```
+   *
    * @param id
    * @param revision
    */
@@ -129,6 +235,11 @@ export class CouchDB {
   /**
    * Main request handler.
    * This method is used for most of our other methods as well.
+   *
+   * @example
+   * ```ts
+   * // TODO: Write example
+   * ```
    *
    * @param endpoint
    * @param body
