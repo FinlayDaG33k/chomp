@@ -233,6 +233,28 @@ export class CouchDB {
   }
 
   /**
+   * Execute a view design
+   *
+   * @example
+   * ```ts
+   * import { CouchDB } from "https://deno.land/x/chomp/communication/couchdb.ts";
+   *
+   * const couchdb = new CouchDB(...);
+   * const resp = await couchdb.viewDesign('my-design', 'my-view', 'my-partition');
+   * if(resp.status !== 200) {
+   *   // Handle view error
+   * }
+   * ```
+   *
+   * @param design
+   * @param view
+   * @param partition
+   */
+  public async viewDesign(design: string, view: string, partition: string): Promise<CouchResponse>{
+    return await this.raw(`_partition/${partition}/_design/${design}/_view/${view}`);
+  }
+
+  /**
    * Main request handler.
    * This method is used for most of our other methods as well.
    *
