@@ -9,11 +9,11 @@ class CustomError extends Error {
 
 Deno.test("Errors Test", () => {
   // Check with a "simple" raise
-  assertThrows(() => raise('Some Error Message'), Error, 'Some Error Message');
-  
+  assertThrows(() => raise("Some Error Message"), Error, "Some Error Message");
+
   // Check with custom Error type (via string)
-  assertThrows(() => raise('Some Error Message', 'CustomError'), Error, 'Some Error Message');
-  
+  assertThrows(() => raise("Some Error Message", "CustomError"), Error, "Some Error Message");
+
   // Check with custom Error type (via class)
-  assertThrows(() => raise('Some Error Message', CustomError), CustomError, 'Some Error Message');
+  assertThrows(() => raise("Some Error Message", CustomError), CustomError, "Some Error Message");
 });

@@ -15,13 +15,13 @@ export class RCON {
    * @param port
    * @param password Optional password for authentication
    */
-  public async connect(ip: string, port: number, password: string|null = null) {
+  public async connect(ip: string, port: number, password: string | null = null) {
     this.conn = await Deno.connect({
       hostname: ip,
       port: port,
     });
 
-    if(password) await this.send(password, "AUTH");
+    if (password) await this.send(password, "AUTH");
   }
 
   /**
@@ -97,6 +97,6 @@ export class RCON {
       str = str.substring(0, str.length - 1);
     }
 
-    return str.replace(/\0/g, '') || "";
+    return str.replace(/\0/g, "") || "";
   }
 }

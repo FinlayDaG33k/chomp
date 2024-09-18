@@ -3,7 +3,7 @@ import { readAll } from "https://deno.land/std@0.213.0/io/read_all.ts";
 import { pathToRegexp } from "../pathToRegexp.ts";
 import { Inflector } from "../../utility/inflector.ts";
 import { Logger } from "../../core/logger.ts";
-import {QueryParameters, Request as ChompRequest, RequestParameters} from "../http/request.ts";
+import { QueryParameters, Request as ChompRequest, RequestParameters } from "../http/request.ts";
 import { StatusCodes } from "../http/status-codes.ts";
 import { Route as ChompRoute } from "./route.ts";
 import { Controller } from "../controller/controller.ts";
@@ -20,7 +20,9 @@ interface Route {
 export class Router {
   private static readonly _controllerDir = `file://${Deno.cwd()}/src/controller`;
   private static routes: ChompRoute[] = [];
-  public static getRoutes() { return Router.routes; }
+  public static getRoutes() {
+    return Router.routes;
+  }
 
   /**
    * Match the controller and action to a route
@@ -33,7 +35,7 @@ export class Router {
     let path = request.url
       .replace("http://", "")
       .replace("https://", "");
-    if(host !== null) path = path.replace(host, "");
+    if (host !== null) path = path.replace(host, "");
 
     // Ignore query parameters
     path = path.split("?", 1)[0];
@@ -43,14 +45,16 @@ export class Router {
     // Check if it's the right path
     // Return the route if route found
     for (const route of Router.routes) {
-      if(route.getMethod() !== request.method) continue;
+      if (route.getMethod() !== request.method) continue;
 
       // Make sure we have a matching route
       const matches = pathToRegexp(route.getPath()).exec(path);
-      if(matches) return {
-        route: route,
-        path: path
-      };
+      if (matches) {
+        return {
+          route: route,
+          path: path,
+        };
+      }
     }
   }
 
@@ -65,15 +69,15 @@ export class Router {
     // Make sure a route was found
     // Otherwise return a 404 response
     const route = Router.route(request);
-    if(!route || !route.route) {
+    if (!route || !route.route) {
       return new Response(
-        'The requested page could not be found.',
+        "The requested page could not be found.",
         {
           status: StatusCodes.NOT_FOUND,
           headers: {
-            'Content-Type': 'text/plain'
-          }
-        }
+            "Content-Type": "text/plain",
+          },
+        },
       );
     }
 
@@ -87,37 +91,39 @@ export class Router {
       Router.getParams(route.route, route.path),
       Router.getQuery(request.url),
       Router.getAuth(request),
-      clientIp
+      clientIp,
     );
 
     // Import and cache controller file if need be
-    if(!Registry.has(req.getRoute().getController())) {
+    if (!Registry.has(req.getRoute().getController())) {
       try {
         // Import the module
-        const module = await import(`${Router._controllerDir}/${Inflector.lcfirst(req.getRoute().getController())}.controller.ts`);
+        const module = await import(
+          `${Router._controllerDir}/${Inflector.lcfirst(req.getRoute().getController())}.controller.ts`
+        );
 
         // Make sure the controller class was found
-        if(!(`${req.getRoute().getController()}Controller` in module)) {
+        if (!(`${req.getRoute().getController()}Controller` in module)) {
           raise(`No class "${req.getRoute().getController()}Controller" could be found.`);
         }
 
         // Make sure the controller class extends our base controller
-        if(!(module[`${req.getRoute().getController()}Controller`].prototype instanceof Controller)) {
+        if (!(module[`${req.getRoute().getController()}Controller`].prototype instanceof Controller)) {
           raise(`Class "${req.getRoute().getController()}Controller" does not properly extend Chomp's controller.`);
         }
 
         // Add the module to our registry
         Registry.add(`${req.getRoute().getController()}Controller`, module);
-      } catch(e) {
+      } catch (e) {
         Logger.error(`Could not import "${req.getRoute().getController()}": ${e.message}`, e.stack);
         return new Response(
-          'Internal Server Error',
+          "Internal Server Error",
           {
             status: 500,
             headers: {
-              'content-type': 'text/plain'
-            }
-          }
+              "content-type": "text/plain",
+            },
+          },
         );
       }
     }
@@ -125,7 +131,8 @@ export class Router {
     // Run our controller
     try {
       // Instantiate the controller
-      const module = Registry.get(`${req.getRoute().getController()}Controller`) ?? raise(`"${req.getRoute().getController()}Controller" was not found in registry.`)
+      const module = Registry.get(`${req.getRoute().getController()}Controller`) ??
+        raise(`"${req.getRoute().getController()}Controller" was not found in registry.`);
       const controller = new module[`${req.getRoute().getController()}Controller`](req);
 
       // Run the controller's initializer
@@ -139,16 +146,16 @@ export class Router {
 
       // Return our response
       return controller.getResponse().build();
-    } catch(e) {
+    } catch (e) {
       Logger.error(`Could not execute "${req.getRoute().getController()}": ${e.message}`, e.stack);
       return new Response(
-        'An Internal Server Error Occurred',
+        "An Internal Server Error Occurred",
         {
           status: 500,
           headers: {
-            'Content-Type': 'text/plain'
-          }
-        }
+            "Content-Type": "text/plain",
+          },
+        },
       );
     }
   }
@@ -190,7 +197,7 @@ export class Router {
    */
   public static async getBody(request: Request): Promise<string> {
     // Make sure a body is set
-    if(request.body === null) return '';
+    if (request.body === null) return "";
 
     // Create a reader
     const reader = readerFromStreamReader(request.body.getReader());
@@ -211,7 +218,7 @@ export class Router {
   public static getAuth(request: Request): string {
     // Get our authorization header
     // Return it or empty string if none found
-    return request.headers.get("authorization") ?? '';
+    return request.headers.get("authorization") ?? "";
   }
 
   /**
@@ -222,11 +229,13 @@ export class Router {
    * @returns void
    */
   public static add(route: Route): void {
-    Router.routes.push(new ChompRoute(
-      route.path,
-      Inflector.pascalize(route.controller),
-      route.action,
-      route.method ?? 'GET',
-    ));
+    Router.routes.push(
+      new ChompRoute(
+        route.path,
+        Inflector.pascalize(route.controller),
+        route.action,
+        route.method ?? "GET",
+      ),
+    );
   }
 }

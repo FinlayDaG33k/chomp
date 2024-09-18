@@ -1,24 +1,24 @@
 export class GraphQL {
   private _variables = {};
-  private _query: string = 'query{}';
-  
+  private _query: string = "query{}";
+
   public constructor(
-    private readonly endpoint = '/graphql'
+    private readonly endpoint = "/graphql",
   ) {
   }
-  
+
   public execute() {
     return fetch(this.endpoint, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
+        "Content-Type": "application/json",
+        "Accept": "application/json",
       },
       body: JSON.stringify({
         query: this._query,
-        variables: this._variables
-      })
-    }).then(r => r.json());
+        variables: this._variables,
+      }),
+    }).then((r) => r.json());
   }
 
   /**
@@ -41,7 +41,7 @@ export class GraphQL {
    * @return The instance of this class
    */
   public addVariable(key: string, value: string): GraphQL {
-   this._variables[key] = value;
-   return this;
+    this._variables[key] = value;
+    return this;
   }
 }

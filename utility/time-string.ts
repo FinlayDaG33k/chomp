@@ -7,7 +7,7 @@ interface RegExp {
   groups: {
     digit: number;
     format: string;
-  }
+  };
 }
 
 const TimeRegexp = /(?<value>[+-]?\d+(\.\d+)?)\s*(?<unit>[a-zA-Z]+)/g;
@@ -28,7 +28,7 @@ const year = month * 12;
  */
 function parseNumberFormat(digit: string, unit: string): number {
   const n = Number(digit);
-  switch(unit) {
+  switch (unit) {
     case "ms":
     case "millisecond":
     case "milliseconds":
@@ -82,10 +82,11 @@ function parseNumberFormat(digit: string, unit: string): number {
  */
 // deno-lint-ignore no-explicit-any -- TODO
 export function TimeString(strIn: TemplateStringsArray, ...parts: any[]): number {
-  const str = String.raw(strIn, parts).toLowerCase().replace(/\s/g, '');
+  const str = String.raw(strIn, parts).toLowerCase().replace(/\s/g, "");
   const parsed = [...str.matchAll(TimeRegexp)];
-  if (parsed.length === 0)
+  if (parsed.length === 0) {
     throw new Error(`"${str}" is not a valid interval string`);
+  }
   let out = 0;
   for (const res of parsed) {
     out += Math.round(parseNumberFormat(res.groups!.value, res.groups!.unit));

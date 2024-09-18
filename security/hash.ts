@@ -5,14 +5,14 @@ import { crypto } from "https://deno.land/std@0.113.0/crypto/mod.ts";
  * List of algorithms supported by this library
  */
 export enum Algorithms {
-  SHA384 = 'SHA-384',
-  SHA3_224 = 'SHA3-224',
-  SHA3_256 = 'SHA3-256',
-  SHA3_384 = 'SHA3-384',
-  SHA3_512 = 'SHA3-512',
-  SHAKE128 = 'SHAKE128',
-  SHAKE256 = 'SHAKE256',
-  BLAKE2B256 = 'BLAKE2B-256',
+  SHA384 = "SHA-384",
+  SHA3_224 = "SHA3-224",
+  SHA3_256 = "SHA3-256",
+  SHA3_384 = "SHA3-384",
+  SHA3_512 = "SHA3-512",
+  SHAKE128 = "SHAKE128",
+  SHAKE256 = "SHAKE256",
+  BLAKE2B256 = "BLAKE2B-256",
   BLAKE2B384 = "BLAKE2B-384",
   BLAKE2B = "BLAKE2B",
   BLAKE2S = "BLAKE2S",
@@ -24,15 +24,15 @@ export enum Algorithms {
   /* Insecure, please do not use in production */
   RIPEMD160 = "RIPEMD-160",
   /* Insecure, please do not use in production */
-  SHA224 = 'SHA-224',
+  SHA224 = "SHA-224",
   /* Insecure, please do not use in production */
-  SHA256 = 'SHA-256',
+  SHA256 = "SHA-256",
   /* Insecure, please do not use in production */
-  SHA512 = 'SHA-512',
+  SHA512 = "SHA-512",
   /* Insecure, please do not use in production */
-  SHA1 = 'SHA-1',
+  SHA1 = "SHA-1",
   /* Insecure, please do not use in production */
-  MD5 = 'MD5',
+  MD5 = "MD5",
 }
 
 /**
@@ -92,6 +92,6 @@ export class Hash {
    * ```
    */
   public hex() {
-    return [...new Uint8Array(this.result)].map(x => x.toString(16).padStart(2, '0')).join('');
+    return [...new Uint8Array(this.result)].map((x) => x.toString(16).padStart(2, "0")).join("");
   }
 }

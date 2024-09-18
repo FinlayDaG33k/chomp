@@ -9,14 +9,14 @@ import { Registry } from "../registry/registry.ts";
 import { compress as compressBrotli } from "https://deno.land/x/brotli@v0.1.4/mod.ts";
 
 export interface ViewVariable {
-  [key: string]: string|number|unknown;
+  [key: string]: string | number | unknown;
 }
 
 export class Controller {
   private static readonly _templateDir = `./src/templates`;
   private static readonly _componentDir = `file:///${Deno.cwd()}/src/controller/component`;
   private _response: ResponseBuilder = new ResponseBuilder();
-  private _vars: ViewVariable = <ViewVariable>{};
+  private _vars: ViewVariable = <ViewVariable> {};
 
   /**
    * Set the 'Content-Type' header
@@ -24,9 +24,11 @@ export class Controller {
    * @deprecated Please use "Controller.getResponse().withType()" instead.
    * @param value
    */
-  public set type(value = 'text/html') {
-    Logger.warning('Setting type on controller itself is deprecated, please use "Controller.getResponse().withType()" instead.');
-    this.getResponse().withHeader('Content-Type', value);
+  public set type(value = "text/html") {
+    Logger.warning(
+      'Setting type on controller itself is deprecated, please use "Controller.getResponse().withType()" instead.',
+    );
+    this.getResponse().withHeader("Content-Type", value);
   }
 
   constructor(
@@ -63,7 +65,7 @@ export class Controller {
   protected async loadComponent(name: string): Promise<Controller> {
     // Check if we already loaded the component before
     // Use that if so
-    if(Registry.has(`${Inflector.ucfirst(name)}Component`)) {
+    if (Registry.has(`${Inflector.ucfirst(name)}Component`)) {
       const module = Registry.get(`${Inflector.ucfirst(name)}Component`);
       this[Inflector.ucfirst(name)] = new module[`${Inflector.ucfirst(name)}Component`](this);
       return this;
@@ -73,12 +75,12 @@ export class Controller {
     const module = await import(`${Controller._componentDir}/${Inflector.lcfirst(name)}.ts`);
 
     // Make sure the component class was found
-    if(!(`${Inflector.ucfirst(name)}Component` in module)) {
+    if (!(`${Inflector.ucfirst(name)}Component` in module)) {
       raise(`No class "${Inflector.ucfirst(name)}Component" could be found.`);
     }
 
     // Make sure the component class extends our base controller
-    if(!(module[`${Inflector.ucfirst(name)}Component`].prototype instanceof Component)) {
+    if (!(module[`${Inflector.ucfirst(name)}Component`].prototype instanceof Component)) {
       raise(`Class "${Inflector.ucfirst(name)}Component" does not properly extend Chomp's component.`);
     }
 
@@ -97,7 +99,9 @@ export class Controller {
    * @param key
    * @param value
    */
-  protected set(key: string, value: string|number|unknown) { this._vars[key] = value; }
+  protected set(key: string, value: string | number | unknown) {
+    this._vars[key] = value;
+  }
 
   /**
    * Render the page output
@@ -106,36 +110,36 @@ export class Controller {
    * @returns Promise<void>
    */
   public async render(): Promise<void> {
-    let body: string|Uint8Array = '';
+    let body: string | Uint8Array = "";
     const canCompress = true;
-    switch(this.getResponse().getHeaderLine('Content-Type').toLowerCase()) {
-      case 'application/json': {
-        body = JSON.stringify(this._vars['data']);
+    switch (this.getResponse().getHeaderLine("Content-Type").toLowerCase()) {
+      case "application/json": {
+        body = JSON.stringify(this._vars["data"]);
         break;
       }
-      case 'text/plain': {
-        body = this._vars['message'] as string;
+      case "text/plain": {
+        body = this._vars["message"] as string;
         break;
       }
-      case 'text/html': {
+      case "text/html": {
         const controller = Inflector.lcfirst(this.getRequest().getRoute().getController());
         const action = this.getRequest().getRoute().getAction();
         body = await Handlebars.render(`${Controller._templateDir}/${controller}/${action}.hbs`, this._vars);
         break;
       }
-      case 'application/octet-stream': {
-        body = this._vars['data'] as Uint8Array;
+      case "application/octet-stream": {
+        body = this._vars["data"] as Uint8Array;
         break;
       }
     }
 
     // Check if we can compress with Brotli
     // TODO: Hope that Deno will make this obsolete.
-    if(this.getRequest().getHeaders().get('accept-encoding')?.includes('br') && canCompress && body.length > 1024) {
+    if (this.getRequest().getHeaders().get("accept-encoding")?.includes("br") && canCompress && body.length > 1024) {
       Logger.debug(`Compressing body with brotli: ${body.length}-bytes`);
       body = compressBrotli(new TextEncoder().encode(body));
       Logger.debug(`Compressed body with brotli: ${body.length}-bytes`);
-      this.getResponse().withHeader('Content-Encoding', 'br');
+      this.getResponse().withHeader("Content-Encoding", "br");
     }
 
     // Set our final body

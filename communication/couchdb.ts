@@ -7,8 +7,8 @@ export interface CouchResponse {
   status: number;
   statusText: string;
   // deno-lint-ignore no-explicit-any -- Any arbitrary data may be used
-  data: any|null;
-  error: null|{
+  data: any | null;
+  error: null | {
     error: string;
     reason: string;
   };
@@ -19,10 +19,9 @@ interface CouchOverrides {
 }
 
 export class CouchDB {
-  private auth = '';
+  private auth = "";
 
   /**
-   *
    * @example
    * ```ts
    * import { CouchDB } from "https://deno.land/x/chomp/communication/couchdb.ts";
@@ -42,9 +41,9 @@ export class CouchDB {
    * @param auth
    */
   public constructor(
-    private readonly host: string = 'http://localhost:5984',
+    private readonly host: string = "http://localhost:5984",
     private readonly database: string,
-    auth: Auth = {username: '', password: ''},
+    auth: Auth = { username: "", password: "" },
   ) {
     this.auth = btoa(`${auth.username}:${auth.password}`);
   }
@@ -65,7 +64,7 @@ export class CouchDB {
    */
   public set username(username: string) {
     // Get the password from the data
-    const password = atob(this.auth).split(':')[1];
+    const password = atob(this.auth).split(":")[1];
 
     // Update auth string
     this.auth = btoa(`${username}:${password}`);
@@ -87,7 +86,7 @@ export class CouchDB {
    */
   public set password(password: string) {
     // Get the password from the data
-    const username = atob(this.auth).split(':')[0];
+    const username = atob(this.auth).split(":")[0];
 
     // Update auth string
     this.auth = btoa(`${username}:${password}`);
@@ -139,7 +138,7 @@ export class CouchDB {
    */
   // deno-lint-ignore no-explicit-any -- Any arbitrary data may be used
   public async insert(data: any): Promise<CouchResponse> {
-    return await this.raw('', data);
+    return await this.raw("", data);
   }
 
   /**
@@ -167,10 +166,10 @@ export class CouchDB {
   // deno-lint-ignore no-explicit-any -- Any arbitrary data may be used
   public async update(id: string, revision: string, data: any): Promise<CouchResponse> {
     // Make sure the id and revision are set in the data
-    if(!data['_id'] || data['_id'] !== id) data['_id'] = id;
-    if(!data['_rev'] || data['_rev'] !== revision) data['_rev'] = revision;
+    if (!data["_id"] || data["_id"] !== id) data["_id"] = id;
+    if (!data["_rev"] || data["_rev"] !== revision) data["_rev"] = revision;
 
-    return await this.raw(id, data, { method: 'PUT' });
+    return await this.raw(id, data, { method: "PUT" });
   }
 
   /**
@@ -197,14 +196,14 @@ export class CouchDB {
   public async upsert(id: string, data: any): Promise<CouchResponse> {
     // Check if a document already exists
     // Insert a new document if not
-    const exists = await this.raw(id, null, { method: 'GET' });
-    if(exists.status === 404) {
-      data['_id'] = id;
+    const exists = await this.raw(id, null, { method: "GET" });
+    if (exists.status === 404) {
+      data["_id"] = id;
       return await this.insert(data);
     }
 
     // Update the document
-    return await this.update(id, exists.data['_rev'], data);
+    return await this.update(id, exists.data["_rev"], data);
   }
 
   /**
@@ -228,8 +227,8 @@ export class CouchDB {
    * @param id
    * @param revision
    */
-  public async delete(id: string, revision: string): Promise <CouchResponse> {
-    return await this.raw(`${id}?rev=${revision}`, null, { method: 'DELETE' });
+  public async delete(id: string, revision: string): Promise<CouchResponse> {
+    return await this.raw(`${id}?rev=${revision}`, null, { method: "DELETE" });
   }
 
   /**
@@ -250,7 +249,7 @@ export class CouchDB {
    * @param view
    * @param partition
    */
-  public async viewDesign(design: string, view: string, partition: string): Promise<CouchResponse>{
+  public async viewDesign(design: string, view: string, partition: string): Promise<CouchResponse> {
     return await this.raw(`_partition/${partition}/_design/${design}/_view/${view}`);
   }
 
@@ -271,26 +270,26 @@ export class CouchDB {
   public async raw(endpoint: string, body: any = null, overrides: CouchOverrides = {}): Promise<CouchResponse> {
     // Start building opts
     const opts = {
-      method: overrides['method'] ? overrides['method'] : 'GET',
+      method: overrides["method"] ? overrides["method"] : "GET",
       headers: {
         Authorization: `Basic ${this.auth}`,
-      }
+      },
     };
 
     // Add body if specified
-    if(body !== null) {
-      opts['method'] = opts.method !== 'GET' ? opts.method : 'POST';
-      opts['body'] = JSON.stringify(body);
-      opts.headers['Content-Type'] = 'application/json';
+    if (body !== null) {
+      opts["method"] = opts.method !== "GET" ? opts.method : "POST";
+      opts["body"] = JSON.stringify(body);
+      opts.headers["Content-Type"] = "application/json";
     }
 
     // Make sure the endpoint starts with a leading slash
-    if(endpoint.charAt(0) !== '/' && endpoint !== '') endpoint = `/${endpoint}`;
+    if (endpoint.charAt(0) !== "/" && endpoint !== "") endpoint = `/${endpoint}`;
 
     // Send our request and get the response
     const resp = await fetch(`${this.host}/${this.database}${endpoint}`, opts);
     let data = null;
-    if(opts.method !== 'HEAD') data = await resp.json();
+    if (opts.method !== "HEAD") data = await resp.json();
 
     // Prepare our CouchResponse
     const couchResponse: CouchResponse = {
@@ -301,10 +300,10 @@ export class CouchDB {
     };
 
     // Check whether we have an error
-    if(resp.ok) {
-      couchResponse['data'] = data;
+    if (resp.ok) {
+      couchResponse["data"] = data;
     } else {
-      couchResponse['error'] = data;
+      couchResponse["error"] = data;
     }
 
     return couchResponse;

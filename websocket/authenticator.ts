@@ -7,11 +7,11 @@ export class Authenticator {
    *
    * @param token
    */
-  public static client(token: string = ''): boolean {
-    if(!token) {
+  public static client(token: string = ""): boolean {
+    if (!token) {
       Logger.debug(`No token has been set! (this may be a bug)`);
       return false;
     }
-    return token === Configure.get('websocket_client_auth', '');
+    return token === Configure.get("websocket_client_auth", "");
   }
 }

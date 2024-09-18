@@ -37,11 +37,11 @@ export class InfluxDB {
    *
    * @param data
    */
-  public async write(data: Point|Point[]): Promise<boolean> {
+  public async write(data: Point | Point[]): Promise<boolean> {
     // Convert point(s) to Line Protocol entry
-    let points = '';
-    if(Array.isArray(data)) {
-      for await(const point of data) {
+    let points = "";
+    if (Array.isArray(data)) {
+      for await (const point of data) {
         points += `${point.toLine(this._api.precision)}\n`;
       }
     } else {
@@ -53,13 +53,13 @@ export class InfluxDB {
       const resp = await fetch(this._api.url, {
         headers: {
           Authorization: this._api.auth,
-          'Content-Type': 'text/plain',
+          "Content-Type": "text/plain",
         },
-        method: 'POST',
+        method: "POST",
         body: points,
       });
       return resp.ok;
-    } catch(e) {
+    } catch (e) {
       Logger.error(`Could not write point(s) to InfluxDB`, e.stack);
       return false;
     }
@@ -68,8 +68,8 @@ export class InfluxDB {
 
 export class Point {
   private _tags: Map<string, string> = new Map<string, string>();
-  private _fields: Map<string, string|number> = new Map<string, string|number>();
-  private _timestamp: Date|number = 0;
+  private _fields: Map<string, string | number> = new Map<string, string | number>();
+  private _timestamp: Date | number = 0;
 
   public constructor(
     private readonly measurement: string,
@@ -93,7 +93,7 @@ export class Point {
    * @param key
    * @param value
    */
-  public addField(key: string, value: string|number): this {
+  public addField(key: string, value: string | number): this {
     this._fields.set(key, value);
     return this;
   }
@@ -105,38 +105,38 @@ export class Point {
    *
    * @param ts
    */
-  public setTimestamp(ts: Date|number): this {
+  public setTimestamp(ts: Date | number): this {
     this._timestamp = ts;
     return this;
   }
 
   public toLine(precision: Precision = Precision.us): string {
     // Start off with a blank string
-    let line = '';
+    let line = "";
 
     // Set the measurement
     line += this.measurement;
 
     // Add all tags
-    for(const [key, value] of this._tags.entries()) {
+    for (const [key, value] of this._tags.entries()) {
       line += `,${key}=${value}`;
     }
 
     // Add separator before fieldset
-    line += ' ';
+    line += " ";
 
     // Add all fields
     const entries = [];
-    for(const [key, value] of this._fields.entries()) {
+    for (const [key, value] of this._fields.entries()) {
       entries.push(`${key}=${value}`);
     }
-    line += entries.join(',');
+    line += entries.join(",");
 
     // Add timestamp
     let ts = 0;
-    if(this._timestamp instanceof Date) {
+    if (this._timestamp instanceof Date) {
       ts = this._timestamp.getTime();
-      switch(precision) {
+      switch (precision) {
         case Precision.s:
           ts = Math.trunc(ts / 1_000);
           break;

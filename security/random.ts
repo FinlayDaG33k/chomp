@@ -37,7 +37,7 @@ export class Random {
    */
   public static async string(length: number): Promise<string> {
     const buf = await Random.bytes(length / 2);
-    return Array.from(buf, (dec: number) => dec.toString(16).padStart(2, "0")).join('');
+    return Array.from(buf, (dec: number) => dec.toString(16).padStart(2, "0")).join("");
   }
 
   /**
@@ -105,9 +105,7 @@ export class Random {
    */
   public static float(min = 0, max = 1, secure = false): number {
     // Generate our randomness
-    const random = secure
-      ? crypto.getRandomValues(new Uint32Array(1))[0] / Math.pow(2, 32)
-      : Math.random();
+    const random = secure ? crypto.getRandomValues(new Uint32Array(1))[0] / Math.pow(2, 32) : Math.random();
 
     // Limit and return
     return random * (max - min + 1) + min;

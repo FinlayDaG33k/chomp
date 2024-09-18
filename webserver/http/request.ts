@@ -18,35 +18,53 @@ export class Request {
     private readonly params: RequestParameters,
     private readonly query: QueryParameters,
     private readonly auth: string,
-    private readonly ip: string|null = null,
+    private readonly ip: string | null = null,
   ) {
   }
-  
-  public getUrl(): string { return this.url; }
-  
-  public getMethod(): string { return this.method; }
-  
-  public getRoute(): Route { return this.route; }
-  
-  public getHeaders(): Headers { return this.headers ;}
-  
-  public getBody(): string { return this.body; }
-  
-  public getParams(): RequestParameters { return this.params; }
-  
-  public getParam(name: string): string|null { 
-    if(name in this.params) return this.params[name];
+
+  public getUrl(): string {
+    return this.url;
+  }
+
+  public getMethod(): string {
+    return this.method;
+  }
+
+  public getRoute(): Route {
+    return this.route;
+  }
+
+  public getHeaders(): Headers {
+    return this.headers;
+  }
+
+  public getBody(): string {
+    return this.body;
+  }
+
+  public getParams(): RequestParameters {
+    return this.params;
+  }
+
+  public getParam(name: string): string | null {
+    if (name in this.params) return this.params[name];
     return null;
   }
 
-  public getQueryParams(): QueryParameters { return this.query; }
-  
-  public getQuery(name: string): string|null {
-    if(name in this.query) return this.query[name];
+  public getQueryParams(): QueryParameters {
+    return this.query;
+  }
+
+  public getQuery(name: string): string | null {
+    if (name in this.query) return this.query[name];
     return null;
   }
-  
-  public getAuth(): string { return this.auth; }
-  
-  public getIp(): string|null { return this.ip; }
+
+  public getAuth(): string {
+    return this.auth;
+  }
+
+  public getIp(): string | null {
+    return this.ip;
+  }
 }

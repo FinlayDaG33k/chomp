@@ -4,18 +4,36 @@ import { TimeString } from "./time-string.ts";
 
 export class Time {
   private readonly time;
-  public get getTime() { return this.time; }
-  public get milliseconds() { return this.time.getMilliseconds(); }
-  public get seconds() { return this.time.getSeconds(); }
-  public get minutes() { return this.time.getMinutes(); }
-  public get hours() { return this.time.getHours(); }
-  public get weekDay() { return this.time.getDay(); }
-  public get monthDay() { return this.time.getDate(); }
-  public get month() { return this.time.getMonth(); }
-  public get year() { return this.time.getFullYear(); }
+  public get getTime() {
+    return this.time;
+  }
+  public get milliseconds() {
+    return this.time.getMilliseconds();
+  }
+  public get seconds() {
+    return this.time.getSeconds();
+  }
+  public get minutes() {
+    return this.time.getMinutes();
+  }
+  public get hours() {
+    return this.time.getHours();
+  }
+  public get weekDay() {
+    return this.time.getDay();
+  }
+  public get monthDay() {
+    return this.time.getDate();
+  }
+  public get month() {
+    return this.time.getMonth();
+  }
+  public get year() {
+    return this.time.getFullYear();
+  }
 
-  public constructor(time: string|undefined = undefined) {
-    this.time = timets(time).tz(Deno.env.get('TZ')!).t;
+  public constructor(time: string | undefined = undefined) {
+    this.time = timets(time).tz(Deno.env.get("TZ")!).t;
   }
 
   public format(format: string) {
@@ -23,7 +41,7 @@ export class Time {
   }
 
   public midnight() {
-    this.time.setHours(0,0,0,0);
+    this.time.setHours(0, 0, 0, 0);
     return this;
   }
 

@@ -12,8 +12,8 @@ export class Loki {
    * @param tenant Tenant ID to use for the log item. Can be ommitted if not using multi-tenant mode.
    */
   public constructor(
-    private readonly host: string = 'http://localhost:3100',
-    private readonly tenant: string = 'fake',
+    private readonly host: string = "http://localhost:3100",
+    private readonly tenant: string = "fake",
   ) {
   }
 
@@ -22,20 +22,20 @@ export class Loki {
    *
    * @param stream
    */
-  public async send(stream: LokiStream|LokiStream[]) {
+  public async send(stream: LokiStream | LokiStream[]) {
     try {
       const resp = await fetch(`${this.host}/loki/api/v1/push`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'X-Scope-OrgID': this.tenant,
+          "Content-Type": "application/json",
+          "X-Scope-OrgID": this.tenant,
         },
         body: JSON.stringify({
           streams: Array.isArray(stream) ? stream : [stream],
         }),
       });
-      if(resp.ok === false) throw Error(`Response non-OK: ${resp.statusText}`)
-    } catch(e) {
+      if (resp.ok === false) throw Error(`Response non-OK: ${resp.statusText}`);
+    } catch (e) {
       Logger.error(`Could not add message to Loki: ${e.message}`, e.stack);
     }
   }

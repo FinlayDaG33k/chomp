@@ -2,8 +2,8 @@ import { Logger } from "./logger.ts";
 
 // deno-lint-ignore no-explicit-any -- Arbitrary data may be used
 const defaults = new Map<string, any>([
-  ['debug', false],
-  ['error_log', `${Deno.cwd()}/logs/error.log`],
+  ["debug", false],
+  ["error_log", `${Deno.cwd()}/logs/error.log`],
 ]);
 
 export class Configure {
@@ -26,13 +26,13 @@ export class Configure {
    */
   public static async load(force = false): Promise<void> {
     // Make sure we don't have loaded already
-    if(Configure.hasLoaded === true && force === false) return;
+    if (Configure.hasLoaded === true && force === false) return;
     Logger.info(`Loading data into Configure...`);
 
     // Make sure our file exists
     try {
       await Deno.stat(`${Deno.cwd()}/config.json`);
-    } catch(_e) {
+    } catch (_e) {
       Logger.warning(`Could not find file "config.json" at "${Deno.cwd()}". Configure will be empty!`);
       Configure.hasLoaded = true;
       return;
@@ -42,10 +42,10 @@ export class Configure {
     try {
       const json = await Deno.readTextFile(`${Deno.cwd()}/config.json`);
       const data = JSON.parse(json);
-      for(const entry of Object.keys(data)) {
+      for (const entry of Object.keys(data)) {
         Configure.set(entry, data[entry]);
       }
-    } catch(e) {
+    } catch (e) {
       Logger.error(`Could not load JSON: "${e.message}"`, e.stack);
       return;
     }
@@ -79,9 +79,9 @@ export class Configure {
    * @returns any|null
    */
   // deno-lint-ignore no-explicit-any -- Any arbitrary data may be used
-  public static get(key: string, defaultValue: any = null): any|null {
+  public static get(key: string, defaultValue: any = null): any | null {
     // Return null if we do not have the key
-    if(!Configure.config.has(key)) return defaultValue;
+    if (!Configure.config.has(key)) return defaultValue;
     return Configure.config.get(key);
   }
 
@@ -103,7 +103,7 @@ export class Configure {
    */
   // deno-lint-ignore no-explicit-any -- Any arbitrary data may be used
   public static set(key: string, value: any): void {
-    if(value === null || typeof value === 'undefined') return;
+    if (value === null || typeof value === "undefined") return;
     Configure.config.set(key, value);
   }
 
@@ -150,7 +150,7 @@ export class Configure {
   // deno-lint-ignore no-explicit-any -- Any arbitrary data may be used
   public static consume(key: string, defaultValue: any = null): any {
     // Check if the key exists, if not, return the default value
-    if(!Configure.config.has(key)) return defaultValue;
+    if (!Configure.config.has(key)) return defaultValue;
 
     // Hack together a reference to our item's value
     const ref = [Configure.config.get(key)];

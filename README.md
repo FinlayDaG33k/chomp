@@ -1,16 +1,19 @@
 # Chomp
-Library of (arguably) useful stuff.  
-Should work just fine but comes with no warranties whatsoever.  
+
+Library of (arguably) useful stuff.\
+Should work just fine but comes with no warranties whatsoever.
 
 ## Usage
 
-Chomp is structured in such a way that you can import just what you need for your app.  
+Chomp is structured in such a way that you can import just what you need for your app.\
 A good start would be to import the most common things you might use:
+
 ```ts
 import * from "https://deno.land/x/chomp/common.ts";
 ```
 
 This includes (list might not always be up-to-date):
+
 - [Cache](docs/core/cache.md)
 - [Configure](docs/core/configure.md)
 - [Logger](docs/logging/logger.md)
@@ -21,25 +24,33 @@ This includes (list might not always be up-to-date):
 You can then import any of the "extras" as you need:
 
 - [Discord Bot](docs/discord/README.md) (Discordeno Wrapper):
+
 ```ts
 import * from "https://deno.land/x/chomp/discord/mod.ts";
 ```
+
 - [Webserver](docs/webserver/README.md):
-```ts 
+
+```ts
 import * from "https://deno.land/x/chomp/webserver/mod.ts";
 ```
+
 - [Websocket Server](docs/websocket/README.md):
-```ts 
+
+```ts
 import * from "https://deno.land/x/chomp/websocket/mod.ts";
 ```
 
-Additionally, you can explore the [docs](/docs) or [Deno.land](https://doc.deno.land/https://deno.land/x/chomp/mod.ts) to see what more Chomp is capable off!
+Additionally, you can explore the [docs](/docs) or [Deno.land](https://doc.deno.land/https://deno.land/x/chomp/mod.ts)
+to see what more Chomp is capable off!
 
-**NOTE**: While you can import `https://deno.land/x/chomp/mod.ts`, we advice against this as it'll load the entire codebase, including stuff you may not actually be using.
+**NOTE**: While you can import `https://deno.land/x/chomp/mod.ts`, we advice against this as it'll load the entire
+codebase, including stuff you may not actually be using.
 
 ## Versioning
 
 Versions adhere to the following versioning system of `x.y.z` where:
+
 - `x` means a breaking change (eg. removal of a function, breaking upgrade of an upstream dependency etc.).
 - `y` means an addition or non-breaking update.
 - `z` means a typos, bug-fix etc.

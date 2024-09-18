@@ -41,12 +41,12 @@ export class CheckSource {
 
   constructor(
     private readonly paths: string[],
-    private readonly exclusions: ExclusionConfig = { directories: [], files: [] }
+    private readonly exclusions: ExclusionConfig = { directories: [], files: [] },
   ) {}
 
   public async run(): Promise<void> {
     // Get all files in all paths
-    for(const path of this.paths) {
+    for (const path of this.paths) {
       await this.getFiles(path);
     }
 
@@ -55,8 +55,10 @@ export class CheckSource {
     await this.checkFiles();
 
     // Exit when done
-    if(this.errors > 0) {
-      Logger.info(`Finished checking files with ${this.errors} errors!\r\nPlease check the logs above for more information.`);
+    if (this.errors > 0) {
+      Logger.info(
+        `Finished checking files with ${this.errors} errors!\r\nPlease check the logs above for more information.`,
+      );
       Deno.exit(1);
     }
     Logger.info(`Finished checking files without errors!`);
@@ -71,21 +73,21 @@ export class CheckSource {
    */
   private async getFiles(path: string) {
     Logger.info(`Getting all files in directory "${path}"...`);
-    for await(const entry of Deno.readDir(path)) {
-      if(entry.isDirectory) {
-        if('directories' in this.exclusions && this.exclusions.directories?.includes(entry.name)) {
+    for await (const entry of Deno.readDir(path)) {
+      if (entry.isDirectory) {
+        if ("directories" in this.exclusions && this.exclusions.directories?.includes(entry.name)) {
           Logger.debug(`Skipping excluded directory "${path}/${entry.name}"...`);
           continue;
         }
         await this.getFiles(`${path}/${entry.name}`);
       }
 
-      if(entry.isFile) {
-        if('files' in this.exclusions && this.exclusions.files?.includes(entry.name)) {
+      if (entry.isFile) {
+        if ("files" in this.exclusions && this.exclusions.files?.includes(entry.name)) {
           Logger.debug(`Skipping excluded file "${path}/${entry.name}"...`);
           continue;
         }
-        if(new File(`${path}/${entry.name}`).ext() !== 'ts') {
+        if (new File(`${path}/${entry.name}`).ext() !== "ts") {
           Logger.debug(`Skipping non-ts file...`);
           continue;
         }
@@ -101,7 +103,7 @@ export class CheckSource {
    * @param path
    */
   private addFile(path: string) {
-    if(this.files.includes(path)) return;
+    if (this.files.includes(path)) return;
     this.files.push(path);
   }
 
@@ -109,10 +111,10 @@ export class CheckSource {
    * Check all files found
    */
   private async checkFiles() {
-    for await(const file of this.files) {
+    for await (const file of this.files) {
       try {
         await import(`file://${Deno.cwd()}/${file}`);
-      } catch(e) {
+      } catch (e) {
         Logger.error(`Check for "${Deno.cwd()}/${file}" failed: ${e.message}`, e.stack);
         this.errors++;
       }

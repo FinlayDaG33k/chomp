@@ -2,7 +2,7 @@ import { Logger } from "../core/logger.ts";
 
 export class Folder {
   public constructor(
-    private readonly path: string
+    private readonly path: string,
   ) {
   }
 
@@ -13,8 +13,8 @@ export class Folder {
     try {
       const target = await Deno.stat(this.path);
       return target.isDirectory;
-    } catch(e) {
-      if(e instanceof Deno.errors.NotFound) return false;
+    } catch (e) {
+      if (e instanceof Deno.errors.NotFound) return false;
       throw e;
     }
   }
@@ -26,8 +26,8 @@ export class Folder {
    */
   public async create(options?: Deno.MkdirOptions): Promise<void> {
     try {
-      if(await this.exists()) throw new Error('The specified folder already exists!');
-    } catch(e) {
+      if (await this.exists()) throw new Error("The specified folder already exists!");
+    } catch (e) {
       Logger.warning(e.message);
     }
 

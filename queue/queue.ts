@@ -30,14 +30,18 @@ export class Queue {
    *
    * @returns number
    */
-  public get count(): number { return this.items.length; }
+  public get count(): number {
+    return this.items.length;
+  }
 
   /**
    * Check whether the Queue has any items
    *
    * @returns boolean
    */
-  public get isEmpty(): boolean { return this.items.length === 0; }
+  public get isEmpty(): boolean {
+    return this.items.length === 0;
+  }
 
   /**
    * Get the next item from the queue.
@@ -45,9 +49,9 @@ export class Queue {
    *
    * @returns QueueItem
    */
-  public get next(): QueueItem|null {
+  public get next(): QueueItem | null {
     // Make sure we have items in our queue
-    if(this.items.length === 0) return null;
+    if (this.items.length === 0) return null;
 
     // Return the first item in our queue and remove it
     // @ts-ignore We already return null when no items are present
@@ -60,9 +64,9 @@ export class Queue {
    *
    * @returns QueueItem|null
    */
-  public get peek(): QueueItem|null {
+  public get peek(): QueueItem | null {
     // Make sure we have items in our queue
-    if(this.items.length === 0) return null;
+    if (this.items.length === 0) return null;
 
     // Return the first item in our queue
     return this.items[0];
@@ -73,7 +77,9 @@ export class Queue {
    *
    * @returns QueueItems[]
    */
-  public get dump(): QueueItem[] { return [...this.items]; }
+  public get dump(): QueueItem[] {
+    return [...this.items];
+  }
 
   /**
    * Add an item to the queue based on the scheduler used
@@ -82,32 +88,32 @@ export class Queue {
    */
   public add(item: QueueItem): void {
     // Make sure data was set
-    if(Object.keys(item.data).length === 0) throw Error('Data for queue item may not be empty!');
+    if (Object.keys(item.data).length === 0) throw Error("Data for queue item may not be empty!");
 
     // Add item to the queue based on the scheduler used
-    switch(this.scheduler) {
+    switch (this.scheduler) {
       case Scheduler.FIFO:
-        if('weight' in item) {
-          Logger.debug('A weight was set without the weighted scheduler, removing it...');
+        if ("weight" in item) {
+          Logger.debug("A weight was set without the weighted scheduler, removing it...");
           delete item.weight;
         }
         this.items.push(item);
         break;
       case Scheduler.LIFO:
-        if('weight' in item) {
-          Logger.debug('A weight was set without the weighted scheduler, removing it...');
+        if ("weight" in item) {
+          Logger.debug("A weight was set without the weighted scheduler, removing it...");
           delete item.weight;
         }
         this.items.unshift(item);
         break;
       case Scheduler.WEIGHTED:
-        if(!('weight' in item)) {
-          Logger.debug('No weight was set with weighted scheduler, defaulting to 0...');
+        if (!("weight" in item)) {
+          Logger.debug("No weight was set with weighted scheduler, defaulting to 0...");
           item.weight = 0;
         }
 
         // Loop over all items in queue, add it at the bottom of it's weight
-        for (let i=0; i<this.items.length;i++) {
+        for (let i = 0; i < this.items.length; i++) {
           // @ts-ignore Weight is set to 0 by default
           if (item.weight > this.items[i].weight || i === this.items.length) {
             this.items.splice(i, 0, item);
@@ -119,7 +125,7 @@ export class Queue {
         this.items.push(item);
         break;
       default:
-        throw Error('No scheduler has been set, this is a bug!');
+        throw Error("No scheduler has been set, this is a bug!");
     }
   }
 
@@ -132,17 +138,17 @@ export class Queue {
     const itemKeys = Object.keys(item.data);
     const match = this.items.find((queued: QueueItem) => {
       // Check if the weights are the same
-      if(queued.weight !== item.weight) return false;
+      if (queued.weight !== item.weight) return false;
 
       // Check if all keys exists and if they have the same value
-      for(const key of itemKeys) {
+      for (const key of itemKeys) {
         // deno-lint-ignore no-prototype-builtins -- TODO
-        if(!queued.data.hasOwnProperty(key)) return false;
-        if(queued.data[key] !== item.data[key]) return false;
+        if (!queued.data.hasOwnProperty(key)) return false;
+        if (queued.data[key] !== item.data[key]) return false;
       }
       return true;
     });
-    return typeof match !== 'undefined';
+    return typeof match !== "undefined";
   }
 
   /**
@@ -150,5 +156,7 @@ export class Queue {
    *
    * @returns void
    */
-  public clear(): void { this.items = []; }
+  public clear(): void {
+    this.items = [];
+  }
 }

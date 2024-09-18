@@ -5,10 +5,10 @@
     "semiColons": true,
     "indentWidth": 2,
     "lineWidth": 120,
-    "exclude": [".github",".idea","docs"]
+    "exclude": [".github", ".idea", "docs"]
   },
   "lint": {
-    "exclude": [".github",".idea","docs"],
+    "exclude": [".github", ".idea", "docs"],
     "rules": {
       "exclude": ["no-inferrable-types"]
     }

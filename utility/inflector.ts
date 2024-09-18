@@ -2,7 +2,6 @@
  * Idea and code primarily based on CakePHP's code.
  */
 export class Inflector {
-
   /**
    * Return input string with first character uppercased.
    *
@@ -27,19 +26,19 @@ export class Inflector {
    * @param input
    * @param delimiter Optional delimiter by which to split the string
    */
-  public static pascalize(input: string, delimiter: string = '_'): string {
+  public static pascalize(input: string, delimiter: string = "_"): string {
     return this
       .humanize(input, delimiter)
-      .replaceAll(' ', '');
+      .replaceAll(" ", "");
   }
 
   /**
    * Turn a string into camelCase
-   * 
+   *
    * @param input
    * @param delimiter Optional delimiter by which to split the string
    */
-  public static camelize(input: string, delimiter: string = '_'): string {
+  public static camelize(input: string, delimiter: string = "_"): string {
     return this.lcfirst(this.pascalize(input, delimiter));
   }
 
@@ -50,17 +49,17 @@ export class Inflector {
    * @param input
    * @param delimiter
    */
-  public static humanize(input: string, delimiter: string = '_'): string {
+  public static humanize(input: string, delimiter: string = "_"): string {
     // Split our string into tokens
     const tokens: string[] = input
       .split(delimiter);
 
     // Uppercase each of the tokens
-    for(let i = 0; i < tokens.length; i++) {
+    for (let i = 0; i < tokens.length; i++) {
       tokens[i] = this.ucfirst(tokens[i]);
     }
 
     // Join tokens into a string and return
-    return tokens.join(' ');
+    return tokens.join(" ");
   }
 }
