@@ -69,6 +69,13 @@ function parseNumberFormat(digit: string, unit: string): number {
 /**
  * Takes a time string and turns it into milliseconds
  *
+ * @example
+ * ```ts
+ * import { TimeStringSeconds } from "https://deno.land/x/chomp/utility/time-string.ts";
+ *
+ * const milliseconds = TimeString`+1 minute`;
+ * ```
+ *
  * @param strIn
  * @param parts
  * @returns number
@@ -89,11 +96,18 @@ export function TimeString(strIn: TemplateStringsArray, ...parts: any[]): number
 /**
  * Takes a time string and turns it into round seconds
  *
+ * @example
+ * ```ts
+ * import { TimeStringSeconds } from "https://deno.land/x/chomp/utility/time-string.ts";
+ *
+ * const seconds = TimeStringSeconds`+1 minute`;
+ * ```
+ *
  * @param strIn
  * @param parts
  * @returns number
  */
 // deno-lint-ignore no-explicit-any -- TODO
 export function TimeStringSeconds(strIn: TemplateStringsArray, ...parts: any[]): number {
-  return Math.round(T(strIn, parts) / 1000);
+  return Math.round(TimeString(strIn, parts) / 1000);
 }
