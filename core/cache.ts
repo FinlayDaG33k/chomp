@@ -1,5 +1,5 @@
-import { T as TimeString } from "../utility/time-string.ts";
-import { Logger } from "../core/logger.ts";
+import { TimeString } from "../utility/time-string.ts";
+import { Logger } from "./logger.ts";
 import { Cron } from "../utility/cron.ts";
 
 interface CacheItem {
