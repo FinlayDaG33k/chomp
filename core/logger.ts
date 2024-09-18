@@ -54,8 +54,8 @@ export class Logger {
    * @param level {LogLevels}
    * @param handler {any}
    */
-  public static setHandler(level: LogLevels, handler: typeof Handlers): void {
-    // @ts-ignore TODO: Figure out how to replace Function with something more sane
+  // @ts-ignore TODO: Figure out how to replace any type with something more sane
+  public static setHandler(level: LogLevels, handler: any): void {
     Logger._handlers[level] = handler;
   }
 
