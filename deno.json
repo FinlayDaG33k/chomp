@@ -5,12 +5,17 @@
     "semiColons": true,
     "indentWidth": 2,
     "lineWidth": 120,
-    "exclude": [".github", ".idea", "docs"]
+    "exclude": [".github", ".idea", "docs", "README.md"]
   },
   "lint": {
     "exclude": [".github", ".idea", "docs"],
     "rules": {
       "exclude": ["no-inferrable-types"]
     }
+  },
+  "tasks": {
+    "coverage": "deno coverage --lcov ./cov",
+    "test": "deno test --allow-read",
+    "test:coverage": "deno test --coverage=./cov --allow-read"
   }
 }

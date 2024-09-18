@@ -5,7 +5,7 @@ on:
   pull_request:
     branches: [main]
 jobs:
-  lint:
+  chomp:
     runs-on: ubuntu-latest
     steps:
       - name: Clone repository
@@ -16,31 +16,16 @@ jobs:
         uses: denoland/setup-deno@v1
         with:
           deno-version: "1.40.0"
-      - name: Lint
+      - name: Check format
+        run: deno task test:fmt
+      - name: Check lint
         run: deno lint
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Clone repository
-        uses: actions/checkout@v3
+      - name: Run tests generating coverage
+        run: deno task test:coverage
+      - name: Generate lcov report
+        run: deno task coverage > cov.lcov
+      - name: upload coverage
+        uses: codecov/codecov-action@v4
         with:
-          submodules: true
-      - name: Set up Deno
-        uses: denoland/setup-deno@v1
-        with:
-          deno-version: "1.40.0"
-      - name: Run tests
-        run: deno test --allow-read
-  fmt:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Clone repository
-        uses: actions/checkout@v3
-        with:
-          submodules: true
-      - name: Set up Deno
-        uses: denoland/setup-deno@v1
-        with:
-          deno-version: "1.40.0"
-      - name: Run tests
-        run: deno fmt --check
+          files: ./cov.lcov
+          token: ${{ secrets.CODECOV_TOKEN }}

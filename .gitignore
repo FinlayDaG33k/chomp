@@ -1,2 +1,6 @@
 # Ignore IDE-specific folders
 /.idea
+
+# Ignore reports
+/coverage
+/cov.lcov
