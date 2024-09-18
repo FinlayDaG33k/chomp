@@ -76,7 +76,7 @@ export class Router {
         }
       );
     }
-    
+
     // Build our Request object
     const req = new ChompRequest(
       request.url,
@@ -95,17 +95,17 @@ export class Router {
       try {
         // Import the module
         const module = await import(`${Router._controllerDir}/${Inflector.lcfirst(req.getRoute().getController())}.controller.ts`);
-        
+
         // Make sure the controller class was found
         if(!(`${req.getRoute().getController()}Controller` in module)) {
           raise(`No class "${req.getRoute().getController()}Controller" could be found.`);
         }
-        
+
         // Make sure the controller class extends our base controller
         if(!(module[`${req.getRoute().getController()}Controller`].prototype instanceof Controller)) {
           raise(`Class "${req.getRoute().getController()}Controller" does not properly extend Chomp's controller.`);
         }
-        
+
         // Add the module to our registry
         Registry.add(`${req.getRoute().getController()}Controller`, module);
       } catch(e) {
@@ -121,7 +121,7 @@ export class Router {
         );
       }
     }
-    
+
     // Run our controller
     try {
       // Instantiate the controller
@@ -130,7 +130,7 @@ export class Router {
 
       // Run the controller's initializer
       await controller.initialize();
-      
+
       // Execute our action
       await controller[req.getRoute().getAction()]();
 
@@ -164,7 +164,7 @@ export class Router {
     // Strip off query parameters
     const pathSplit = path.split("%3F");
     path = pathSplit[0];
-    
+
     const keys: string[] = [];
     const r = pathToRegexp(route.getPath(), keys).exec(path) || [];
 
@@ -173,7 +173,7 @@ export class Router {
 
   /**
    * Get the query parameters for the given route
-   * 
+   *
    * @param path
    * @returns QueryParameters
    */
@@ -181,7 +181,7 @@ export class Router {
     const params = new URLSearchParams(path.split("?")[1]);
     return Object.fromEntries(params.entries());
   }
-  
+
   /**
    * Get the body from the request
    *

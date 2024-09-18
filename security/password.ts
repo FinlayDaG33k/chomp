@@ -45,8 +45,11 @@ enum HASH_IDENTIFIERS {
   'db7' = 'MD5',
 }
 
-// Set default options for hashing
-export const DEFAULT_OPTS: IPasswordOpts = {
+/**
+ * Default options for password hashing.
+ * These defaults offer a good balance between performance and security.
+ */
+export const DEFAULT_OPTS: PasswordOptions = {
   cost: 10,
   allowInsecure: false
 }
@@ -54,7 +57,7 @@ export const DEFAULT_OPTS: IPasswordOpts = {
 /**
  * Options for hashing a password
  */
-export interface IPasswordOpts {
+export interface PasswordOptions {
   /* Cost factor for hashing (2**cost) */
   cost?: number;
   /* Allow the use of insecure algorithms */
@@ -68,9 +71,9 @@ export class Password {
    * @param password
    * @param algo
    * @param options
-   * @returns Promise<string> Hash string containing algo, cost, salt and hash
+   * @returns Hash string containing algo, cost, salt and hash
    */
-  public static async hash(password: string, algo: Algorithms = PASSWORD_DEFAULT, options: IPasswordOpts = DEFAULT_OPTS): Promise<string> {
+  public static async hash(password: string, algo: Algorithms = PASSWORD_DEFAULT, options: PasswordOptions = DEFAULT_OPTS): Promise<string> {
     // Make sure we are not using an insecure algorithm
     if(INSECURE_ALGORITHMS.includes(algo) && !options.allowInsecure) throw Error('Insecure hashing algorithm selected, aborting.');
 

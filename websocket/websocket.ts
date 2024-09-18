@@ -57,7 +57,7 @@ export class Websocket {
 
     // Decode the message
     const data = JSON.parse(message);
-    
+
     // Get the Event
     let event = data.event;
     const tokens = [];

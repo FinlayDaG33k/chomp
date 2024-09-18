@@ -21,7 +21,7 @@ export class Folder {
 
   /**
    * Create the directory if it does not exist yet.
-   * 
+   *
    * @param options Options with which to create the directory
    */
   public async create(options?: Deno.MkdirOptions): Promise<void> {

@@ -12,7 +12,14 @@ export class Configure {
   private static hasLoaded = false;
 
   /**
-   * Load our configure date from file
+   * Load our configure data from file
+   *
+   * @example Basic Usage
+   * ```ts
+   * import { Configure } from "https://deno.land/x/chomp/core/configure.ts";
+   *
+   * await Configure.load();
+   * ```
    *
    * @param force Set to true to force re-loading the configure
    * @returns void
@@ -51,6 +58,21 @@ export class Configure {
   /**
    * Obtain the value of a key in the configure.
    *
+   * @example Basic Usage
+   * ```ts
+   * import { Configure } from "https://deno.land/x/chomp/core/configure.ts";
+   *
+   * await Configure.load();
+   * const item = Configure.get('my-item');
+   * ```
+   *
+   * @example Setting a default value
+   * ```ts
+   * import { Configure } from "https://deno.land/x/chomp/core/configure.ts";
+   *
+   * await Configure.load();
+   * const item = Configure.get('my-item', 'my-default');
+   * ```
    *
    * @param key Key to look for
    * @param defaultValue Default value to return when no result was found
@@ -67,6 +89,14 @@ export class Configure {
    * Set a configure item
    * It is not possible to store null values
    *
+   * @example Basic Usage
+   * ```ts
+   * import { Configure } from "https://deno.land/x/chomp/core/configure.ts";
+   *
+   * await Configure.load();
+   * Configure.set('my-item', 'my-value);
+   * ```
+   *
    * @param key
    * @param value
    * @returns void
@@ -80,6 +110,14 @@ export class Configure {
   /**
    * Return whether a key exists
    *
+   * @example Basic Usage
+   * ```ts
+   * import { Configure } from "https://deno.land/x/chomp/core/configure.ts";
+   *
+   * await Configure.load();
+   * const exists = Configure.check('my-item');
+   * ```
+   *
    * @param key
    * @returns boolean
    */
@@ -87,6 +125,28 @@ export class Configure {
     return Configure.config.has(key);
   }
 
+  /**
+   * Consume a key from configure (removing it).
+   *
+   * @example Basic Usage
+   * ```ts
+   * import { Configure } from "https://deno.land/x/chomp/core/configure.ts";
+   *
+   * await Configure.load();
+   * const exists = Configure.consume('my-item');
+   * ```
+   *
+   * @example Setting a default value
+   * ```ts
+   * import { Configure } from "https://deno.land/x/chomp/core/configure.ts";
+   *
+   * await Configure.load();
+   * const exists = Configure.consume('my-item', 'default-value');
+   * ```
+   *
+   * @param key
+   * @param defaultValue
+   */
   // deno-lint-ignore no-explicit-any -- Any arbitrary data may be used
   public static consume(key: string, defaultValue: any = null): any {
     // Check if the key exists, if not, return the default value
@@ -105,6 +165,14 @@ export class Configure {
   /**
    * Delete a ConfigureItem from the Configure
    *
+   * @example Basic Usage
+   * ```ts
+   * import { Configure } from "https://deno.land/x/chomp/core/configure.ts";
+   *
+   * await Configure.load();
+   * Configure.delete('my-item');
+   * ```
+   *
    * @param key
    * @returns void
    */
@@ -115,6 +183,14 @@ export class Configure {
   /**
    * Dump all contents of the Configure
    *
+   * @example Basic Usage
+   * ```ts
+   * import { Configure } from "https://deno.land/x/chomp/core/configure.ts";
+   *
+   * await Configure.load();
+   * console.log(Configure.dump());
+   * ```
+   *
    * @returns ConfigureItem[]
    */
   // deno-lint-ignore no-explicit-any -- Any arbitrary data may be used
@@ -124,7 +200,15 @@ export class Configure {
 
   /**
    * Clear all items in the configure (including defaults).
-   * If you want to keep the defaults, use "Configure.reset()" instead.
+   * If you want to keep the defaults, use {@linkcode Configure.reset()} instead.
+   *
+   * @example Basic Usage
+   * ```ts
+   * import { Configure } from "https://deno.land/x/chomp/core/configure.ts";
+   *
+   * await Configure.load();
+   * Configure.clear();
+   * ```
    *
    * @returns void
    */
@@ -135,6 +219,14 @@ export class Configure {
   /**
    * Resets the configure to the defaults.
    * If you do not want to keep the defaults, use "Configure.clear()" instead.
+   *
+   * @example Basic Usage
+   * ```ts
+   * import { Configure } from "https://deno.land/x/chomp/core/configure.ts";
+   *
+   * await Configure.load();
+   * Configure.reset();
+   * ```
    */
   public static reset(): void {
     Configure.config = defaults;

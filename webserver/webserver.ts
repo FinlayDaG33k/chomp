@@ -32,7 +32,7 @@ export class Webserver {
       try {
         // Run the required route
         const response: Response = await Router.execute(request.request, (conn.remoteAddr as Deno.NetAddr).hostname!);
-        
+
         // Send our response
         await request.respondWith(response);
       } catch(e) {

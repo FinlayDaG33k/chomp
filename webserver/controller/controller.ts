@@ -20,7 +20,7 @@ export class Controller {
 
   /**
    * Set the 'Content-Type' header
-   * 
+   *
    * @deprecated Please use "Controller.getResponse().withType()" instead.
    * @param value
    */
@@ -37,11 +37,11 @@ export class Controller {
   /**
    * Initialize the controller.
    * Literally does nothing at this moment except exist to prevent errors.
-   * 
+   *
    * @protected
    */
   public async initialize(): Promise<void> {}
-  
+
   /**
    * Get the request object for this controller
    *
@@ -50,10 +50,10 @@ export class Controller {
   protected getRequest(): Request {
     return this.request;
   }
-  
+
   /**
    * Get the response object for this controller
-   * 
+   *
    * @protected
    */
   protected getResponse(): ResponseBuilder {
@@ -68,7 +68,7 @@ export class Controller {
       this[Inflector.ucfirst(name)] = new module[`${Inflector.ucfirst(name)}Component`](this);
       return this;
     }
-    
+
     // Import the module
     const module = await import(`${Controller._componentDir}/${Inflector.lcfirst(name)}.ts`);
 
@@ -81,16 +81,16 @@ export class Controller {
     if(!(module[`${Inflector.ucfirst(name)}Component`].prototype instanceof Component)) {
       raise(`Class "${Inflector.ucfirst(name)}Component" does not properly extend Chomp's component.`);
     }
-    
+
     // Add the component to the registry
     Registry.add(`${Inflector.ucfirst(name)}Component`, module);
-    
+
     // Add the module as class property
     this[Inflector.ucfirst(name)] = new module[`${Inflector.ucfirst(name)}Component`](this);
-    
+
     return this;
   }
-  
+
   /**
    * Set a view variable
    *
@@ -128,7 +128,7 @@ export class Controller {
         break;
       }
     }
-    
+
     // Check if we can compress with Brotli
     // TODO: Hope that Deno will make this obsolete.
     if(this.getRequest().getHeaders().get('accept-encoding')?.includes('br') && canCompress && body.length > 1024) {
@@ -137,7 +137,7 @@ export class Controller {
       Logger.debug(`Compressed body with brotli: ${body.length}-bytes`);
       this.getResponse().withHeader('Content-Encoding', 'br');
     }
-    
+
     // Set our final body
     this.getResponse().withBody(body);
   }

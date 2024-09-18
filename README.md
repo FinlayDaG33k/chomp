@@ -7,7 +7,7 @@ Should work just fine but comes with no warranties whatsoever.
 Chomp is structured in such a way that you can import just what you need for your app.  
 A good start would be to import the most common things you might use:
 ```ts
-import * from "https://deno.land/x/chomp/mod.ts";
+import * from "https://deno.land/x/chomp/common.ts";
 ```
 
 This includes (list might not always be up-to-date):
@@ -34,6 +34,8 @@ import * from "https://deno.land/x/chomp/websocket/mod.ts";
 ```
 
 Additionally, you can explore the [docs](/docs) or [Deno.land](https://doc.deno.land/https://deno.land/x/chomp/mod.ts) to see what more Chomp is capable off!
+
+**NOTE**: While you can import `https://deno.land/x/chomp/mod.ts`, we advice against this as it'll load the entire codebase, including stuff you may not actually be using.
 
 ## Versioning
 

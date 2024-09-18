@@ -55,10 +55,42 @@ export class Hash {
     private algo: string,
   ) {}
 
+  /**
+   * Digest the input
+   *
+   * @example Basic usage
+   * ```ts
+   * import { Hash } from "https://deno.land/x/chomp/security/hash.ts";
+   *
+   * const hash = new Hash("some data");
+   * await hash.digest();
+   * console.log(hash.hex());
+   * ```
+   *
+   * @example Using BLAKE2B384
+   * ```ts
+   * import { Hash, Algorithms } from "https://deno.land/x/chomp/security/hash.ts";
+   *
+   * const hash = new Hash("some data", Algorithms.BLAKE2B384);
+   * await hash.digest();
+   * ```
+   */
   public async digest() {
     this.result = await crypto.subtle.digest(this.algo as DigestAlgorithm, new TextEncoder().encode(this.input));
   }
 
+  /**
+   * Digest the input
+   *
+   * @example Basic usage
+   * ```ts
+   * import { Hash } from "https://deno.land/x/chomp/security/hash.ts";
+   *
+   * const hash = new Hash("some data");
+   * await hash.digest();
+   * console.log(hash.hex());
+   * ```
+   */
   public hex() {
     return [...new Uint8Array(this.result)].map(x => x.toString(16).padStart(2, '0')).join('');
   }

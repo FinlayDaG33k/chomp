@@ -6,6 +6,35 @@ export interface ExclusionConfig {
   files?: string[];
 }
 
+/**
+ * Check all files in the specified directories.
+ * Doing this allows the program to start up significantly faster after deployment.
+ * It is **NOT** a replacement for "deno lint".
+ *
+ * @example Basic Usage
+ * ```ts
+ * import { CheckSource } from "https://deno.land/x/chomp/utility/check-source.ts";
+ *
+ * const checker = new CheckSource(['./src']);
+ * await checker.run();
+ * ```
+ *
+ * @example Exclude a directory
+ * ```ts
+ * import { CheckSource } from "https://deno.land/x/chomp/utility/check-source.ts";
+ *
+ * const checker = new CheckSource(['./src'], { directories: 'my-directory' });
+ * await checker.run();
+ * ```
+ *
+ * @example Exclude a file
+ * ```ts
+ * import { CheckSource } from "https://deno.land/x/chomp/utility/check-source.ts";
+ *
+ * const checker = new CheckSource(['./src'], { files: './src/my-directory/my-file.txt' });
+ * await checker.run();
+ * ```
+ */
 export class CheckSource {
   private files: string[] = [];
   private errors = 0;

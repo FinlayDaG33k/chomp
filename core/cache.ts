@@ -13,6 +13,17 @@ export class Cache {
   /**
    * Add an item to the cache.
    *
+   * @example Basic Usage
+   * ```ts
+   * import { Cache } from "https://deno.land/x/chomp/core/cache.ts";
+   *
+   * Cache.set('I expire in 1 minute', 'foo');
+   * Cache.set('I expire in 10 minutes', 'bar', '+10 minutes');
+   * Cache.set('I never expire', 'baz', null);
+   * ```
+   *
+   * **NOTE**: Expiry times use {@linkcode TimeString} formats.
+   *
    * @param key
    * @param value
    * @param expiry Can be set to null for never expiring items
@@ -20,7 +31,7 @@ export class Cache {
   public static set(key: string, value: unknown, expiry: string|null = '+1 minute'): void {
     let expiresAt = null;
     if(expiry) expiresAt = new Date(new Date().getTime() + TimeString`${expiry}`)
-    
+
     Cache._items.set(key, {
       data: value,
       expires: expiresAt,
@@ -29,6 +40,20 @@ export class Cache {
 
   /**
    * Get an item from the cache
+   *
+   * @example Basic Usage
+   * ```ts
+   * import { Cache } from "https://deno.land/x/chomp/core/cache.ts";
+   *
+   * Cache.get('cache item name');
+   * ```
+   *
+   * @example Getting expired items
+   * ```ts
+   * import { Cache } from "https://deno.land/x/chomp/core/cache.ts";
+   *
+   * const item = Cache.get('cache item name', true);
+   * ```
    *
    * @param key
    * @param optimistic Whether to serve expired items from the cache
@@ -48,6 +73,13 @@ export class Cache {
    * Check whether an item exists in the cache.
    * This does *not* check whether the item has expired or not.
    *
+   * @example Basic Usage
+   * ```ts
+   * import { Cache } from "https://deno.land/x/chomp/core/cache.ts";
+   *
+   * const doesExist = Cache.exists('cache item name');
+   * ```
+   *
    * @param key
    */
   public static exists(key: string): boolean {
@@ -56,6 +88,13 @@ export class Cache {
 
   /**
    * Check whether an item has expired
+   *
+   * @example Basic Usage
+   * ```ts
+   * import { Cache } from "https://deno.land/x/chomp/core/cache.ts";
+   *
+   * const hasExpired = Cache.expired('cache item name');
+   * ```
    *
    * @param key
    */
@@ -71,23 +110,37 @@ export class Cache {
   /**
    * Consume an item from the cache.
    * Differs from "Cache.get()" in that it removes the item afterwards.
-   * 
+   *
+   * @example Basic Usage
+   * ```ts
+   * import { Cache } from "https://deno.land/x/chomp/core/cache.ts";
+   *
+   * const item = Cache.consume('cache item name');
+   * ```
+   *
    * @param key
    * @param optimistic Whether to serve expired items from the cache
    */
   public static consume(key: string, optimistic = false): unknown|null {
     // Copy item from cache
     const data = Cache.get(key, optimistic);
-    
+
     // Remove item from cache
     Cache.remove(key);
-    
+
     // Return the item
     return data;
   }
 
   /**
    * Remove an item from the cache
+   *
+   * @example Basic Usage
+   * ```ts
+   * import { Cache } from "https://deno.land/x/chomp/core/cache.ts";
+   *
+   * Cache.remove('cache item name');
+   * ```
    *
    * @param key
    */
@@ -98,6 +151,13 @@ export class Cache {
   /**
    * Dumps the raw cache contents.
    * Should only be used for debugging purposes.
+   *
+   * @example Basic Usage
+   * ```ts
+   * import { Cache } from "https://deno.land/x/chomp/core/cache.ts";
+   *
+   * console.log(Cache.dump());
+   * ```
    */
   public static dump(): Map<string, CacheItem> {
     return Cache._items;
@@ -105,6 +165,14 @@ export class Cache {
 
   /**
    * Scan the cache and clean up expired items while keeping optimistic caching in tact.
+   * There shouldn't be a need to manually run this in most cases.
+   *
+   * @example Basic Usage
+   * ```ts
+   * import { Cache } from "https://deno.land/x/chomp/core/cache.ts";
+   *
+   * Cache.sweep();
+   * ```
    */
   public static sweep(): void {
     // Set the start time of this sweep
@@ -113,7 +181,7 @@ export class Cache {
     const now = new Date();
     const start = new Date(now.getTime() + TimeString`-1 hour -1 second`);
     const boundary = new Date(now.getTime() + TimeString`-1 hour -1 minute`);
-    
+
     // Loop over each item in the cache
     for(const [key, value] of Cache._items) {
       // Keep items that do not expire
@@ -121,7 +189,7 @@ export class Cache {
         Logger.debug(`Keeping cache item "${key}": Does not expire`);
         continue;
       }
-      
+
       // Keep items that have not yet expired
       if(value.expires >= start) {
         Logger.debug(`Keeping cache item "${key}": Has not expired`);
