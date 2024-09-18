@@ -17,7 +17,7 @@ jobs:
         with:
           deno-version: "1.40.0"
       - name: Check format
-        run: deno task test:fmt
+        run: deno fmt --check
       - name: Check lint
         run: deno lint
       - name: Run tests generating coverage
