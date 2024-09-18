@@ -54,7 +54,7 @@ export class Logger {
    * @param level {LogLevels}
    * @param handler {any}
    */
-  // @ts-ignore TODO: Figure out how to replace any type with something more sane
+  // deno-lint-ignore no-explicit-any -- TODO: Figure out how to replace any type with something more sane
   public static setHandler(level: LogLevels, handler: any): void {
     Logger._handlers[level] = handler;
   }
