@@ -54,9 +54,8 @@ export class Logger {
    * @param level {LogLevels}
    * @param handler {any}
    */
-  public static setHandler(level: LogLevels, handler: Function): void {
+  public static setHandler(level: LogLevels, handler: typeof Handlers): void {
     // @ts-ignore TODO: Figure out how to replace Function with something more sane
-    // deno-lint-ignore ban-types -- TODO
     Logger._handlers[level] = handler;
   }
 
