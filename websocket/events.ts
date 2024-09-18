@@ -1,4 +1,4 @@
-import { Logger } from "../logging/logger.ts";
+import { Logger } from "../core/logger.ts";
 
 interface IEvent {
   name: string;

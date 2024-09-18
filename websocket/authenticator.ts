@@ -1,4 +1,4 @@
-import { Logger } from "../logging/logger.ts";
+import { Logger } from "../core/logger.ts";
 import { Configure } from "../core/configure.ts";
 
 export class Authenticator {

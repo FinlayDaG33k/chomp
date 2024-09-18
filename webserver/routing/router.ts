@@ -2,7 +2,7 @@ import { readerFromStreamReader } from "https://deno.land/std@0.126.0/io/mod.ts"
 import { readAll } from "https://deno.land/std@0.213.0/io/read_all.ts";
 import { pathToRegexp } from "../pathToRegexp.ts";
 import { Inflector } from "../../utility/inflector.ts";
-import { Logger } from "../../logging/logger.ts";
+import { Logger } from "../../core/logger.ts";
 import {QueryParameters, Request as ChompRequest, RequestParameters} from "../http/request.ts";
 import { StatusCodes } from "../http/status-codes.ts";
 import { Route as ChompRoute } from "./route.ts";

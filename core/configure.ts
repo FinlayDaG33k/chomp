@@ -1,4 +1,4 @@
-import { Logger } from "../logging/logger.ts";
+import { Logger } from "../core/logger.ts";
 
 // deno-lint-ignore no-explicit-any -- Arbitrary data may be used
 const defaults = new Map<string, any>([

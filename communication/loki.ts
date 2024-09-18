@@ -1,4 +1,4 @@
-import { Logger } from "../logging/logger.ts";
+import { Logger } from "../core/logger.ts";
 
 export interface LokiStream {
   // deno-lint-ignore no-explicit-any -- TODO

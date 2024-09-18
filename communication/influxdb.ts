@@ -1,4 +1,4 @@
-import { Logger } from "../logging/logger.ts";
+import { Logger } from "../core/logger.ts";
 
 export enum Precision {
   s,

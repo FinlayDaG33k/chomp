@@ -1,4 +1,4 @@
-import { Logger } from "../../logging/logger.ts";
+import { Logger } from "../../core/logger.ts";
 import { Inflector } from "../../utility/inflector.ts";
 import { Handlebars } from "../renderers/handlebars.ts";
 import { ResponseBuilder } from "../http/response-builder.ts";

@@ -1,4 +1,4 @@
-import { Logger } from "../logging/logger.ts";
+import { Logger } from "../core/logger.ts";
 import { File } from "../filesystem/file.ts";
 
 export interface ExclusionConfig {

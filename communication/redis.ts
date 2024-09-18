@@ -1,5 +1,5 @@
 import { connect as redisConnect, Redis as RedisConn } from "https://deno.land/x/redis@v0.25.2/mod.ts"
-import { Logger } from "../logging/logger.ts";
+import { Logger } from "../core/logger.ts";
 
 export class Redis {
   private static connection: RedisConn|null = null;

@@ -1,4 +1,4 @@
-import { Logger } from "../logging/logger.ts";
+import { Logger } from "../core/logger.ts";
 import { Router } from "./routing/router.ts";
 import { StatusCodes } from "./http/status-codes.ts";
 

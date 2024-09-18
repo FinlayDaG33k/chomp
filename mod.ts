@@ -4,7 +4,7 @@
  */
 export { Cache } from "./core/cache.ts";
 export { Configure } from "./core/configure.ts";
-export { Logger } from "./logging/logger.ts";
+export { Logger } from "./core/logger.ts";
 export { File } from "./filesystem/file.ts";
 export { Folder } from "./filesystem/folder.ts";
 export { CheckSource } from "./utility/check-source.ts";
