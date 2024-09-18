@@ -34,7 +34,7 @@ export class Router {
       .replace("http://", "")
       .replace("https://", "");
     if(host !== null) path = path.replace(host, "");
-    
+
     // Ignore query parameters
     path = path.split("?", 1)[0];
 

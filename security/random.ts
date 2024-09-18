@@ -1,7 +1,15 @@
 export class Random {
   /**
    * Generate random bytes.
-   * These bytes are generated using the Web Crypto API, this cryptographically secure.
+   * These bytes are generated using the Web Crypto API, this is cryptographically secure.
+   *
+   * @example Basic Usage
+   * ```ts
+   * import { CouchDB } from "https://deno.land/x/chomp/security/random.ts";
+   *
+   * // Generates 16 random bytes
+   * const bytes = Random.bytes(16);
+   * ```
    *
    * @param length Amount of bytes to be generated
    * @returns Uint8Array
@@ -14,7 +22,15 @@ export class Random {
 
   /**
    * Generate a random string.
-   * These strings are generated using the Web Crypto API, this cryptographically secure.
+   * These strings are generated using the Web Crypto API, this is cryptographically secure.
+   *
+   * @example Basic Usage
+   * ```ts
+   * import { CouchDB } from "https://deno.land/x/chomp/security/random.ts";
+   *
+   * // Generates a string with 16 characters
+   * const str = await Random.string(16);
+   * ```
    *
    * @param length Length of the string to be generated
    * @returns Promise<string>
@@ -26,11 +42,27 @@ export class Random {
 
   /**
    * Inclusively generate a random integer between min and max.
-   * If you want to use decimals, please use Random.float() instead.
-   * 
+   * If you want to use decimals, please use "{@linkcode Random.float()}" instead.
+   *
    * By default, these integers are **NOT** cryptographically secure (for performance reasons).
    * Set the "secure" argument to "true" if you are using this for cryptographic purposes!
-   * 
+   *
+   * @example Basic Usage
+   * ```ts
+   * import { CouchDB } from "https://deno.land/x/chomp/security/random.ts";
+   *
+   * // Generate a random integer between 0 and 10
+   * const num = await Random.integer(0, 10);
+   * ```
+   *
+   * @example Cryptographically secure
+   * ```ts
+   * import { CouchDB } from "https://deno.land/x/chomp/security/random.ts";
+   *
+   * // Generate a secure random integer between 0 and 10
+   * const num = await Random.integer(0, 10, true);
+   * ```
+   *
    * @param min Minimum allowable integer
    * @param max Maximum allowable integer
    * @param secure Using this for cryptographic purposes?
@@ -39,7 +71,7 @@ export class Random {
     // Strip decimals
     min = Math.ceil(min);
     max = Math.floor(max);
-    
+
     // Generate a number using Random.float and floor that
     return Math.floor(Random.float(min, max, secure));
   }
@@ -47,9 +79,25 @@ export class Random {
   /**
    * Inclusively generate a random float between min and max.
    * If you do not want to use decimals, please use Random.integer() instead.
-   * 
+   *
    * By default, these floats are **NOT** cryptographically secure (for performance reasons).
    * Set the "secure" argument to "true" if you are using this for cryptographic purposes!
+   *
+   * @example Basic Usage
+   * ```ts
+   * import { CouchDB } from "https://deno.land/x/chomp/security/random.ts";
+   *
+   * // Generate a random float between 0 and 1
+   * const num = await Random.float(0, 1);
+   * ```
+   *
+   * @example Cryptographically secure
+   * ```ts
+   * import { CouchDB } from "https://deno.land/x/chomp/security/random.ts";
+   *
+   * // Generate a secure random float between 0 and 1
+   * const num = await Random.float(0, 1, true);
+   * ```
    *
    * @param min Minimum allowable float
    * @param max Maximum allowable float
