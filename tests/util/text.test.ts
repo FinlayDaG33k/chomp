@@ -1,8 +1,18 @@
-import { assertEquals } from "https://deno.land/std@0.152.0/testing/asserts.ts";
+import { assertEquals, assertNotEquals } from "https://deno.land/std@0.152.0/testing/asserts.ts";
 import { Text } from "../../utility/text.ts";
 
 Deno.test("Text Test", async (t) => {
-  Deno.test("htmlentities", async (t) => {
+  await t.step("tokenize", () => {
+    // Test without limits
+    assertEquals(Text.tokenize("this is a sentence."), ["this", "is", "a", "sentence."]);
+    assertNotEquals(Text.tokenize("this is a sentence."), ["this", "is", "a sentence."]);
+
+    // Test with limits
+    assertEquals(Text.tokenize("this is a sentence.", 2), ["this", "is", "a sentence."]);
+    assertNotEquals(Text.tokenize("this is a sentence.", 2), ["this", "is", "a", "sentence."]);
+  })
+
+  await t.step("htmlentities", () => {
     // Test all supported entities
     assertEquals(Text.htmlentities('&'), '&amp;');
     assertEquals(Text.htmlentities('<'), '&lt;');
