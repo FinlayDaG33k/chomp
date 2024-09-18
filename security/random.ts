@@ -5,7 +5,7 @@ export class Random {
    *
    * @example Basic Usage
    * ```ts
-   * import { CouchDB } from "https://deno.land/x/chomp/security/random.ts";
+   * import { Random } from "https://deno.land/x/chomp/security/random.ts";
    *
    * // Generates 16 random bytes
    * const bytes = Random.bytes(16);
@@ -26,7 +26,7 @@ export class Random {
    *
    * @example Basic Usage
    * ```ts
-   * import { CouchDB } from "https://deno.land/x/chomp/security/random.ts";
+   * import { Random } from "https://deno.land/x/chomp/security/random.ts";
    *
    * // Generates a string with 16 characters
    * const str = await Random.string(16);
@@ -49,7 +49,7 @@ export class Random {
    *
    * @example Basic Usage
    * ```ts
-   * import { CouchDB } from "https://deno.land/x/chomp/security/random.ts";
+   * import { Random } from "https://deno.land/x/chomp/security/random.ts";
    *
    * // Generate a random integer between 0 and 10
    * const num = await Random.integer(0, 10);
@@ -57,7 +57,7 @@ export class Random {
    *
    * @example Cryptographically secure
    * ```ts
-   * import { CouchDB } from "https://deno.land/x/chomp/security/random.ts";
+   * import { Random } from "https://deno.land/x/chomp/security/random.ts";
    *
    * // Generate a secure random integer between 0 and 10
    * const num = await Random.integer(0, 10, true);
@@ -85,7 +85,7 @@ export class Random {
    *
    * @example Basic Usage
    * ```ts
-   * import { CouchDB } from "https://deno.land/x/chomp/security/random.ts";
+   * import { Random } from "https://deno.land/x/chomp/security/random.ts";
    *
    * // Generate a random float between 0 and 1
    * const num = await Random.float(0, 1);
@@ -93,7 +93,7 @@ export class Random {
    *
    * @example Cryptographically secure
    * ```ts
-   * import { CouchDB } from "https://deno.land/x/chomp/security/random.ts";
+   * import { Random } from "https://deno.land/x/chomp/security/random.ts";
    *
    * // Generate a secure random float between 0 and 1
    * const num = await Random.float(0, 1, true);
