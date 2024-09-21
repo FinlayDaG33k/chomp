@@ -5,7 +5,7 @@ on:
   pull_request:
     branches: [main]
 jobs:
-  chomp:
+  chomp-format:
     runs-on: ubuntu-latest
     steps:
       - name: Clone repository
@@ -18,8 +18,30 @@ jobs:
           deno-version: "1.40.0"
       - name: Check format
         run: deno fmt --check
+  chomp-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+      - name: Set up Deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: "1.40.0"
       - name: Check lint
         run: deno lint
+  chomp-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+      - name: Set up Deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: "1.40.0"
       - name: Run tests generating coverage
         run: deno task test:coverage
       - name: Generate lcov report
