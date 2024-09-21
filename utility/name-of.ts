@@ -13,4 +13,4 @@
  *
  * @param variable
  */
-export const nameOf = (variable: Record<string, any>) => Object.keys(variable)[0]
+export const nameOf = (variable: Record<string, unknown>) => Object.keys(variable)[0];

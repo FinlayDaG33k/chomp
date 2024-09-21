@@ -5,10 +5,8 @@ import { raise } from "../error/raise.ts";
  * Allows code to be more concise and users to more easily read what it does.
  *
  * It was based on the .NET 6 feature of the same name.
- *
  */
 export class Contract {
-
   /**
    * Make sure the condition is true, otherwise throw an error
    *
@@ -24,11 +22,10 @@ export class Contract {
    * @param message
    */
   public static require(condition: boolean, message: string): void {
-    if(!condition) raise(message, "Argument");
+    if (!condition) raise(message, "Argument");
   }
 
   /**
-   *
    * @example Basic Usage
    * ```ts
    * import { Contract } from "https://deno.land/x/chomp/utility/contract.ts";
@@ -49,7 +46,7 @@ export class Contract {
    * @param argument
    * @param argumentName
    */
-  public static requireNotNull(argument: any, argumentName: string): void {
-    if(argument === null) raise(`${argumentName} may not be null`, "ArgumentNull");
+  public static requireNotNull(argument: unknown, argumentName: string): void {
+    if (argument === null) raise(`${argumentName} may not be null`, "ArgumentNull");
   }
 }
