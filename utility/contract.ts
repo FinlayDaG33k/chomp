@@ -21,7 +21,7 @@ export class Contract {
    * @param condition
    * @param message
    */
-  public static require(condition: boolean, message: string): void {
+  public static require(condition: boolean, message: string): void|never {
     if (!condition) raise(message, "Argument");
   }
 
@@ -46,7 +46,7 @@ export class Contract {
    * @param argument
    * @param argumentName
    */
-  public static requireNotNull(argument: unknown, argumentName: string): void {
+  public static requireNotNull(argument: unknown, argumentName: string): void|never {
     if (argument === null) raise(`${argumentName} may not be null`, "ArgumentNull");
   }
 }
