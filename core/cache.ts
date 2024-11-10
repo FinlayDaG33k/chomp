@@ -149,6 +149,39 @@ export class Cache {
   }
 
   /**
+   * Read-through cache.
+   *
+   * Will check if the cache item can be obtained and if not, will execute the callable function.
+   * The result will then be stored in the cache.
+   *
+   * **NOTE:** This feature is currently experimental.
+   *
+   * TODO: Test whether it actually works as intended
+   *
+   * @example Basic Usage
+   * ```ts
+   * const res = Cache.remember('cache item name, "+1 minute", async function { return true });
+   * ```
+   *
+   * @param key
+   * @param expiry
+   * @param callable
+   */
+  public static async remember(key: string, expiry: string | null = "+1 minute", callable: Promise): Promise<any> {
+    // Check if cache item exists and hasn't expired
+    if(!Cache.expired(key)) return Cache.get(key);
+
+    // Cache does not exist, run callable
+    const res = await callable();
+
+    // Add result to cache
+    Cache.set(key, res, expiry);
+
+    // Return result
+    return res;
+  }
+
+  /**
    * Dumps the raw cache contents.
    * Should only be used for debugging purposes.
    *
