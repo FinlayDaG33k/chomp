@@ -30,14 +30,16 @@ export class Cache {
    *
    * @param key
    */
-  public static metrics(key: keyof CacheMetrics|"rate"|null = null): number|CacheMetrics {
+  public static metrics(key: keyof CacheMetrics|"rate"|"total"|null = null): number|CacheMetrics {
     switch(key) {
       case "hit":
         return Cache._metrics.hit;
       case "miss":
         return Cache._metrics.miss;
+      case "total":
+        return Cache._metrics.hit + Cache._metrics.miss;
       case "rate":
-        const percentile = Cache._metrics.hit / (Cache._metrics.hit + Cache._metrics.miss);
+        const percentile = Cache._metrics.hit / Cache.metrics("total");
         return Math.round(percentile * 100) / 100;
       default:
         return Cache._metrics;
