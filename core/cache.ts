@@ -7,8 +7,42 @@ interface CacheItem {
   expires: Date | null;
 }
 
+interface CacheMetrics {
+  hit: number;
+  miss: number;
+}
+
 export class Cache {
   private static _items: Map<string, CacheItem> = new Map<string, CacheItem>();
+  private static _metrics: CacheMetrics = { hit: 0, miss: 0 };
+
+  /**
+   * Get the metrics for the cache
+   *
+   * @example Basic usage
+   * ```ts
+   * import { Cache } from "https://deno.land/x/chomp/core/cache.ts";
+   * const metrics = Cache.metrics();
+   * const hits = Cache.metrics("hit");
+   * const misses = Cache.metrics("miss");
+   * const rate = Cache.metrics("rate");
+   * ```
+   *
+   * @param key
+   */
+  public static metrics(key: keyof CacheMetrics|"rate"|null = null): number|CacheMetrics {
+    switch(key) {
+      case "hit":
+        return Cache._metrics.hit;
+      case "miss":
+        return Cache._metrics.miss;
+      case "rate":
+        const percentile = Cache._metrics.hit / (Cache._metrics.hit + Cache._metrics.miss);
+        return Math.round(percentile * 100) / 100;
+      default:
+        return Cache._metrics;
+    }
+  }
 
   /**
    * Add an item to the cache.
@@ -60,12 +94,19 @@ export class Cache {
    */
   public static get(key: string, optimistic = false): unknown | null {
     // Return null if the item doesn't exist
-    if (!Cache.exists(key)) return null;
+    if (!Cache.exists(key)) {
+      Cache._metrics.miss++;
+      return null;
+    }
 
     // Return null if the item expired
-    if (Cache.expired(key) && !optimistic) return null;
+    if (Cache.expired(key) && !optimistic) {
+      Cache._metrics.miss++;
+      return null;
+    }
 
     // Return the item's data
+    Cache._metrics.hit++;
     return Cache._items.get(key)?.data;
   }
 
