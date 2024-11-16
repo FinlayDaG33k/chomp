@@ -8,13 +8,24 @@ interface CacheItem {
 }
 
 interface CacheMetrics {
-  hit: number;
-  miss: number;
+  reads: {
+    hit: number;
+    miss: number;
+  };
+  writes: number;
+  swept: number;
 }
 
 export class Cache {
   private static _items: Map<string, CacheItem> = new Map<string, CacheItem>();
-  private static _metrics: CacheMetrics = { hit: 0, miss: 0 };
+  private static _metrics: CacheMetrics = {
+    reads: {
+      hit: 0,
+      miss: 0
+    },
+    writes: 0,
+    swept: 0,
+  };
 
   /**
    * Get the metrics for the cache
@@ -28,22 +39,28 @@ export class Cache {
    * const hits = Cache.metrics("hit");
    * const misses = Cache.metrics("miss");
    * const rate = Cache.metrics("rate");
+   * const writes = Cache.metrics("writes");
+   * const swept = Cache.metrics("swept");
    * ```
    *
    * @param key
    */
-  public static metrics(key: keyof CacheMetrics|"rate"|"total"|null = null): number|CacheMetrics {
+  public static metrics(key: keyof CacheMetrics["reads"]|"rate"|"total"|"writes"|"swept"|null = null): number|CacheMetrics {
     switch(key) {
       case "hit":
-        return Cache._metrics.hit;
+        return Cache._metrics.reads.hit;
       case "miss":
-        return Cache._metrics.miss;
+        return Cache._metrics.reads.miss;
       case "total":
-        return Cache._metrics.hit + Cache._metrics.miss;
+        return Cache._metrics.reads.hit + Cache._metrics.reads.miss;
       case "rate":
-        const percentile = Cache._metrics.hit / Cache.metrics("total");
+        const percentile = Cache._metrics.reads.hit / Cache.metrics("total");
         if(percentile > 0) return Math.round(percentile * 100) / 100;
         return 0;
+      case "writes":
+        return Cache._metrics.writes;
+      case "swept":
+        return Cache._metrics.swept;
       default:
         return Cache._metrics;
     }
@@ -100,18 +117,18 @@ export class Cache {
   public static get(key: string, optimistic = false): unknown | null {
     // Return null if the item doesn't exist
     if (!Cache.exists(key)) {
-      Cache._metrics.miss++;
+      Cache._metrics.reads.miss++;
       return null;
     }
 
     // Return null if the item expired
     if (Cache.expired(key) && !optimistic) {
-      Cache._metrics.miss++;
+      Cache._metrics.reads.miss++;
       return null;
     }
 
     // Return the item's data
-    Cache._metrics.hit++;
+    Cache._metrics.reads.hit++;
     return Cache._items.get(key)?.data;
   }
 
@@ -284,6 +301,7 @@ export class Cache {
       // Clean up items that have expired
       Logger.debug(`Removing expired cache item "${key}"`);
       Cache._items.delete(key);
+      Cache._metrics.swept++;
     }
   }
 }
