@@ -19,6 +19,8 @@ export class Cache {
   /**
    * Get the metrics for the cache
    *
+   * **NOTE:** Rate will be returned 0-1
+   *
    * @example Basic usage
    * ```ts
    * import { Cache } from "https://deno.land/x/chomp/core/cache.ts";
@@ -40,7 +42,8 @@ export class Cache {
         return Cache._metrics.hit + Cache._metrics.miss;
       case "rate":
         const percentile = Cache._metrics.hit / Cache.metrics("total");
-        return Math.round(percentile * 100) / 100;
+        if(percentile > 0) return Math.round(percentile * 100) / 100;
+        return 0;
       default:
         return Cache._metrics;
     }
