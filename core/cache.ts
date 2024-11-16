@@ -234,6 +234,7 @@ export class Cache {
   public static async remember(key: string, expiry: string | null = "+1 minute", callable: Promise): Promise<any> {
     // Check if cache item exists and hasn't expired
     if(!Cache.expired(key)) return Cache.get(key);
+    Cache._metrics.reads.miss++;
 
     // Cache does not exist, run callable
     const res = await callable();
