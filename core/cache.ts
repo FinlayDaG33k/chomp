@@ -92,6 +92,7 @@ export class Cache {
       data: value,
       expires: expiresAt,
     });
+    Cache._metrics.writes++;
   }
 
   /**
