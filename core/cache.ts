@@ -53,10 +53,11 @@ export class Cache {
         return Cache._metrics.reads.miss;
       case "total":
         return Cache._metrics.reads.hit + Cache._metrics.reads.miss;
-      case "rate":
-        const percentile = Cache._metrics.reads.hit / Cache.metrics("total");
-        if(percentile > 0) return Math.round(percentile * 100) / 100;
+      case "rate": {
+        const percentile = +(Cache._metrics.reads.hit / Cache.metrics("total")).toFixed(4);
+        if(percentile > 0) return percentile;
         return 0;
+      }
       case "writes":
         return Cache._metrics.writes;
       case "swept":
