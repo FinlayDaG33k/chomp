@@ -45,7 +45,7 @@ export class Cache {
    *
    * @param key
    */
-  public static metrics(key: keyof CacheMetrics["reads"]|"rate"|"total"|"writes"|"swept"|null = null): number|CacheMetrics {
+  public static metrics(key: keyof CacheMetrics["reads"]|"rate"|"total"|"writes"|"swept"|"size"|null = null): number|CacheMetrics {
     switch(key) {
       case "hit":
         return Cache._metrics.reads.hit;
@@ -62,6 +62,8 @@ export class Cache {
         return Cache._metrics.writes;
       case "swept":
         return Cache._metrics.swept;
+      case "size":
+        return Cache._items.size;
       default:
         return Cache._metrics;
     }
