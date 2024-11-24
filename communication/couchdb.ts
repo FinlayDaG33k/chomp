@@ -254,6 +254,41 @@ export class CouchDB {
   }
 
   /**
+   * Find a document
+   *
+   * @example Basic usage
+   * ```ts
+   * import { CouchDB } from "https://deno.land/x/chomp/communication/couchdb.ts";
+   *
+   * const couchdb = new CouchDB(...);
+   * const resp = await couchdb.find({"_id": "example});
+   * ```
+   *
+   * @example Specific fields only
+   * ```ts
+   * import { CouchDB } from "https://deno.land/x/chomp/communication/couchdb.ts";
+   *
+   * const couchdb = new CouchDB(...);
+   * const resp = await couchdb.find({"_id": "example}, ["_id", "_rev", "example_field"]);
+   * ```
+   *
+   * @param selector
+   * @param fields
+   */
+  public async find(selector: any, fields: string[]|null = null): Promise<CouchResponse> {
+    // Instantiate body with selector
+    const body = {
+      selector: selector,
+    };
+
+    // Check if we want only specific fields
+    if(fields !== null) body.fields = fields;
+
+    // Execute query
+    return this.raw(`_find`, body, {method: 'POST'});
+  }
+
+  /**
    * Main request handler.
    * This method is used for most of our other methods as well.
    *
