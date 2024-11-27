@@ -14,7 +14,7 @@ export interface CouchResponse {
   };
 }
 
-interface CouchOverrides {
+export interface CouchOverrides {
   method?: string;
 }
 
