@@ -102,4 +102,20 @@ export class Contract {
     // Check if empty object
     if(typeof argument === "object" && Object.keys(argument).length === 0) raise(`${nameOf({ argument })} may not be empty`, "ContractArgumentEmpty");
   }
+
+  /**
+   * Require the input argument to not be empty
+   *
+   *
+   * @param argument
+   */
+  public static requireEmpty(argument: unknown): void|never {
+    try {
+      Contract.requireNotEmpty(argument);
+    } catch(e) {
+      return;
+    }
+
+    raise(`${nameOf({ argument })} must be empty`, "ContractArgumentNotEmpty");
+  }
 }
