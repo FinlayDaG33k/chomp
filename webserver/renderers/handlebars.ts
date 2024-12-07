@@ -23,6 +23,8 @@ export class Handlebars {
 
     // Compile our template
     // Cache it if need be
+    // TODO: Fix type
+    // @ts-ignore See TODO
     const compiled = hbs.compile(template) ?? raise("Could not compile template");
     if (cache) Handlebars._cache[path] = compiled;
 

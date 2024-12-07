@@ -6,8 +6,8 @@ export class NutState {
 }
 
 export class Nut {
-  private host: string = "";
-  private port: number = 3493;
+  private readonly host: string = "";
+  private readonly port: number = 3493;
   private client: Deno.TcpConn | null = null;
   private _status: number = NutState.IDLE;
   // deno-lint-ignore no-explicit-any -- TODO
@@ -46,17 +46,17 @@ export class Nut {
     const data = new TextEncoder().encode(`${cmd}\n`);
 
     // Send our data over the connection
-    await this.client.write(data);
+    await this.client!.write(data);
   }
 
   public close() {
     //this.send(`LOGOUT`);
-    this.client.close();
+    this.client!.close();
   }
 
   private async onReceive() {
     // deno-lint-ignore no-deprecated-deno-api -- TODO
-    for await (const buffer of Deno.iter(this.client)) {
+    for await (const buffer of Deno.iter(this.client!)) {
       this.dataBuf += new TextDecoder().decode(buffer);
       this.callback(this.dataBuf);
     }

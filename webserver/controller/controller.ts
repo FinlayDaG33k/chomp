@@ -24,7 +24,8 @@ export class Controller {
    * @deprecated Please use "Controller.getResponse().withType()" instead.
    * @param value
    */
-  public set type(value = "text/html") {
+  // @ts-ignore Deprecated function anyways
+  public set type(value: string = "text/html") {
     Logger.warning(
       'Setting type on controller itself is deprecated, please use "Controller.getResponse().withType()" instead.',
     );
@@ -67,6 +68,8 @@ export class Controller {
     // Use that if so
     if (Registry.has(`${Inflector.ucfirst(name)}Component`)) {
       const module = Registry.get(`${Inflector.ucfirst(name)}Component`);
+      // TODO: Fix index signature
+      // @ts-ignore --
       this[Inflector.ucfirst(name)] = new module[`${Inflector.ucfirst(name)}Component`](this);
       return this;
     }
@@ -88,6 +91,8 @@ export class Controller {
     Registry.add(`${Inflector.ucfirst(name)}Component`, module);
 
     // Add the module as class property
+    // TODO: Fix index signature
+    // @ts-ignore --
     this[Inflector.ucfirst(name)] = new module[`${Inflector.ucfirst(name)}Component`](this);
 
     return this;
@@ -124,7 +129,8 @@ export class Controller {
       case "text/html": {
         const controller = Inflector.lcfirst(this.getRequest().getRoute().getController());
         const action = this.getRequest().getRoute().getAction();
-        body = await Handlebars.render(`${Controller._templateDir}/${controller}/${action}.hbs`, this._vars);
+        const rendered = await Handlebars.render(`${Controller._templateDir}/${controller}/${action}.hbs`, this._vars);
+        body = rendered ? rendered : '';
         break;
       }
       case "application/octet-stream": {
@@ -135,7 +141,7 @@ export class Controller {
 
     // Check if we can compress with Brotli
     // TODO: Hope that Deno will make this obsolete.
-    if (this.getRequest().getHeaders().get("accept-encoding")?.includes("br") && canCompress && body.length > 1024) {
+    if (this.getRequest().getHeaders().get("accept-encoding")?.includes("br") && canCompress && body.length > 1024 && typeof body === 'string') {
       Logger.debug(`Compressing body with brotli: ${body.length}-bytes`);
       body = compressBrotli(new TextEncoder().encode(body));
       Logger.debug(`Compressed body with brotli: ${body.length}-bytes`);

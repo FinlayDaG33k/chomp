@@ -1,5 +1,5 @@
 interface RegistryItem {
-  [key: string]: Module;
+  [key: string]: any;
 }
 
 export class Registry {
@@ -11,7 +11,7 @@ export class Registry {
    * @param name
    * @param module
    */
-  public static add(name: string, module: Module): void {
+  public static add(name: string, module: any): void {
     Registry._items[name] = module;
   }
 
@@ -20,7 +20,7 @@ export class Registry {
    *
    * @param name
    */
-  public static get(name: string): Module | null {
+  public static get(name: string): any | null {
     return Registry._items[name] ?? null;
   }
 

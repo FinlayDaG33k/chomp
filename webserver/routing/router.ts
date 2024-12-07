@@ -173,8 +173,12 @@ export class Router {
     path = pathSplit[0];
 
     const keys: string[] = [];
+    // TODO: Fix type error
+    // @ts-ignore --
     const r = pathToRegexp(route.getPath(), keys).exec(path) || [];
 
+    // TODO: Fix type error
+    // @ts-ignore --
     return keys.reduce((acc, key, i) => ({ [key.name]: r[i + 1], ...acc }), {});
   }
 

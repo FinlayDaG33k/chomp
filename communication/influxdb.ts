@@ -17,19 +17,17 @@ export class InfluxDB {
   private _api: Api;
 
   public constructor(
-    private readonly url: string,
-    private readonly token: string,
+    url: string,
+    token: string,
+    org: string,
+    bucket: string,
+    precision: Precision = Precision.us
   ) {
-  }
-
-  public setApi(org: string, bucket: string, precision: Precision = Precision.us): this {
     this._api = {
-      url: `${this.url}/api/v2/write?org=${org}&bucket=${bucket}&precision=${Precision[precision]}`,
-      auth: `Token ${this.token}`,
+      url: `${url}/api/v2/write?org=${org}&bucket=${bucket}&precision=${Precision[precision]}`,
+      auth: `Token ${token}`,
       precision: precision,
     };
-
-    return this;
   }
 
   /**

@@ -8,7 +8,7 @@ interface ResponseHeader {
 export class ResponseBuilder {
   private readonly _headers: Map<string, Array<string>> = new Map<string, Array<string>>();
   private _status: StatusCodes = StatusCodes.OK;
-  private _body = "";
+  private _body: string | Uint8Array = "";
 
   public constructor() {
     // Set default headers
@@ -110,7 +110,7 @@ export class ResponseBuilder {
    *
    * @param body
    */
-  public withBody(body: string): ResponseBuilder {
+  public withBody(body: string|Uint8Array): ResponseBuilder {
     this._body = body;
     return this;
   }

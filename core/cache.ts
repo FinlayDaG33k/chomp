@@ -54,7 +54,8 @@ export class Cache {
       case "total":
         return Cache._metrics.reads.hit + Cache._metrics.reads.miss;
       case "rate": {
-        const percentile = +(Cache._metrics.reads.hit / Cache.metrics("total")).toFixed(4);
+        const total: number = Cache.metrics("total") as number;
+        const percentile = +(Cache._metrics.reads.hit / total).toFixed(4);
         if(percentile > 0) return percentile;
         return 0;
       }
@@ -234,12 +235,14 @@ export class Cache {
    * @param expiry
    * @param callable
    */
-  public static async remember(key: string, expiry: string | null = "+1 minute", callable: Promise): Promise<any> {
+  public static async remember(key: string, expiry: string | null = "+1 minute", callable: Promise<any>): Promise<any> {
     // Check if cache item exists and hasn't expired
     if(!Cache.expired(key)) return Cache.get(key);
     Cache._metrics.reads.miss++;
 
     // Cache does not exist, run callable
+    // TODO: Fix "no call signatures" in lint
+    // @ts-ignore See TODO
     const res = await callable();
 
     // Add result to cache

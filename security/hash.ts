@@ -48,7 +48,7 @@ export const INSECURE_ALGORITHMS: string[] = [
 ];
 
 export class Hash {
-  private result: ArrayBuffer;
+  private result!: ArrayBuffer;
 
   constructor(
     private input: string,

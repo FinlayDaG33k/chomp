@@ -41,6 +41,8 @@ export class GraphQL {
    * @return The instance of this class
    */
   public addVariable(key: string, value: string): GraphQL {
+    // TODO: Find out type
+    // @ts-ignore See TODO
     this._variables[key] = value;
     return this;
   }

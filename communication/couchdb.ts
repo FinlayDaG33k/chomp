@@ -3,6 +3,13 @@ interface Auth {
   password: string;
 }
 
+
+interface CouchRequest {
+  method: string;
+  headers: any;
+  body?: string;
+}
+
 export interface CouchResponse {
   status: number;
   statusText: string;
@@ -277,7 +284,7 @@ export class CouchDB {
    */
   public async find(selector: any, fields: string[]|null = null): Promise<CouchResponse> {
     // Instantiate body with selector
-    const body = {
+    const body: {selector: any, fields?:string[]} = {
       selector: selector,
     };
 
@@ -304,7 +311,7 @@ export class CouchDB {
   // deno-lint-ignore no-explicit-any -- Any arbitrary data may be used
   public async raw(endpoint: string, body: any = null, overrides: CouchOverrides = {}): Promise<CouchResponse> {
     // Start building opts
-    const opts = {
+    const opts: CouchRequest = {
       method: overrides["method"] ? overrides["method"] : "GET",
       headers: {
         Authorization: `Basic ${this.auth}`,
