@@ -314,6 +314,6 @@ export class Cache {
   }
 }
 
-// Sweep cache every hour
+// Sweep cache every minute
 // @ts-ignore It's a function not a type
-Cron("1 0 * * * *", () => Cache.sweep());
+Cron("0 */1 * * * *", () => Cache.sweep());
