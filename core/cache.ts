@@ -279,6 +279,8 @@ export class Cache {
    * ```
    */
   public static sweep(): void {
+    Logger.debug('Starting cache sweep...');
+
     // Set the start time of this sweep
     // Set an optimistic boundary
     // TODO: Allow configuring of optimistic boundary
@@ -311,6 +313,8 @@ export class Cache {
       Cache._items.delete(key);
       Cache._metrics.swept++;
     }
+
+    Logger.debug('Finished cache sweep!');
   }
 }
 
