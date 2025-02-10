@@ -1,6 +1,8 @@
 # Chomp
 
-Library of (arguably) useful stuff.\
+Library of (arguably) useful stuff.  
+This library prioritizes "ease of use" over "efficiency".  
+
 Should work just fine but comes with no warranties whatsoever.
 
 ## Usage
@@ -21,36 +23,17 @@ This includes (list might not always be up-to-date):
 - [Folder](docs/filesystem/folder.md)
 - [CheckSource](docs/utility/check-source.md)
 
-You can then import any of the "extras" as you need:
-
-- [Discord Bot](docs/discord/README.md) (Discordeno Wrapper):
-
-```ts
-import * from "https://deno.land/x/chomp/discord/mod.ts";
-```
-
-- [Webserver](docs/webserver/README.md):
-
-```ts
-import * from "https://deno.land/x/chomp/webserver/mod.ts";
-```
-
-- [Websocket Server](docs/websocket/README.md):
-
-```ts
-import * from "https://deno.land/x/chomp/websocket/mod.ts";
-```
-
-Additionally, you can explore the [docs](/docs) or [Deno.land](https://doc.deno.land/https://deno.land/x/chomp/mod.ts)
+However, there are many more things included so feel free to explore the [docs](/docs) or [Deno.land](https://doc.deno.land/https://deno.land/x/chomp/mod.ts)
 to see what more Chomp is capable off!
 
-**NOTE**: While you can import `https://deno.land/x/chomp/mod.ts`, we advice against this as it'll load the entire
+**NOTE**: While you can import `https://deno.land/x/chomp/mod.ts`, I advice against this as it'll load the entire
 codebase, including stuff you may not actually be using.
 
 ## Versioning
 
-Versions adhere to the following versioning system of `x.y.z` where:
+As of `?.0.0.0`, versioning adheres to the following versioning system of `w.x.y.z` where:
 
-- `x` means a breaking change (eg. removal of a function, breaking upgrade of an upstream dependency etc.).
-- `y` means an addition or non-breaking update.
-- `z` means a typos, bug-fix etc.
+- `w` means all previous deprecations were removed.
+- `x` means deprecations were added in this release.
+- `y` means new features were added in this release.
+- `z` means a small fix was made (typo's, bugs etc.)
