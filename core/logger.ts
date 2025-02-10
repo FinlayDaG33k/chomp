@@ -45,6 +45,9 @@ const handlers: Handlers = {
   },
 };
 
+/**
+ * Logging handler for writing to console
+ */
 export class Logger {
   private static _handlers: Handlers = handlers;
 

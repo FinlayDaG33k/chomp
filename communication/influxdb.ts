@@ -13,6 +13,9 @@ interface Api {
   precision: Precision;
 }
 
+/**
+ * Interact with InfluxDB
+ */
 export class InfluxDB {
   private _api: Api;
 

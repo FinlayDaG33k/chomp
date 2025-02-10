@@ -1,5 +1,8 @@
 import { Logger } from "../core/logger.ts";
 
+/**
+ * Interact with Ntfy.
+ */
 export class Ntfy {
   public constructor(
     private readonly host: string,

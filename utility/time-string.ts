@@ -71,7 +71,7 @@ function parseNumberFormat(digit: string, unit: string): number {
  *
  * @example
  * ```ts
- * import { TimeStringSeconds } from "https://deno.land/x/chomp/utility/time-string.ts";
+ * import { TimeString } from "https://deno.land/x/chomp/utility/time-string.ts";
  *
  * const milliseconds = TimeString`+1 minute`;
  * ```

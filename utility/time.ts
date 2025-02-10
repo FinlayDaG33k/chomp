@@ -2,6 +2,11 @@ import { time as timets } from "https://denopkg.com/burhanahmeed/time.ts@v2.0.1/
 import { format as formatter } from "https://cdn.deno.land/std/versions/0.77.0/raw/datetime/mod.ts";
 import { TimeString } from "./time-string.ts";
 
+/**
+ * Try to alleviate the pain of working with time.
+ *
+ * // TODO: Finish documentation
+ */
 export class Time {
   private readonly time;
   public get getTime() {

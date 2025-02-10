@@ -1,3 +1,6 @@
+/**
+ * Create some randomness because I learned how to exit VIM.
+ */
 export class Random {
   /**
    * Generate random bytes.

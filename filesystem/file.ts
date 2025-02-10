@@ -1,3 +1,8 @@
+/**
+ * Interact with a file
+ *
+ * TODO: Finish documentation
+ */
 export class File {
   public constructor(
     private readonly path: string,

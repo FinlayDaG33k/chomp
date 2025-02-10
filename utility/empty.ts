@@ -1,6 +1,8 @@
 /**
  * Check whether the input is set and empty
  *
+ * // TODO: Finish documentation
+ *
  * @param input
  * @returns boolean
  */

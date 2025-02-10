@@ -1,3 +1,6 @@
+/**
+ * Standardized error codes, because nobody likes meaningless error codes.
+ */
 export enum ErrorCodes {
   // Standard Errors
   UNKNOWN_ERROR = 0x0000000,
@@ -16,7 +19,7 @@ export enum ErrorCodes {
 
   // Upstream Errors
   UPSTREAM_HTTP_BAD_REQUEST = 0x300400,
-  UPSTREAM_HTTP__UNAUTHORIZED = 0x300401,
+  UPSTREAM_HTTP_UNAUTHORIZED = 0x300401,
   UPSTREAM_HTTP_FORBIDDEN = 0x300403,
   UPSTREAM_HTTP_NOT_FOUND = 0x300404,
   UPSTREAM_HTTP_METHOD_NOT_ALLOWED = 0x300405,

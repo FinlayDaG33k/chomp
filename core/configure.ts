@@ -6,13 +6,16 @@ const defaults = new Map<string, any>([
   ["error_log", `${Deno.cwd()}/logs/error.log`],
 ]);
 
+/**
+ * In-memory configuration handler.
+ */
 export class Configure {
   // deno-lint-ignore no-explicit-any -- Arbitrary data may be used
   private static config: Map<string, any> = defaults;
   private static hasLoaded = false;
 
   /**
-   * Load our configure data from file
+   * Load our configure data from file at `${Deno.cwd()}/config.json`.
    *
    * @example Basic Usage
    * ```ts

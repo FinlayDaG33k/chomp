@@ -1,3 +1,6 @@
+/**
+ * Interact with a {@link https://graphql.org/ GraphQL} API.
+ */
 export class GraphQL {
   private _variables = {};
   private _query: string = "query{}";

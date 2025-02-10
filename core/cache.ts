@@ -16,6 +16,9 @@ interface CacheMetrics {
   swept: number;
 }
 
+/**
+ * Very crude but effective in-memory caching
+ */
 export class Cache {
   private static _items: Map<string, CacheItem> = new Map<string, CacheItem>();
   private static _metrics: CacheMetrics = {

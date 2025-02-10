@@ -25,6 +25,9 @@ export interface CouchOverrides {
   method?: string;
 }
 
+/**
+ * Interact with {@link https://couchdb.apache.org/ Apache CouchDB}.
+ */
 export class CouchDB {
   private auth = "";
 

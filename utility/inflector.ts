@@ -1,5 +1,8 @@
 /**
+ * Quickly inflect text in common ways.
  * Idea and code primarily based on CakePHP's code.
+ *
+ * // TODO: Finish documentation
  */
 export class Inflector {
   /**

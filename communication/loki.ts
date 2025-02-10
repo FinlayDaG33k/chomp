@@ -6,6 +6,9 @@ export interface LokiStream {
   values: Array<Array<string>>;
 }
 
+/**
+ * Interact with {@link https://grafana.com/oss/loki/ Loki}.
+ */
 export class Loki {
   /**
    * @param host

@@ -5,6 +5,9 @@ export class NutState {
   public static readonly IDLE = 1;
 }
 
+/**
+ * Interact with NUT (Network UPS Tools).
+ */
 export class Nut {
   private readonly host: string = "";
   private readonly port: number = 3493;

@@ -1,3 +1,8 @@
+/**
+ * Interact with {@link https://druid.apache.org/ Apache Druid}.
+ *
+ * @deprecated No longer actively maintained
+ */
 export class Druid {
   // deno-lint-ignore no-explicit-any -- TODO
   private spec: any = null;

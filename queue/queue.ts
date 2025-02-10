@@ -17,6 +17,9 @@ export enum Scheduler {
   WEIGHTED = 2,
 }
 
+/**
+ * Crude yet effective in-memory Queue system
+ */
 export class Queue {
   private items: QueueItem[] = [];
   private readonly scheduler: Scheduler;

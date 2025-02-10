@@ -5,6 +5,9 @@ export enum PacketType {
   AUTH = 0x03,
 }
 
+/**
+ * Interact with RCON.
+ */
 export class RCON {
   private conn!: Deno.Conn;
 

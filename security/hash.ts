@@ -47,6 +47,11 @@ export const INSECURE_ALGORITHMS: string[] = [
   Algorithms.MD5,
 ];
 
+/**
+ * Create hashes
+ *
+ * **NOTE**: If you want to hash passwords, use the {@linkcode Password} class instead!
+ */
 export class Hash {
   private result!: ArrayBuffer;
 

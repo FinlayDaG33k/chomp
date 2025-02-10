@@ -1,5 +1,10 @@
 import { Logger } from "../core/logger.ts";
 
+/**
+ * Interact with a file
+ *
+ * TODO: Finish documentation
+ */
 export class Folder {
   public constructor(
     private readonly path: string,
