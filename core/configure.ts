@@ -15,7 +15,9 @@ export class Configure {
   private static hasLoaded = false;
 
   /**
-   * Load our configure data from file at `${Deno.cwd()}/config.json`.
+   * Load our configure data from file at `${Deno.cwd()}/config.json` or `${Deno.cwd()}/config.ts`.
+   *
+   * **NOTE**: Loading from `config.json` is deprecated and will be removed in the future but is currently still the default.
    *
    * @example Basic Usage
    * ```ts
@@ -24,14 +26,46 @@ export class Configure {
    * await Configure.load();
    * ```
    *
+   * @example Load from config.ts
+   * ```
+   * import { Configure } from "https://deno.land/x/chomp/core/configure.ts";
+   *
+   * await Configure.load(false, true);
+   * ```
+   *
    * @param force Set to true to force re-loading the configure
+   * @param useTs Set to true to load from config.ts instead of config.json
    * @returns void
    */
-  public static async load(force = false): Promise<void> {
+  public static async load(force = false, useTs = false): Promise<void> {
     // Make sure we don't have loaded already
     if (Configure.hasLoaded === true && force === false) return;
     Logger.info(`Loading data into Configure...`);
 
+    if(!useTs) {
+      Logger.warning('Loading Configure from JSON is deprecated!');
+      await Configure._loadJson();
+    } else {
+      const module = await import(`file:///${Deno.cwd()}/config.ts`);
+      if(!('default' in module)) {
+        Logger.warning(`Could not load Configure: "${Deno.cwd()}/config.ts" has no default export...`);
+        Configure.hasLoaded = true;
+        return;
+      }
+      Configure.config = new Map(function*() { yield* defaults; yield* module['default']; }());
+    }
+
+    // Mark configure as loaded
+    Logger.info(`Finished loading Configure!`);
+    Configure.hasLoaded = true;
+  }
+
+  /**
+   * Read the config.json file
+   *
+   * @deprecated Switching to using solely TS-based configs
+   */
+  private static async _loadJson() {
     // Make sure our file exists
     try {
       await Deno.stat(`${Deno.cwd()}/config.json`);
@@ -52,10 +86,6 @@ export class Configure {
       Logger.error(`Could not load JSON: "${e.message}"`, e.stack);
       return;
     }
-
-    // Mark configure as loaded
-    Logger.info(`Finished loading Configure!`);
-    Configure.hasLoaded = true;
   }
 
   /**
