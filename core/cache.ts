@@ -1,10 +1,12 @@
 import { TimeString } from "../utility/time-string.ts";
 import { Logger } from "./logger.ts";
 import { Cron } from "../utility/cron.ts";
+import { Configure } from "./configure.ts";
 
 interface CacheItem {
   data: unknown;
   expires: Date | null;
+  optimistic?: Date;
 }
 
 interface CacheMetrics {
@@ -17,7 +19,14 @@ interface CacheMetrics {
 }
 
 /**
+ * Default optimistic boundaries
+ */
+const OPTIMISTIC_DELAY = '+1 hour';
+
+/**
  * Very crude but effective in-memory caching
+ *
+ * You can specify additional time for optimistic caching by using the `chomp_optimistic_delay` configuration key.
  */
 export class Cache {
   private static _items: Map<string, CacheItem> = new Map<string, CacheItem>();
@@ -93,11 +102,17 @@ export class Cache {
    */
   public static set(key: string, value: unknown, expiry: string | null = "+1 minute"): void {
     let expiresAt = null;
-    if (expiry) expiresAt = new Date(new Date().getTime() + TimeString`${expiry}`);
+    let optimisticExpiry = undefined;
+    if (expiry) {
+      const now = new Date();
+      expiresAt = new Date(now.getTime() + TimeString`${expiry}`);
+      optimisticExpiry = new Date(expiresAt.getTime() + TimeString`${Configure.get('chomp_optimistic_delay', OPTIMISTIC_DELAY)}`)
+    }
 
     Cache._items.set(key, {
       data: value,
       expires: expiresAt,
+      optimistic: optimisticExpiry
     });
     Cache._metrics.writes++;
   }
@@ -158,7 +173,7 @@ export class Cache {
   }
 
   /**
-   * Check whether an item has expired
+   * Check whether an item has expired.
    *
    * @example Basic Usage
    * ```ts
@@ -285,11 +300,7 @@ export class Cache {
     Logger.debug('Starting cache sweep...');
 
     // Set the start time of this sweep
-    // Set an optimistic boundary
-    // TODO: Allow configuring of optimistic boundary
     const now = new Date();
-    const start = new Date(now.getTime() + TimeString`-1 hour -1 second`);
-    const boundary = new Date(now.getTime() + TimeString`-1 hour -1 minute`);
 
     // Loop over each item in the cache
     for (const [key, value] of Cache._items) {
@@ -300,13 +311,13 @@ export class Cache {
       }
 
       // Keep items that have not yet expired
-      if (value.expires >= start) {
+      if (value.expires >= now) {
         Logger.debug(`Keeping cache item "${key}": Has not expired`);
         continue;
       }
 
       // Keep items that may be served optimistically
-      if (value.expires >= boundary) {
+      if (value.optimistic && value.optimistic >= now) {
         Logger.debug(`Keeping cache item "${key}": Keep for optimistic caching`);
         continue;
       }
