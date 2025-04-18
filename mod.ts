@@ -10,6 +10,7 @@ export { Ntfy } from "./communication/ntfy.ts";
 export { Nut } from "./communication/nut.ts";
 export { RCON } from "./communication/rcon.ts";
 export { Redis } from "./communication/redis.ts";
+export { UptimeKuma } from "./communication/uptime-kuma.ts";
 
 /**
  * Chomp Core
@@ -49,6 +50,7 @@ export { CheckSource } from "./utility/check-source.ts";
 export { Contract } from "./utility/contract.ts";
 export { Cron } from "./utility/cron.ts";
 export { empty } from "./utility/empty.ts";
+export { fetchWithTimeout } from "./utility/fetch-with-timeout.ts";
 export { formatBytes } from "./utility/format-bytes.ts";
 export { Inflector } from "./utility/inflector.ts";
 export { nameOf } from "./utility/name-of.ts";
