@@ -65,4 +65,10 @@ export class Inflector {
     // Join tokens into a string and return
     return tokens.join(" ");
   }
+
+  public static delimit(input: string, delimiter: string = '_'): string {
+    return input
+      .replaceAll(/(?<=\w)([A-Z])/g, delimiter + '$1')
+      .toLowerCase();
+  }
 }
