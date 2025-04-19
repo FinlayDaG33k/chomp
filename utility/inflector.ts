@@ -38,7 +38,7 @@ export class Inflector {
   public static pascalize(input: string, delimiter: string = "_"): string {
     // Try to look up in cache
     const type = `pascalize${delimiter}`;
-    let result = Inflector._cache(type, input);
+    let result = this._cache(type, input);
 
     // Inflect on cache miss and add to cache
     if(!result) {
@@ -48,7 +48,7 @@ export class Inflector {
         .replaceAll(" ", "");
 
       // Add to Cache
-      Inflector._cache(type, input, result);
+      this._cache(type, input, result);
     }
 
     return result;
@@ -74,7 +74,7 @@ export class Inflector {
   public static humanize(input: string, delimiter: string = "_"): string {
     // Try to look up in cache
     const type = `humanize${delimiter}`;
-    let result = Inflector._cache(type, input);
+    let result = this._cache(type, input);
 
     // Inflect on cache miss and add to cache
     if(!result) {
@@ -91,7 +91,7 @@ export class Inflector {
       result = tokens.join(" ");
 
       // Add to cache
-      Inflector._cache(type, input, result);
+      this._cache(type, input, result);
     }
 
     // Join tokens into a string and return
@@ -104,7 +104,7 @@ export class Inflector {
    * @param input
    */
   public static dasherize(input: string): string {
-    return Inflector.delimit(input.replaceAll('_', '-'), '-');
+    return this.delimit(input.replaceAll('_', '-'), '-');
   }
 
   /**
@@ -116,7 +116,7 @@ export class Inflector {
   public static delimit(input: string, delimiter: string = '_'): string {
     // Try to look up in cache
     const type = `delimit${delimiter}`;
-    let result = Inflector._cache(type, input);
+    let result = this._cache(type, input);
 
     // Inflect on cache miss and add to cache
     if(!result) {
@@ -126,7 +126,7 @@ export class Inflector {
         .toLowerCase();
 
       // Add to cache
-      Inflector._cache(type, input, result);
+      this._cache(type, input, result);
     }
 
     return result;
