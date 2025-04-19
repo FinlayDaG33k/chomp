@@ -66,10 +66,21 @@ export class Inflector {
     return tokens.join(" ");
   }
 
+  /**
+   * Returns the input CamelCasedString as a dashed-string and replace underscores with dashes
+   *
+   * @param input
+   */
   public static dasherize(input: string): string {
     return Inflector.delimit(input.replaceAll('_', '-'), '-');
   }
 
+  /**
+   * Expects a CamelCasedInputString, and produces a lower_case_delimited_string
+   *
+   * @param input
+   * @param delimiter
+   */
   public static delimit(input: string, delimiter: string = '_'): string {
     return input
       .replaceAll(/(?<=\w)([A-Z])/g, delimiter + '$1')
