@@ -66,6 +66,10 @@ export class Inflector {
     return tokens.join(" ");
   }
 
+  public static dasherize(input: string): string {
+    return Inflector.delimit(input.replaceAll('_', '-'), '-');
+  }
+
   public static delimit(input: string, delimiter: string = '_'): string {
     return input
       .replaceAll(/(?<=\w)([A-Z])/g, delimiter + '$1')

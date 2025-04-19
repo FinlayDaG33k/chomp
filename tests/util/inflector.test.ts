@@ -26,10 +26,15 @@ Deno.test("Inflector Test", async (t) => {
     assertEquals(Inflector.humanize("hello_World", "-"), "Hello_World");
   });
 
+  await t.step("dasherize", () => {
+    assertEquals(Inflector.dasherize("HelloWorld"), "hello-world");
+    assertEquals(Inflector.dasherize("hello_world"), "hello-world");
+  });
+
   await t.step("delimit", () => {
     assertEquals(Inflector.delimit("HelloWorld"), "hello_world");
     assertEquals(Inflector.delimit("HelloWorld", "-"), "hello-world");
     assertEquals(Inflector.delimit("Hello World"), "hello world");
     assertEquals(Inflector.delimit("Hello-World"), "hello-world");
-  })
+  });
 });
