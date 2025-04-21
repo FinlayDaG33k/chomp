@@ -30,7 +30,7 @@ export class UptimeKuma {
       {method: 'GET'},
       5000
     );
-    if(resp.status !== 200) raise(`Could not send heartbeat to Uptime Kuma: ${resp.status} - ${resp.statusText}`, 'UptimeKumaHeartbeatNotOK')
+    if(resp.status !== 200) raise(`${resp.status} - ${resp.statusText}`, 'UptimeKumaHeartbeatNotOK')
     return true;
   }
 }
