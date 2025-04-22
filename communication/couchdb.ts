@@ -103,6 +103,21 @@ export class CouchDB {
   }
 
   /**
+   * Get the name of the database we're working with
+   *
+   * @example
+   * ```ts
+   * import { CouchDB } from "https://deno.land/x/chomp/communication/couchdb.ts";
+   *
+   * const couchdb = new CouchDB(...);
+   * const database = couchdb.databaseName;
+   * ```
+   */
+  public get databaseName(): string {
+    return this.database;
+  }
+
+  /**
    * Get a document from the database.
    *
    * @example
