@@ -4,6 +4,6 @@
  * @param input
  * @param defaultValue
  */
-export function valueOrDefault<T>(input: T|undefined|null, defaultValue: T|null): T|null {
-  return input ?? defaultValue;
+export function valueOrDefault<T>(input: T|undefined|null, defaultValue: T|null = null): T {
+  return input ?? defaultValue as T;
 }
