@@ -1,4 +1,5 @@
 import { Logger } from "./logger.ts";
+import {valueOrDefault} from "../utility/value-or-default.ts";
 
 // deno-lint-ignore no-explicit-any -- Arbitrary data may be used
 const defaults = new Map<string, any>([
@@ -111,10 +112,9 @@ export class Configure {
    * @param defaultValue Default value to return when no result was found
    * @returns any|null
    */
-  public static get<T>(key: string, defaultValue: T|null = null): T | null {
+  public static get<T>(key: string, defaultValue: T|null = null): T {
     // Return null if we do not have the key
-    if (!Configure.config.has(key)) return defaultValue;
-    return Configure.config.get(key);
+    return valueOrDefault(Configure.config.get(key), defaultValue);
   }
 
   /**
@@ -179,9 +179,9 @@ export class Configure {
    * @param key
    * @param defaultValue
    */
-  public static consume<T>(key: string, defaultValue: T|null = null): T|null {
+  public static consume<T>(key: string, defaultValue: T|null = null): T {
     // Check if the key exists, if not, return the default value
-    if (!Configure.config.has(key)) return defaultValue;
+    if (!Configure.config.has(key)) return defaultValue as T;
 
     // Hack together a reference to our item's value
     const ref = [Configure.config.get(key)];
