@@ -6,9 +6,22 @@
  * @param input
  * @returns boolean
  */
-// deno-lint-ignore no-explicit-any -- Any arbitrary data may be used
-export function empty(input: string | any[] | null): boolean {
-  if (!input) return true;
-  if (typeof input === "string") return input === "";
-  return input.length === 0;
+export function empty(input: unknown): boolean {
+  // Check if undefined
+  if(input === undefined) return true;
+
+  // Check if null
+  if(input === null) return true;
+
+  // Check if empty string
+  if(input === "") return true;
+
+  // Check if empty array
+  if(Array.isArray(input) && input.length === 0) return true;
+
+  // Check if empty object
+  if(typeof input === "object" && Object.keys(input).length === 0) return true;
+
+  // We have something inside
+  return false;
 }

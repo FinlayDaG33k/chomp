@@ -1,5 +1,6 @@
 import { raise } from "../error/raise.ts";
-import { nameOf } from "../mod.ts";
+import { empty } from "./empty.ts";
+import { nameOf } from "./name-of.ts";
 
 /**
  * Class to more easily throw errors while creating (among others) constructors.
@@ -87,20 +88,7 @@ export class Contract {
    * @param argument
    */
   public static requireNotEmpty(argument: unknown): void|never {
-    // Check if undefined
-    if(argument === undefined) raise(`${nameOf({ argument })} may not be empty`, "ContractArgumentEmpty");
-
-    // Check if null
-    if(argument === null) raise(`${nameOf({ argument })} may not be empty`, "ContractArgumentEmpty");
-
-    // Check if empty string
-    if(argument === "") raise(`${nameOf({ argument })} may not be empty`, "ContractArgumentEmpty");
-
-    // Check if empty array
-    if(Array.isArray(argument) && argument.length === 0) raise(`${nameOf({ argument })} may not be empty`, "ContractArgumentEmpty");
-
-    // Check if empty object
-    if(typeof argument === "object" && Object.keys(argument).length === 0) raise(`${nameOf({ argument })} may not be empty`, "ContractArgumentEmpty");
+    if(empty(argument)) raise(`${nameOf({ argument })} may not be empty`, "ContractArgumentEmpty")
   }
 
   /**
@@ -110,12 +98,6 @@ export class Contract {
    * @param argument
    */
   public static requireEmpty(argument: unknown): void|never {
-    try {
-      Contract.requireNotEmpty(argument);
-    } catch(e) {
-      return;
-    }
-
-    raise(`${nameOf({ argument })} must be empty`, "ContractArgumentNotEmpty");
+    if(!empty(argument)) raise(`${nameOf({ argument })} must be empty`, "ContractArgumentNotEmpty");
   }
 }
