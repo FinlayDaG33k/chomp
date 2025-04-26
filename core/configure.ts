@@ -111,8 +111,7 @@ export class Configure {
    * @param defaultValue Default value to return when no result was found
    * @returns any|null
    */
-  // deno-lint-ignore no-explicit-any -- Any arbitrary data may be used
-  public static get(key: string, defaultValue: any = null): any | null {
+  public static get<T>(key: string, defaultValue: T|null = null): T | null {
     // Return null if we do not have the key
     if (!Configure.config.has(key)) return defaultValue;
     return Configure.config.get(key);
@@ -180,8 +179,7 @@ export class Configure {
    * @param key
    * @param defaultValue
    */
-  // deno-lint-ignore no-explicit-any -- Any arbitrary data may be used
-  public static consume(key: string, defaultValue: any = null): any {
+  public static consume<T>(key: string, defaultValue: T|null = null): T|null {
     // Check if the key exists, if not, return the default value
     if (!Configure.config.has(key)) return defaultValue;
 
