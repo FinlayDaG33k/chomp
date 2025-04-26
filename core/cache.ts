@@ -4,7 +4,8 @@ import { Cron } from "../utility/cron.ts";
 import { Configure } from "./configure.ts";
 
 interface CacheItem {
-  data: unknown;
+  // deno-lint-ignore no-explicit-any -- Any arbitrary data may be added to cache
+  data: any;
   expires: Date | null;
   optimistic?: Date;
 }
@@ -100,7 +101,8 @@ export class Cache {
    * @param value
    * @param expiry Can be set to null for never expiring items
    */
-  public static set(key: string, value: unknown, expiry: string | null = "+1 minute"): void {
+  // deno-lint-ignore no-explicit-any -- Any arbitrary data may be added to cache
+  public static set(key: string, value: any, expiry: string | null = "+1 minute"): void {
     let expiresAt = null;
     let optimisticExpiry = undefined;
     if (expiry) {
@@ -137,7 +139,7 @@ export class Cache {
    * @param key
    * @param optimistic Whether to serve expired items from the cache
    */
-  public static get(key: string, optimistic = false): unknown | null {
+  public static get<T>(key: string, optimistic = false): T | null {
     // Return null if the item doesn't exist
     if (!Cache.exists(key)) {
       Cache._metrics.reads.miss++;
@@ -207,9 +209,9 @@ export class Cache {
    * @param key
    * @param optimistic Whether to serve expired items from the cache
    */
-  public static consume(key: string, optimistic = false): unknown | null {
+  public static consume<T>(key: string, optimistic = false): T | null {
     // Copy item from cache
-    const data = Cache.get(key, optimistic);
+    const data = <T|null>Cache.get(key, optimistic);
 
     // Remove item from cache
     Cache.remove(key);
@@ -253,9 +255,9 @@ export class Cache {
    * @param expiry
    * @param callable
    */
-  public static async remember(key: string, expiry: string | null = "+1 minute", callable: Promise<any>): Promise<any> {
+  public static async remember<T>(key: string, expiry: string | null = "+1 minute", callable: Promise<T>|(() => Promise<T>)): Promise<T> {
     // Check if cache item exists and hasn't expired
-    if(!Cache.expired(key)) return Cache.get(key);
+    if(!Cache.expired(key)) return <T>Cache.get(key);
     Cache._metrics.reads.miss++;
 
     // Cache does not exist, run callable
