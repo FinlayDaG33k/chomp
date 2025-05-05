@@ -139,7 +139,7 @@ export class Router {
       await controller.initialize();
 
       // Execute our action
-      await controller[req.getRoute().getAction()]();
+      await controller[Inflector.camelize(req.getRoute().getAction(), '-')]();
 
       // Render the body
       await controller.render();
