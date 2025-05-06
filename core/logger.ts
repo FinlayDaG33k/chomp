@@ -1,22 +1,17 @@
 import { Time } from "../utility/time.ts";
 import { Configure } from "./configure.ts";
-import { bold, cyan, magenta, red, yellow } from "https://deno.land/std@0.117.0/fmt/colors.ts";
+import { bold, cyan, magenta, red, yellow, blue } from "https://deno.land/std@0.117.0/fmt/colors.ts";
 
 type Handlers = {
-  info: (message: string) => void;
-  warning: (message: string) => void;
   error: (message: string, stack: string | null) => void;
+  warning: (message: string) => void;
+  notice: (message: string) => void;
+  info: (message: string) => void;
   debug: (message: string) => void;
 };
 type LogLevels = keyof Handlers;
 
 const handlers: Handlers = {
-  info: (message: string): void => {
-    console.log(`[${Logger.time()}] ${cyan("INFO")}  > ${message}`);
-  },
-  warning: (message: string): void => {
-    console.error(`[${Logger.time()}] ${yellow("WARN")}  > ${message}`);
-  },
   error: (message: string, stack: string | null = null): void => {
     // Get current time
     const now = Logger.time();
@@ -37,6 +32,15 @@ const handlers: Handlers = {
     let output = `[${now}] ${red(bold("ERROR"))} > ${message}`;
     if (stack) output += `\r\n${stack}`;
     console.error(output);
+  },
+  warning: (message: string): void => {
+    console.error(`[${Logger.time()}] ${yellow("WARN")}  > ${message}`);
+  },
+  notice: (message: string): void => {
+    console.error(`[${Logger.time()}] ${blue("NOTICE")}> ${message}`);
+  },
+  info: (message: string): void => {
+    console.log(`[${Logger.time()}] ${cyan("INFO")}  > ${message}`);
   },
   debug: (message: string): void => {
     if (Configure.get("debug", false)) {
@@ -63,13 +67,15 @@ export class Logger {
   }
 
   /**
-   * Write an info message to the console
+   * Write an error message to the console.
+   * If the "error_log" Configure item is set, will also write to file.
    *
    * @param {string} message The message to write
+   * @param {string|null} stack Optional stacktrace
    * @returns {void}
    */
-  public static info(message: string): void {
-    Logger._handlers["info"](message);
+  public static error(message: string, stack: string | null = null): void {
+    Logger._handlers["error"](message, stack);
   }
 
   /**
@@ -83,15 +89,23 @@ export class Logger {
   }
 
   /**
-   * Write an error message to the console.
-   * If the "error_log" Configure item is set, will also write to file.
+   * Write a notice to the console
    *
    * @param {string} message The message to write
-   * @param {string|null} stack Optional stacktrace
    * @returns {void}
    */
-  public static error(message: string, stack: string | null = null): void {
-    Logger._handlers["error"](message, stack);
+  public static notice(message: string): void {
+    Logger._handlers["notice"](message);
+  }
+
+  /**
+   * Write an info message to the console
+   *
+   * @param {string} message The message to write
+   * @returns {void}
+   */
+  public static info(message: string): void {
+    Logger._handlers["info"](message);
   }
 
   /**
