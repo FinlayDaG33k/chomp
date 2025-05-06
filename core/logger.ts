@@ -29,22 +29,22 @@ const handlers: Handlers = {
     }
 
     // Write to console
-    let output = `[${now}] ${red(bold("ERROR"))} > ${message}`;
+    let output = `[${now}] ${red(bold("ERROR"))}  > ${message}`;
     if (stack) output += `\r\n${stack}`;
     console.error(output);
   },
   warning: (message: string): void => {
-    console.error(`[${Logger.time()}] ${yellow("WARN")}  > ${message}`);
+    console.error(`[${Logger.time()}] ${yellow("WARN")}   > ${message}`);
   },
   notice: (message: string): void => {
-    console.error(`[${Logger.time()}] ${blue("NOTICE")}> ${message}`);
+    console.error(`[${Logger.time()}] ${blue("NOTICE")} > ${message}`);
   },
   info: (message: string): void => {
-    console.log(`[${Logger.time()}] ${cyan("INFO")}  > ${message}`);
+    console.log(`[${Logger.time()}] ${cyan("INFO")}   > ${message}`);
   },
   debug: (message: string): void => {
     if (Configure.get("debug", false)) {
-      console.log(`[${Logger.time()}] ${magenta("DEBUG")} > ${message}`);
+      console.log(`[${Logger.time()}] ${magenta("DEBUG")}  > ${message}`);
     }
   },
 };
