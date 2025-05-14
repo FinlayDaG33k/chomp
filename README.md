@@ -31,9 +31,15 @@ codebase, including stuff you may not actually be using.
 
 ## Versioning
 
-As of `?.0.0.0`, versioning adheres to the following versioning system of `w.x.y.z` where:
+As of `?.0.0.0-0`, versioning adheres to the following versioning system of `a.b.c.d-e` where:
 
-- `w` means all previous deprecations were removed.
-- `x` means deprecations were added in this release.
-- `y` means new features were added in this release.
-- `z` means a small fix was made (typo's, bugs etc.)
+- `a`: Some previous behaviour may have changed in a non-backwards compatible fashion (breaking).
+  - Impact: Serious updates may be required on your end.
+- `b`: All previous deprecations were removed (potentially breaking).
+  - Impact: Nothing if you kept up with deprecations.
+- `c`: Deprecations were added in this release.
+  - Impact: Deprecations may need to be fixed on your end.
+- `d`: New feature(s) were added.
+  - Impact: New goodies for you to use.
+- `e`: Small fixes (typo's, bugs, documentation etc.)
+  - Impact: Generally none.
