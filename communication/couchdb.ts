@@ -1,4 +1,5 @@
 import { Cache } from "../core/cache.ts";
+import {Configure} from "../core/configure.ts";
 
 type Auth = {
   username: string;
@@ -42,8 +43,12 @@ export interface CouchOverrides {
   etag?: string;
 }
 
+const CACHE_TIME = '+1 hour';
+
 /**
  * Interact with {@link https://couchdb.apache.org/ Apache CouchDB}.
+ *
+ * You can specify the read cache expiry used for {@link CouchDB.get} by setting the `chomp_couchdb_cache` configuration key.
  */
 export class CouchDB {
   private auth = "";
@@ -419,7 +424,7 @@ export class CouchDB {
         statusText: 'OK',
         data: data,
       },
-    }, "+1 hour");
+    }, Configure.get('chomp_couchdb_cache', CACHE_TIME));
 
     // Return our response
     return {

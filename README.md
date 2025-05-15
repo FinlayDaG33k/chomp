@@ -34,9 +34,10 @@ codebase, including stuff you may not actually be using.
 While Chomp does try to have a lot of "good enough" defaults, sometimes you may want to set things to your own needs.  
 As a result, some things can be configured by you by adding entries to the Configure.
 
-| Key | Default Value | Comment                                                                                                |
-|-----|---------------|--------------------------------------------------------------------------------------------------------|
+| Key | Default Value | Comment                                                                                                                             |
+|-----|---------------|-------------------------------------------------------------------------------------------------------------------------------------|
 | `chomp_optimistic_delay` | `'+1 hour'` | Additional time a cache entry may exist for optimistic caching. Uses the `utility/time-string` formats |
+| `chomp_couchdb_cache` | `'+1 hour'` | Time a document for `communication/couchdb` will be kept in the cache to improve read times. Uses the `utility/time-string` formats |
 
 ## Versioning
 
