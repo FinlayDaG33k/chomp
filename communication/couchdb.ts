@@ -1,28 +1,45 @@
-interface Auth {
+import { Cache } from "../core/cache.ts";
+
+type Auth = {
   username: string;
   password: string;
 }
 
-
-interface CouchRequest {
+type CouchRequest = {
   method: string;
+  // deno-lint-ignore no-explicit-any -- TODO: Figure out proper type
   headers: any;
   body?: string;
 }
 
-export interface CouchResponse {
-  status: number;
-  statusText: string;
+type CouchSuccess = {
+  ok: true;
   // deno-lint-ignore no-explicit-any -- Any arbitrary data may be used
-  data: any | null;
-  error: null | {
+  data: any;
+}
+
+type CouchError = {
+  ok: false;
+  error: {
     error: string;
     reason: string;
-  };
+  }
 }
+
+type CachedResponse = {
+  etag: string;
+  // deno-lint-ignore no-explicit-any -- Any arbitrary data may be used
+  data: any;
+}
+
+export type CouchResponse = {
+  status: number;
+  statusText: string;
+} & (CouchSuccess | CouchError)
 
 export interface CouchOverrides {
   method?: string;
+  etag?: string;
 }
 
 /**
@@ -120,6 +137,8 @@ export class CouchDB {
   /**
    * Get a document from the database.
    *
+   * **Note**: Responses will always be cached.
+   *
    * @example
    * ```ts
    * import { CouchDB } from "https://deno.land/x/chomp/communication/couchdb.ts";
@@ -133,9 +152,28 @@ export class CouchDB {
    * ```
    *
    * @param id
+   * @param cache
    */
-  public async get(id: string): Promise<CouchResponse> {
-    return await this.raw(id);
+  public async get(id: string, cache: boolean = true): Promise<CouchResponse> {
+    // Check if we want to cache
+    // If not, just run the request
+    if(!cache) return this.raw(id);
+
+    // Get the etag from cache
+    const cached = Cache.get(`chomp.couchdb.cache ${id}`) as CachedResponse|null;
+
+    // Check if etag was found
+    // Run the request with or without it depending on result
+    let resp;
+    if(cached) {
+      resp = await this.raw(id, null, {
+        etag: cached.etag,
+      });
+    } else {
+      resp =  await this.raw(id);
+    }
+
+    return resp;
   }
 
   /**
@@ -224,8 +262,12 @@ export class CouchDB {
     const exists = await this.raw(id, null, { method: "GET" });
     if (exists.status === 404) {
       data["_id"] = id;
+      delete data["_rev"];
       return await this.insert(data);
     }
+
+    // Make sure we got an "OK" status before
+    if(!exists.ok) return exists;
 
     // Update the document
     return await this.update(id, exists.data["_rev"], data);
@@ -333,6 +375,7 @@ export class CouchDB {
       method: overrides["method"] ? overrides["method"] : "GET",
       headers: {
         Authorization: `Basic ${this.auth}`,
+        "If-None-Match": overrides["etag"] ? overrides["etag"] : undefined,
       },
     };
 
@@ -344,28 +387,50 @@ export class CouchDB {
     }
 
     // Make sure the endpoint starts with a leading slash
+    const cacheKey = endpoint;
     if (endpoint.charAt(0) !== "/" && endpoint !== "") endpoint = `/${endpoint}`;
 
-    // Send our request and get the response
+    // Send our request
     const resp = await fetch(`${this.host}/${this.database}${endpoint}`, opts);
+
+    // Check if we have a 304
+    // If so, get data from cache
+    if(resp.status === 304) {
+      const cached = Cache.get(`chomp.couchdb.cache ${cacheKey}`) as CachedResponse;
+      return cached.data;
+    }
+
+    // Get data from request
     let data = null;
     if (opts.method !== "HEAD") data = await resp.json();
 
-    // Prepare our CouchResponse
-    const couchResponse: CouchResponse = {
-      status: resp.status,
-      statusText: resp.statusText,
-      data: null,
-      error: null,
-    };
-
     // Check whether we have an error
-    if (resp.ok) {
-      couchResponse["data"] = data;
-    } else {
-      couchResponse["error"] = data;
+    if(!resp.ok) {
+      return {
+        ok: false,
+        status: resp.status,
+        statusText: resp.statusText,
+        error: data,
+      };
     }
 
-    return couchResponse;
+    // Save etag and (slightly modified) response to cache
+    if(resp.headers.get("etag")) Cache.set(`chomp.couchdb.cache ${cacheKey}`, {
+      etag: resp.headers.get("etag"),
+      data: {
+        ok: true,
+        status: 200,
+        statusText: 'OK',
+        data: data,
+      },
+    });
+
+    // Return our response
+    return {
+      ok: true,
+      status: resp.status,
+      statusText: resp.statusText,
+      data: data,
+    };
   }
 }
