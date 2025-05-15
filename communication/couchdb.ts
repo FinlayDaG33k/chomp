@@ -137,7 +137,7 @@ export class CouchDB {
   /**
    * Get a document from the database.
    *
-   * **Note**: Responses will always be cached.
+   * **Note**: Responses will always be stored in cache, regardless of the `cache` parameter.
    *
    * @example
    * ```ts
@@ -154,26 +154,22 @@ export class CouchDB {
    * @param id
    * @param cache
    */
-  public async get(id: string, cache: boolean = true): Promise<CouchResponse> {
+  public get(id: string, cache: boolean = true): Promise<CouchResponse> {
     // Check if we want to cache
-    // If not, just run the request
+    // If not, just run the request without etag
     if(!cache) return this.raw(id);
 
     // Get the etag from cache
     const cached = Cache.get(`chomp.couchdb.cache ${id}`) as CachedResponse|null;
 
-    // Check if etag was found
-    // Run the request with or without it depending on result
-    let resp;
-    if(cached) {
-      resp = await this.raw(id, null, {
-        etag: cached.etag,
-      });
-    } else {
-      resp =  await this.raw(id);
-    }
+    // Check if cached version was found
+    // If not, run the request without etag
+    if(!cached) return this.raw(id);
 
-    return resp;
+    // Run the request with the etag
+    return this.raw(id, null, {
+      etag: cached.etag,
+    });
   }
 
   /**
@@ -200,8 +196,8 @@ export class CouchDB {
    * @param data
    */
   // deno-lint-ignore no-explicit-any -- Any arbitrary data may be used
-  public async insert(data: any): Promise<CouchResponse> {
-    return await this.raw("", data);
+  public insert(data: any): Promise<CouchResponse> {
+    return this.raw("", data);
   }
 
   /**
@@ -227,12 +223,12 @@ export class CouchDB {
    * @param data
    */
   // deno-lint-ignore no-explicit-any -- Any arbitrary data may be used
-  public async update(id: string, revision: string, data: any): Promise<CouchResponse> {
+  public update(id: string, revision: string, data: any): Promise<CouchResponse> {
     // Make sure the id and revision are set in the data
     if (!data["_id"] || data["_id"] !== id) data["_id"] = id;
     if (!data["_rev"] || data["_rev"] !== revision) data["_rev"] = revision;
 
-    return await this.raw(id, data, { method: "PUT" });
+    return this.raw(id, data, { method: "PUT" });
   }
 
   /**
@@ -294,8 +290,8 @@ export class CouchDB {
    * @param id
    * @param revision
    */
-  public async delete(id: string, revision: string): Promise<CouchResponse> {
-    return await this.raw(`${id}?rev=${revision}`, null, { method: "DELETE" });
+  public delete(id: string, revision: string): Promise<CouchResponse> {
+    return this.raw(`${id}?rev=${revision}`, null, { method: "DELETE" });
   }
 
   /**
@@ -316,8 +312,8 @@ export class CouchDB {
    * @param view
    * @param partition
    */
-  public async viewDesign(design: string, view: string, partition: string): Promise<CouchResponse> {
-    return await this.raw(`_partition/${partition}/_design/${design}/_view/${view}`);
+  public viewDesign(design: string, view: string, partition: string): Promise<CouchResponse> {
+    return this.raw(`_partition/${partition}/_design/${design}/_view/${view}`);
   }
 
   /**
@@ -342,7 +338,7 @@ export class CouchDB {
    * @param selector
    * @param fields
    */
-  public async find(selector: any, fields: string[]|null = null): Promise<CouchResponse> {
+  public find(selector: any, fields: string[]|null = null): Promise<CouchResponse> {
     // Instantiate body with selector
     const body: {selector: any, fields?:string[]} = {
       selector: selector,
