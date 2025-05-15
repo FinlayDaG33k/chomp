@@ -29,6 +29,15 @@ to see what more Chomp is capable off!
 **NOTE**: While you can import `https://deno.land/x/chomp/mod.ts`, I advice against this as it'll load the entire
 codebase, including stuff you may not actually be using.
 
+### Configuration keys
+
+While Chomp does try to have a lot of "good enough" defaults, sometimes you may want to set things to your own needs.  
+As a result, some things can be configured by you by adding entries to the Configure.
+
+| Key | Default Value | Comment                                                                                                |
+|-----|---------------|--------------------------------------------------------------------------------------------------------|
+| `chomp_optimistic_delay` | `'+1 hour'` | Additional time a cache entry may exist for optimistic caching. Uses the `utility/time-string` formats |
+
 ## Versioning
 
 As of `?.0.0.0-0`, versioning adheres to the following versioning system of `a.b.c.d-e` where:
