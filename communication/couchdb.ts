@@ -419,7 +419,7 @@ export class CouchDB {
         statusText: 'OK',
         data: data,
       },
-    });
+    }, "+1 hour");
 
     // Return our response
     return {
