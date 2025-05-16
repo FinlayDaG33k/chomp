@@ -260,18 +260,18 @@ export class CouchDB {
   public async upsert(id: string, data: any): Promise<CouchResponse> {
     // Check if a document already exists
     // Insert a new document if not
-    const exists = await this.raw(id, null, { method: "GET" });
+    const exists = await this.get(id);
     if (exists.status === 404) {
       data["_id"] = id;
       delete data["_rev"];
-      return await this.insert(data);
+      return this.insert(data);
     }
 
     // Make sure we got an "OK" status before
     if(!exists.ok) return exists;
 
     // Update the document
-    return await this.update(id, exists.data["_rev"], data);
+    return this.update(id, exists.data["_rev"], data);
   }
 
   /**
@@ -403,7 +403,13 @@ export class CouchDB {
 
     // Get data from request
     let data = null;
-    if (opts.method !== "HEAD") data = await resp.json();
+    if (!["HEAD","PUT"].includes(opts.method)) data = await resp.json();
+    if(opts.method === "PUT") {
+      data = body;
+
+      // Overwrite revision with revision from the etag to prevent conflicts
+      if(resp.headers.get("etag")) data._rev = resp.headers.get("etag")!.replaceAll("\"", "");
+    }
 
     // Check whether we have an error
     if(!resp.ok) {
