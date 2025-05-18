@@ -43,6 +43,11 @@ export interface CouchOverrides {
   etag?: string;
 }
 
+export type DocumentHeader = {
+  _id: string;
+  _rev?: string;
+}
+
 const CACHE_TIME = '+1 hour';
 
 /**
