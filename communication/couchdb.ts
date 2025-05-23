@@ -29,8 +29,7 @@ type CouchError = {
 
 type CachedResponse = {
   etag: string;
-  // deno-lint-ignore no-explicit-any -- Any arbitrary data may be used
-  data: any;
+  data: CouchResponse;
 }
 
 export type CouchResponse = {
@@ -401,10 +400,8 @@ export class CouchDB {
 
     // Check if we have a 304
     // If so, get data from cache
-    if(resp.status === 304) {
-      const cached = Cache.get(`chomp.couchdb.cache ${cacheKey}`) as CachedResponse;
-      return cached.data;
-    }
+    const cached = Cache.get(`chomp.couchdb.cache ${cacheKey}`) as CachedResponse
+    if(resp.status === 304 && cached) return cached.data;
 
     // Get data from request
     let data = null;
