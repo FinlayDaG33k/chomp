@@ -1,0 +1,46 @@
+name: Bug Report
+description: File a bug report.
+title: "Bug: "
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Provide as much information as possible and please be descriptive.
+    validations:
+      required: true
+  - type: dropdown
+    id: runtime
+    attributes:
+      label: Runtime
+      description: What runtime (Node, Deno, etc) are you using?
+      options:
+        - Deno
+        - NodeJS
+        - Bun
+        - Other (add the name to the version)
+      default: 0
+    validations:
+      required: true
+  - type: input
+    id: runtime-version
+    attributes:
+      label: Runtime Version
+      description: What version of the runtime are you using? In Deno you could get this through `deno --version`.
+      placeholder: 1.46.3
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output
+      description: Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks.
+      render: shell
+  - type: checkboxes
+    id: latest
+    attributes:
+      label: Latest Release
+      description: By submitting this issue, you confirm that you are using the latest release when this issue is present.
+      options:
+        - label: I confirm that I am running on the latest release.
+          required: true

@@ -22,6 +22,6 @@ I made this PR because ...
 
 - [ ] Changes have no left-over console logs.
 - [ ] Changes have no left-over debuggers.
-- [ ] Changes have no left-over other pieces or code.
+- [ ] Changes have no left-over "other pieces or code".
 - [ ] Changes have kept the documentation in-sync with the code as much as possible.
 - [ ] Changes still look good after taking a break and coming in cold.
