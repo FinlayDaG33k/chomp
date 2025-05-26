@@ -403,6 +403,17 @@ export class CouchDB {
     const cached = Cache.get(`chomp.couchdb.cache ${cacheKey}`) as CachedResponse
     if(resp.status === 304 && cached) return cached.data;
 
+    // Check whether we have an error
+    // If so, return
+    if(!resp.ok) {
+      return {
+        ok: false,
+        status: resp.status,
+        statusText: resp.statusText,
+        error: await resp.json(),
+      };
+    }
+
     // Get data from request
     let data = null;
     if (!["HEAD","PUT"].includes(opts.method)) data = await resp.json();
@@ -411,16 +422,6 @@ export class CouchDB {
 
       // Overwrite revision with revision from the etag to prevent conflicts
       if(resp.headers.get("etag")) data._rev = resp.headers.get("etag")!.replaceAll("\"", "");
-    }
-
-    // Check whether we have an error
-    if(!resp.ok) {
-      return {
-        ok: false,
-        status: resp.status,
-        statusText: resp.statusText,
-        error: data,
-      };
     }
 
     // Save etag and (slightly modified) response to cache
