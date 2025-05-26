@@ -416,12 +416,20 @@ export class CouchDB {
 
     // Get data from request
     let data = null;
-    if (!["HEAD","PUT"].includes(opts.method)) data = await resp.json();
-    if(opts.method === "PUT") {
-      data = body;
+    switch(opts.method.toUpperCase()) {
+      case "HEAD":
+      case "DELETE":
+        break;
+      case "PUT":
+        // Put input body as data since CouchDB doesn't send this back
+        data = body;
 
-      // Overwrite revision with revision from the etag to prevent conflicts
-      if(resp.headers.get("etag")) data._rev = resp.headers.get("etag")!.replaceAll("\"", "");
+        // Overwrite revision with revision from the etag to prevent conflicts
+        if(resp.headers.get("etag")) data._rev = resp.headers.get("etag")!.replaceAll("\"", "");
+        break;
+      case "GET":
+        data = await resp.json();
+        break;
     }
 
     // Save etag and (slightly modified) response to cache
