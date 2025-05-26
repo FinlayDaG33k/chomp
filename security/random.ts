@@ -38,9 +38,23 @@ export class Random {
    * @param length Length of the string to be generated
    * @returns Promise<string>
    */
-  public static async string(length: number): Promise<string> {
-    const buf = await Random.bytes(length / 2);
-    return Array.from(buf, (dec: number) => dec.toString(16).padStart(2, "0")).join("");
+  public static string(length: number): string {
+    // Calculate how much bytes we need to generate to fulfill this request
+    // If we have an odd number, generate one extra byte
+    let generateLength = length;
+    if(generateLength % 2 !== 0) generateLength++;
+
+    // Generate our random bytes
+    const buf = Random.bytes(generateLength / 2);
+
+    // Turn bytes into string
+    const str =
+      Array
+        .from(buf, (dec: number) => dec.toString(16).padStart(2, "0"))
+        .join("");
+
+    // Return requested length
+    return str.substring(0, length);
   }
 
   /**
