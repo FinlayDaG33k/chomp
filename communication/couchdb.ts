@@ -427,6 +427,7 @@ export class CouchDB {
         // Overwrite revision with revision from the etag to prevent conflicts
         if(resp.headers.get("etag")) data._rev = resp.headers.get("etag")!.replaceAll("\"", "");
         break;
+      case "POST":
       case "GET":
         data = await resp.json();
         break;
