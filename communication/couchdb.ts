@@ -410,7 +410,7 @@ export class CouchDB {
         ok: false,
         status: resp.status,
         statusText: resp.statusText,
-        error: await resp.json(),
+        error: resp.status === 404 ? await resp.json() : { error: resp.status, reason: resp.statusText },
       };
     }
 
