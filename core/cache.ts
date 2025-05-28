@@ -27,7 +27,7 @@ const OPTIMISTIC_DELAY = '+1 hour';
 /**
  * Very crude but effective in-memory caching
  *
- * You can specify additional time for optimistic caching by using the `chomp_optimistic_delay` configuration key.
+ * Running {@linkcode Cache.sweep} is up to the app itself.
  */
 export class Cache {
   private static _items: Map<string, CacheItem> = new Map<string, CacheItem>();
@@ -289,7 +289,6 @@ export class Cache {
 
   /**
    * Scan the cache and clean up expired items while keeping optimistic caching in tact.
-   * There shouldn't be a need to manually run this in most cases.
    *
    * @example Basic Usage
    * ```ts
@@ -333,7 +332,3 @@ export class Cache {
     Logger.debug('Finished cache sweep!');
   }
 }
-
-// Sweep cache every minute
-// @ts-ignore It's a function not a type
-Cron("0 */1 * * * *", () => Cache.sweep());
