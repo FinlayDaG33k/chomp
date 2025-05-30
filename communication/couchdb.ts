@@ -13,29 +13,35 @@ type CouchRequest = {
   body?: string;
 }
 
-type CouchSuccess = {
-  ok: true;
-  // deno-lint-ignore no-explicit-any -- Any arbitrary data may be used
-  data: any;
-}
-
-type CouchError = {
-  ok: false;
-  error: {
-    error: string;
-    reason: string;
-  }
-}
-
 type CachedResponse = {
   etag: string;
   data: CouchResponse;
 }
 
-export type CouchResponse = {
-  status: number;
-  statusText: string;
-} & (CouchSuccess | CouchError)
+export type CouchFailure = [
+  // Error data
+  { error: string; reason: string; } | undefined,
+
+  // No document
+  undefined,
+
+  // HTTP Status code
+  number,
+]
+
+export type CouchSuccess = [
+  // No error
+  undefined,
+
+  // Document
+  // deno-lint-ignore no-explicit-any -- TODO: Figure out proper type
+  DocumentHeader & any,
+
+  // HTTP Status code
+  number,
+]
+
+export type CouchResponse = CouchSuccess|CouchFailure;
 
 export interface CouchOverrides {
   method?: string;
@@ -264,18 +270,18 @@ export class CouchDB {
   public async upsert(id: string, data: any): Promise<CouchResponse> {
     // Check if a document already exists
     // Insert a new document if not
-    const exists = await this.get(id);
-    if (exists.status === 404) {
+    const [error, document, status] = await this.get(id);
+    if (status === 404) {
       data["_id"] = id;
       delete data["_rev"];
       return this.insert(data);
     }
 
     // Make sure we got an "OK" status before
-    if(!exists.ok) return exists;
+    if(error) return [error, document, status];
 
     // Update the document
-    return this.update(id, exists.data["_rev"], data);
+    return this.update(id, document["_rev"], data);
   }
 
   /**
@@ -406,12 +412,11 @@ export class CouchDB {
     // Check whether we have an error
     // If so, return
     if(!resp.ok) {
-      return {
-        ok: false,
-        status: resp.status,
-        statusText: resp.statusText,
-        error: resp.status === 404 ? await resp.json() : { error: resp.status, reason: resp.statusText },
-      };
+      return [
+        resp.status === 404 ? await resp.json() : { error: resp.status, reason: resp.statusText },
+        undefined,
+        resp.status,
+      ];
     }
 
     // Get data from request
@@ -436,20 +441,10 @@ export class CouchDB {
     // Save etag and (slightly modified) response to cache
     if(resp.headers.get("etag")) Cache.set(`chomp.couchdb.cache ${cacheKey}`, {
       etag: resp.headers.get("etag"),
-      data: {
-        ok: true,
-        status: 200,
-        statusText: 'OK',
-        data: data,
-      },
+      data: [undefined, data, 200],
     }, Configure.get('chomp_couchdb_cache', CACHE_TIME));
 
     // Return our response
-    return {
-      ok: true,
-      status: resp.status,
-      statusText: resp.statusText,
-      data: data,
-    };
+    return [undefined, data, resp.status];
   }
 }
