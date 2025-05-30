@@ -50,6 +50,7 @@ export { CheckSource } from "./utility/check-source.ts";
 export { Contract } from "./utility/contract.ts";
 export { Cron } from "./utility/cron.ts";
 export { empty } from "./utility/empty.ts";
+export { errorOrData } from "./utility/error-or-data.ts";
 export { fetchWithTimeout } from "./utility/fetch-with-timeout.ts";
 export { formatBytes } from "./utility/format-bytes.ts";
 export { Inflector } from "./utility/inflector.ts";
