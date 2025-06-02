@@ -1,13 +1,15 @@
 import { Time } from "../utility/time.ts";
 import { Configure } from "./configure.ts";
-import { bold, cyan, magenta, red, yellow, blue } from "https://deno.land/std@0.117.0/fmt/colors.ts";
+import { bold, cyan, magenta, red, yellow, blue, green, gray } from "https://deno.land/std@0.117.0/fmt/colors.ts";
 
 type Handlers = {
   error: (message: string, stack: string | null) => void;
   warning: (message: string) => void;
   notice: (message: string) => void;
   info: (message: string) => void;
+  monitor: (message: string) => void;
   debug: (message: string) => void;
+  trace: (message: string) => void;
 };
 type LogLevels = keyof Handlers;
 
@@ -42,11 +44,19 @@ const handlers: Handlers = {
   info: (message: string): void => {
     console.log(`[${Logger.time()}] ${cyan("INFO")}   > ${message}`);
   },
+  monitor: (message: string): void => {
+    console.log(`[${Logger.time()}] ${green("MON")}    > ${message}`);
+  },
   debug: (message: string): void => {
     if (Configure.get("debug", false)) {
       console.log(`[${Logger.time()}] ${magenta("DEBUG")}  > ${message}`);
     }
   },
+  trace: (message: string): void => {
+    if (Configure.get("debug", false)) {
+      console.log(`[${Logger.time()}] ${gray("TRACE")}  > ${message}`);
+    }
+  }
 };
 
 /**
@@ -109,14 +119,37 @@ export class Logger {
   }
 
   /**
+   * Write a monitor message to the console
+   *
+   * Useful for when you want to write performance-related messages
+   *
+   * @param message
+   * @returns {void}
+   */
+  public static monitor(message: string): void {
+    Logger._handlers["monitor"](message);
+  }
+
+  /**
    * Write a debug message to the console
-   * Only shows up when the "DEBUG" env is set to truthy
+   * By default, only shows up when the "DEBUG" env is set to truthy
    *
    * @param {string} message The message to write
    * @returns {void}
    */
   public static debug(message: string): void {
     Logger._handlers["debug"](message);
+  }
+
+  /**
+   * Write a trace message to the console.
+   * By default, only shows up when the "DEBUG" env is set to truthy.
+   *
+   * @param message
+   * @returns {void}
+   */
+  public static trace(message: string): void {
+    Logger._handlers["trace"](message);
   }
 
   /**
