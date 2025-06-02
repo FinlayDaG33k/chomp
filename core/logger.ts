@@ -45,7 +45,7 @@ const handlers: Handlers = {
     console.log(`[${Logger.time()}] ${cyan("INFO")}   > ${message}`);
   },
   monitor: (message: string): void => {
-    console.log(`[${Logger.time()}] ${green("MON")}    > ${message}`);
+    console.log(`[${Logger.time()}] ${green("MONIT")}  > ${message}`);
   },
   debug: (message: string): void => {
     if (Configure.get("debug", false)) {
