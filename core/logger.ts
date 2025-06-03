@@ -80,6 +80,8 @@ export class Logger {
    * Write an error message to the console.
    * If the "error_log" Configure item is set, will also write to file.
    *
+   * Available in any log level.
+   *
    * @param {string} message The message to write
    * @param {string|null} stack Optional stacktrace
    * @returns {void}
@@ -91,65 +93,75 @@ export class Logger {
   /**
    * Write a warning message to the console
    *
+   * Available in log levels 0 and higher.
+   *
    * @param {string} message The message to write
    * @returns {void}
    */
   public static warning(message: string): void {
-    Logger._handlers["warning"](message);
+    if(Logger.shouldLog(0)) Logger._handlers["warning"](message);
   }
 
   /**
    * Write a notice to the console
    *
+   * Available in log levels 1 and higher.
+   *
    * @param {string} message The message to write
    * @returns {void}
    */
   public static notice(message: string): void {
-    Logger._handlers["notice"](message);
+    if(Logger.shouldLog(1)) Logger._handlers["notice"](message);
   }
 
   /**
    * Write an info message to the console
    *
+   * Available in log levels 2 and higher.
+   *
    * @param {string} message The message to write
    * @returns {void}
    */
   public static info(message: string): void {
-    Logger._handlers["info"](message);
+    if(Logger.shouldLog(2)) Logger._handlers["info"](message);
   }
 
   /**
    * Write a monitor message to the console
-   *
    * Useful for when you want to write performance-related messages
+   *
+   * Available in log levels 3 and higher.
    *
    * @param message
    * @returns {void}
    */
   public static monitor(message: string): void {
-    Logger._handlers["monitor"](message);
+    if(Logger.shouldLog(3)) Logger._handlers["monitor"](message);
   }
 
   /**
    * Write a debug message to the console
-   * By default, only shows up when the "DEBUG" env is set to truthy
+   *
+   * Available in log levels 4 and higher.
    *
    * @param {string} message The message to write
    * @returns {void}
    */
   public static debug(message: string): void {
-    Logger._handlers["debug"](message);
+    if(Logger.shouldLog(4)) Logger._handlers["debug"](message);
   }
 
   /**
    * Write a trace message to the console.
    * By default, only shows up when the "DEBUG" env is set to truthy.
    *
+   * Available in log levels 5 and higher.
+   *
    * @param message
    * @returns {void}
    */
   public static trace(message: string): void {
-    Logger._handlers["trace"](message);
+    if(Logger.shouldLog(5)) Logger._handlers["trace"](message);
   }
 
   /**
@@ -162,5 +174,15 @@ export class Logger {
    */
   public static time(): string {
     return new Time().format(Configure.get("logger.timeformat", "yyyy/MM/dd HH:mm:ss"));
+  }
+
+  /**
+   * Check
+   *
+   * @param level
+   * @private
+   */
+  private static shouldLog(level: number): boolean {
+    return Configure.get("log_level", 5) > level;
   }
 }

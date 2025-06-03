@@ -4,6 +4,7 @@ import {valueOrDefault} from "../utility/value-or-default.ts";
 // deno-lint-ignore no-explicit-any -- Arbitrary data may be used
 const defaults = new Map<string, any>([
   ["debug", false],
+  ["log_level", 5],
   ["error_log", `${Deno.cwd()}/logs/error.log`],
 ]);
 
