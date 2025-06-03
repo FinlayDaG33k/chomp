@@ -183,6 +183,6 @@ export class Logger {
    * @private
    */
   private static shouldLog(level: number): boolean {
-    return Configure.get("log_level", 5) > level;
+    return Configure.get("log_level", 5) >= level;
   }
 }
