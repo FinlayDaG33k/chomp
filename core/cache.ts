@@ -307,24 +307,24 @@ export class Cache {
     for (const [key, value] of Cache._items) {
       // Keep items that do not expire
       if (!value.expires) {
-        Logger.debug(`Keeping cache item "${key}": Does not expire`);
+        Logger.trace(`Keeping cache item "${key}": Does not expire`);
         continue;
       }
 
       // Keep items that have not yet expired
       if (value.expires >= now) {
-        Logger.debug(`Keeping cache item "${key}": Has not expired`);
+        Logger.trace(`Keeping cache item "${key}": Has not expired`);
         continue;
       }
 
       // Keep items that may be served optimistically
       if (value.optimistic && value.optimistic >= now) {
-        Logger.debug(`Keeping cache item "${key}": Keep for optimistic caching`);
+        Logger.trace(`Keeping cache item "${key}": Keep for optimistic caching`);
         continue;
       }
 
       // Clean up items that have expired
-      Logger.debug(`Removing expired cache item "${key}"`);
+      Logger.trace(`Removing expired cache item "${key}"`);
       Cache._items.delete(key);
       Cache._metrics.swept++;
     }
