@@ -412,9 +412,8 @@ export class CouchDB {
     const resp = await fetch(`${this.host}/${this.database}${endpoint}`, opts);
 
     // Check if we have a 304
-    // If so, get data from cache
-    const cached = Cache.get<CachedResponse|null>(`chomp.couchdb.cache ${cacheKey}`);
-    if(resp.status === 304 && cached) return cached.data;
+    // If so, return here
+    if(resp.status === 304) return [undefined, {_id: endpoint, _rev: overrides["etag"]}, 304];
 
     // Check whether we have an error
     // If so, return
