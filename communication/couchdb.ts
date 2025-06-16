@@ -406,7 +406,7 @@ export class CouchDB {
 
     // Check if we have a 304
     // If so, get data from cache
-    const cached = Cache.get(`chomp.couchdb.cache ${cacheKey}`) as CachedResponse
+    const cached = Cache.get<CachedResponse|null>(`chomp.couchdb.cache ${cacheKey}`);
     if(resp.status === 304 && cached) return cached.data;
 
     // Check whether we have an error
