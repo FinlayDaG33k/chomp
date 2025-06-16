@@ -169,7 +169,7 @@ export class CouchDB {
    * @param id
    * @param cache
    */
-  public get(id: string, cache: boolean = true): Promise<CouchResponse> {
+  public async get(id: string, cache: boolean = true): Promise<CouchResponse> {
     // Check if we want to cache
     // If not, just run the request without etag
     if(!cache) return this.raw(id);
@@ -182,9 +182,16 @@ export class CouchDB {
     if(!cached) return this.raw(id);
 
     // Run the request with the etag
-    return this.raw(id, null, {
+    const [error, data, status] = await this.raw(id, null, {
       etag: cached.etag,
     });
+
+    // If we somehow have a 304 still, use the cached version we have already
+    // This can happen in rare cases where the existing entry expired while querying the database
+    if(status === 304) return cached.data;
+
+    // Return our response object
+    return [error, data, status];
   }
 
   /**
