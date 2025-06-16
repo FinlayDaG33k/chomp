@@ -175,7 +175,7 @@ export class CouchDB {
     if(!cache) return this.raw(id);
 
     // Get the etag from cache
-    const cached = Cache.get(`chomp.couchdb.cache ${id}`) as CachedResponse|null;
+    const cached = Cache.get<CachedResponse|null>(`chomp.couchdb.cache ${id}`);
 
     // Check if cached version was found
     // If not, run the request without etag
