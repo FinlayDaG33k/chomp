@@ -25,6 +25,7 @@ const ChompValidators = new Map<string, ValidationCallback>([
  * **NOTE**: This is currently still an alpha feature.
  */
 export class Validator {
+  private _stopOnFailure: boolean = false;
   private _validators: ValidationStep[] = [];
 
   /**
@@ -51,6 +52,14 @@ export class Validator {
   }
 
   /**
+   * Stop validation on the first failing rule instead of checking all possible rules.
+   */
+  public setStopOnFailure() {
+    this._stopOnFailure = true;
+    return this;
+  }
+
+  /**
    * Execute all validator steps
    *
    * @param input
@@ -59,9 +68,13 @@ export class Validator {
     // Create array to collect validation errors
     const errors = [];
 
+    // Execute all validators
     for(const validator of this._validators) {
       const [error] = validator['callback'](input);
       if(error) errors.push(error);
+      if(this._stopOnFailure && errors.length > 0) break;
     }
+
+    return errors;
   }
 }
