@@ -1,6 +1,6 @@
-import {ValidationCallbackResponse} from "../validator.ts";
+import {ValidationCallbackResponse, ValidationOptions} from "../validator.ts";
 
-export function isUndefined(input: any, errorMessage?: string): ValidationCallbackResponse {
-  if(input !== undefined) return [errorMessage];
-  return [undefined];
+export function isUndefined(input: any, options: ValidationOptions): ValidationCallbackResponse {
+  if(input === undefined) return [undefined];
+  return [options.message];
 }
