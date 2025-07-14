@@ -1,10 +1,7 @@
-import { isEmpty } from "./rules/is-empty.ts";
-import { isNull } from "./rules/is-null.ts";
-import { isUndefined } from "./rules/is-undefined.ts";
 import {raise} from "../error/raise.ts";
-import {minLength} from "./rules/min-length.ts";
-import {maxLength} from "./rules/max-length.ts";
+import { Validators } from "./rules.ts";
 
+export type ValidationCallback = (input: any, parameters: any) => ValidationCallbackResponse;
 export type ValidationCallbackResponse = ValidationCallbackSuccess|ValidationCallbackError;
 export type ValidationCallbackParameters = ValidationParameter[];
 export type ValidationOptions = {
@@ -17,19 +14,9 @@ type ValidationStep = {
   callback: ValidationCallback
   options: ValidationOptions;
 };
-type ValidationCallback = (input: any, parameters: any) => ValidationCallbackResponse;
 type ValidationCallbackSuccess = [undefined];
 type ValidationCallbackError = [string];
 type ValidationParameter = {[key: string]: any};
-
-
-const ChompValidators = new Map<string, ValidationCallback>([
-  ['isEmpty', isEmpty],
-  ['isNull', isNull],
-  ['isUndefined', isUndefined],
-  ['minLength', minLength],
-  ['maxLength', maxLength],
-]);
 
 /**
  * Run validator functions on inputs.
@@ -39,6 +26,15 @@ const ChompValidators = new Map<string, ValidationCallback>([
 export class Validator {
   private _stopOnFailure: boolean = false;
   private _validators: ValidationStep[] = [];
+
+  public create(name: string, validator: ValidationCallback, overwrite: boolean = false) {
+    // Check if a validator already exists
+    // Skip if we want to override
+    if(!overwrite && Validators.has(name)) raise(`Validator named "${name}" already exists!`);
+
+    // Add validator
+    Validators.set(name, validator);
+  }
 
   /**
    * Add a validator step
@@ -50,8 +46,8 @@ export class Validator {
     // Check if validator type is a string
     // If so, check with built-ins
     if(typeof validator === 'string') {
-      if(!ChompValidators.has(validator)) raise(`Validator "${validator}" was not found`, 'ValidatorNotFound');
-      validator = ChompValidators.get(validator)!;
+      if(!Validators.has(validator)) raise(`Validator "${validator}" was not found`, 'ValidatorNotFound');
+      validator = Validators.get(validator)!;
     }
 
     // Check if we need to enable the "last" options
