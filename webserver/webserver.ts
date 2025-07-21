@@ -1,6 +1,8 @@
 import { Logger } from "../core/logger.ts";
 import { Router } from "./routing/router.ts";
 import { StatusCodes } from "./http/status-codes.ts";
+import {valueOrDefault} from "../utility/value-or-default.ts";
+import {Configure} from "../core/configure.ts";
 
 export class Webserver {
   private server: Deno.Listener | null = null;
@@ -28,8 +30,13 @@ export class Webserver {
 
     // Handle each request for this connection
     for await (const request of httpConn) {
+      const clientIp = valueOrDefault<string>(
+        request.request.headers.get(Configure.get("real_ip_header", "X-Forwarded-For")),
+        (conn.remoteAddr as Deno.NetAddr).hostname!
+      );
+
       Logger.debug(
-        `Request from "${(conn.remoteAddr as Deno.NetAddr).hostname!}:${(conn.remoteAddr as Deno.NetAddr)
+        `Request from "${clientIp}:${(conn.remoteAddr as Deno.NetAddr)
           .port!}": ${request.request.method} | ${request.request.url}`,
       );
       try {
