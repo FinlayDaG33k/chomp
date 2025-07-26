@@ -1,5 +1,6 @@
 import { Logger } from "./logger.ts";
 import {valueOrDefault} from "../utility/value-or-default.ts";
+import { File } from "../filesystem/file.ts";
 
 // deno-lint-ignore no-explicit-any -- Arbitrary data may be used
 const defaults = new Map<string, any>([
@@ -68,25 +69,27 @@ export class Configure {
    * @deprecated Switching to using solely TS-based configs
    */
   private static async _loadJson() {
+    const file = new File(`${Deno.cwd()}/config.json`);
+
     // Make sure our file exists
-    try {
-      await Deno.stat(`${Deno.cwd()}/config.json`);
-    } catch (_e) {
+    if(!await file.exists()) {
       Logger.warning(`Could not find file "config.json" at "${Deno.cwd()}". Configure will be empty!`);
       Configure.hasLoaded = true;
       return;
     }
 
-    // Read our JSON
+    // Read our JSON content
+    const json = await file.readTextFile();
+
+    // Parse JSON
     try {
-      const json = await Deno.readTextFile(`${Deno.cwd()}/config.json`);
       const data = JSON.parse(json);
       for (const entry of Object.keys(data)) {
+        Logger.debug(`Adding "${entry}" into Configure...`);
         Configure.set(entry, data[entry]);
       }
     } catch (e) {
       Logger.error(`Could not load JSON: "${e.message}"`, e.stack);
-      return;
     }
   }
 
