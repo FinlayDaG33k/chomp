@@ -27,6 +27,24 @@ export class File {
     await Deno.remove(this.path);
   }
 
+  public async move(path: string): Promise<File|false> {
+    try {
+      await Deno.rename(this.path, path);
+      return new File(path);
+    }catch(e) {
+      return false;
+    }
+  }
+
+  public async copy(path: string): Promise<File|false> {
+    try {
+      await Deno.copyFile(this.path, path);
+      return new File(path);
+    }catch(e) {
+      return false;
+    }
+  }
+
   public ext(): string {
     const pos = this.path.lastIndexOf(".");
     if (pos < 1) return "";
