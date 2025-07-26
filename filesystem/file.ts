@@ -9,10 +9,6 @@ export class File {
   ) {
   }
 
-  public async create(): Promise<void> {
-    await Deno.create(this.path);
-  }
-
   public async exists(): Promise<boolean> {
     try {
       const target = await Deno.stat(this.path);
@@ -21,6 +17,10 @@ export class File {
       if (e instanceof Deno.errors.NotFound) return false;
       throw e;
     }
+  }
+
+  public async create(): Promise<void> {
+    await Deno.create(this.path);
   }
 
   public async delete(): Promise<void> {
