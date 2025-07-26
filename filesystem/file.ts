@@ -51,15 +51,15 @@ export class File {
     return this.path.slice(pos + 1);
   }
 
-  public readTextFile() {
+  public readTextFile(): Promise<string> {
     return Deno.readTextFile(this.path);
   }
 
-  public readFile() {
+  public readFile(): Promise<Uint8Array> {
     return Deno.readFile(this.path);
   }
 
-  public async writeTextFile(data: string|ReadableStream<string>, options?: Deno.WriteFileOptions) {
+  public async writeTextFile(data: string|ReadableStream<string>, options?: Deno.WriteFileOptions): Promise<boolean> {
     try {
       await Deno.writeTextFile(this.path, data, options);
       return true;
@@ -68,7 +68,7 @@ export class File {
     }
   }
 
-  public async writeFile(data: Uint8Array|ReadableStream<Uint8Array>, options?: Deno.WriteFileOptions) {
+  public async writeFile(data: Uint8Array|ReadableStream<Uint8Array>, options?: Deno.WriteFileOptions): Promise<boolean> {
     try {
       await Deno.writeFile(this.path, data, options);
       return true;
