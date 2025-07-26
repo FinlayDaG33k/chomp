@@ -24,7 +24,7 @@ const handlers: Handlers = {
       try {
         let output = `[${now}] ERROR > ${message}`;
         if (stack) output += `\r\n${stack}`;
-        Deno.writeTextFile(Configure.get("error_log"), output, { append: true });
+        void Deno.writeTextFile(Configure.get("error_log"), output, { append: true });
       } catch (e) {
         console.error(`Could not append to error log: "${e.message}"`);
       }
