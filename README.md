@@ -39,6 +39,16 @@ As a result, some things can be configured by you by adding entries to the Confi
 | `chomp_optimistic_delay` | `'+1 hour'` | Additional time a cache entry may exist for optimistic caching. Uses the `utility/time-string` formats |
 | `chomp_couchdb_cache` | `'+1 hour'` | Time a document for `communication/couchdb` will be kept in the cache to improve read times. Uses the `utility/time-string` formats |
 
+### Extensions
+
+Chomp includes a few "extensions" that _modify JavaScript's built-in prototypes_.  
+Most of these should be free from interference unless you use other libraries that do this.  
+You can load extensions by simply including them into your project.  
+
+```ts
+import "https://deno.land/x/chomp/extensions/date/is-before.ts";
+```
+
 ## Versioning
 
 As of `?.0.0.0-0`, versioning adheres to the following versioning system of `a.b.c.d-e` where:
