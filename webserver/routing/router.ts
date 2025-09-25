@@ -7,7 +7,7 @@ import { QueryParameters, Request as ChompRequest, RequestParameters } from "../
 import { StatusCodes } from "../http/status-codes.ts";
 import { Route as ChompRoute } from "./route.ts";
 import { Controller } from "../controller/controller.ts";
-import { Registry } from "../registry/registry.ts";
+import { Registry } from "../../utility/registry.ts";
 import { raise } from "../../error/raise.ts";
 
 interface Route {

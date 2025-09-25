@@ -2,6 +2,9 @@ interface RegistryItem {
   [key: string]: any;
 }
 
+/**
+ * @deprecated Use {@linkcode ../../utility/Registry} instead
+ */
 export class Registry {
   private static _items: RegistryItem = <RegistryItem> {};
 

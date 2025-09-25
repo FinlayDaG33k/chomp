@@ -5,7 +5,7 @@ import { ResponseBuilder } from "../http/response-builder.ts";
 import { Request } from "../http/request.ts";
 import { raise } from "../../error/raise.ts";
 import { Component } from "./component.ts";
-import { Registry } from "../registry/registry.ts";
+import { Registry } from "../../utility/registry.ts";
 import { compress as compressBrotli } from "https://deno.land/x/brotli@v0.1.4/mod.ts";
 
 export interface ViewVariable {
