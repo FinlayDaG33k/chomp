@@ -32,33 +32,33 @@ const handlers: Handlers = {
     }
 
     // Write to console
-    let output = `[${now}] ${red(bold("ERROR"))}  > ${message}`;
+    let output = `[${now}] ${red(bold("ERROR"))}   > ${message}`;
     if (stack) output += `\r\n${stack}`;
     console.error(output);
   },
   success: (message: string): void => {
-    console.log(`${Logger.time()} ${green("SUCCESS")} > ${message}`);
+    console.log(`[${Logger.time()}] ${green("SUCCESS")} > ${message}`);
   },
   warning: (message: string): void => {
-    console.error(`[${Logger.time()}] ${yellow("WARN")}   > ${message}`);
+    console.error(`[${Logger.time()}] ${yellow("WARN")}    > ${message}`);
   },
   notice: (message: string): void => {
-    console.error(`[${Logger.time()}] ${blue("NOTICE")} > ${message}`);
+    console.error(`[${Logger.time()}] ${blue("NOTICE")}  > ${message}`);
   },
   info: (message: string): void => {
-    console.log(`[${Logger.time()}] ${cyan("INFO")}   > ${message}`);
+    console.log(`[${Logger.time()}] ${cyan("INFO")}    > ${message}`);
   },
   monitor: (message: string): void => {
-    console.log(`[${Logger.time()}] ${green("MONIT")}  > ${message}`);
+    console.log(`[${Logger.time()}] ${green("MONIT")}   > ${message}`);
   },
   debug: (message: string): void => {
     if (Configure.get("debug", false)) {
-      console.log(`[${Logger.time()}] ${magenta("DEBUG")}  > ${message}`);
+      console.log(`[${Logger.time()}] ${magenta("DEBUG")}   > ${message}`);
     }
   },
   trace: (message: string): void => {
     if (Configure.get("debug", false)) {
-      console.log(`[${Logger.time()}] ${gray("TRACE")}  > ${message}`);
+      console.log(`[${Logger.time()}] ${gray("TRACE")}   > ${message}`);
     }
   }
 };
