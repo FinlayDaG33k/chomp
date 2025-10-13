@@ -4,6 +4,7 @@ import { bold, cyan, magenta, red, yellow, blue, green, gray } from "https://den
 
 type Handlers = {
   error: (message: string, stack: string | null) => void;
+  success: (message: string) => void;
   warning: (message: string) => void;
   notice: (message: string) => void;
   info: (message: string) => void;
@@ -34,6 +35,9 @@ const handlers: Handlers = {
     let output = `[${now}] ${red(bold("ERROR"))}  > ${message}`;
     if (stack) output += `\r\n${stack}`;
     console.error(output);
+  },
+  success: (message: string): void => {
+    console.log(`${Logger.time()} ${green("SUCCESS")} > ${message}`);
   },
   warning: (message: string): void => {
     console.error(`[${Logger.time()}] ${yellow("WARN")}   > ${message}`);
@@ -88,6 +92,18 @@ export class Logger {
    */
   public static error(message: string, stack: string | null = null): void {
     Logger._handlers["error"](message, stack);
+  }
+
+  /**
+   * Write a success message to the console.
+   *
+   * Available in any log level.
+   *
+   * @param {string} message The message to write
+   * @returns {void}
+   */
+  public static success(message: string): void {
+    Logger._handlers["success"](message);
   }
 
   /**
