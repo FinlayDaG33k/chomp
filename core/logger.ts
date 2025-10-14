@@ -21,7 +21,7 @@ const handlers: Handlers = {
 
     // Check if we need to write to file
     // Write to file if need be
-    if (Configure.get("error_log")) {
+    if (Configure.get("error_log", false)) {
       try {
         let output = `[${now}] ERROR > ${message}`;
         if (stack) output += `\r\n${stack}`;
