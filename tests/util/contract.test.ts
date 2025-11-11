@@ -12,18 +12,27 @@ Deno.test("Contract Test", async (t) => {
 
   await t.step("requireNotNull", () => {
     // Test when the argument is null
-    assertThrows(() => Contract.requireNotNull(null, "testArgument"));
+    assertThrows(() => Contract.requireNotNull(null));
 
     // Test when the argument is not null
-    assert(() => Contract.requireNotNull("blabla", "testArgument"));
+    assert(() => Contract.requireNotNull("blabla"));
   });
 
   await t.step("requireNotUndefined", () => {
     // Test when the argument is undefined
-    assertThrows(() => Contract.requireNotUndefined(undefined, "testArgument"));
+    assertThrows(() => Contract.requireNotUndefined(undefined));
 
     // Test when the argument is not undefined
-    assert(() => Contract.requireNotUndefined("blabla", "testArgument"));
+    assert(() => Contract.requireNotUndefined("blabla"));
+  });
+
+  await t.step("requireNotNullish", () => {
+    // Test when argument is nullish
+    assertThrows(() => Contract.requireNotNullish(null));
+    assertThrows(() => Contract.requireNotNullish(undefined));
+
+    // Test when argument is not nullish
+    assert(() => Contract.requireNotNullish("blabla"));
   });
 
   await t.step("requireNotEmpty", () => {
