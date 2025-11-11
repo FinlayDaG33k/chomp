@@ -89,7 +89,7 @@ export class Contract {
    *
    * @param argument
    */
-  public static requireNotEmpty(argument: unknown): void|never {
+  public static requireNotEmpty<T>(argument: T): void|never {
     if(empty(argument)) raise(`${nameOf({ argument })} may not be empty`, "ContractArgumentEmpty")
   }
 
@@ -99,7 +99,7 @@ export class Contract {
    *
    * @param argument
    */
-  public static requireEmpty(argument: unknown): void|never {
+  public static requireEmpty<T>(argument: T): void|never {
     if(!empty(argument)) raise(`${nameOf({ argument })} must be empty`, "ContractArgumentNotEmpty");
   }
 }
