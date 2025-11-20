@@ -96,7 +96,6 @@ Deno.test("Queue Test", async (t) => {
     queue.add({ data: { job: "test6" } });
 
     // Make sure peeking works without removal
-    console.log(queue.dump);
     assertEquals(queue.peek, { weight: 3, data: { job: "test5" } });
     assertEquals(queue.count, 6);
 
