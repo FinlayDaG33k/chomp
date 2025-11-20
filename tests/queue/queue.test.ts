@@ -1,10 +1,13 @@
 import { assertEquals } from "https://deno.land/std@0.152.0/testing/asserts.ts";
-import { Queue, Scheduler } from "../../queue/queue.ts";
+import { Queue  } from "../../queue/queue.ts";
+import { default as fifo } from "../../queue/scheduler/first-in-first-out.ts";
+import { default as lifo } from "../../queue/scheduler/last-in-first-out.ts";
+import { default as wfifo } from "../../queue/scheduler/weighted-first-in-first-out.ts";
 
 Deno.test("Queue Test", async (t) => {
   await t.step("Common", () => {
     // Create our queue
-    const queue = new Queue(Scheduler.FIFO);
+    const queue = new Queue(fifo);
 
     // Test isEmpty and count without items
     assertEquals(queue.isEmpty, true);
@@ -32,7 +35,7 @@ Deno.test("Queue Test", async (t) => {
 
   await t.step("FIFO Scheduler", () => {
     // Create our queue
-    const queue = new Queue(Scheduler.FIFO);
+    const queue = new Queue(fifo);
 
     // Add test items to the queue
     queue.add({ data: { job: "test1" } });
@@ -57,7 +60,7 @@ Deno.test("Queue Test", async (t) => {
 
   await t.step("LIFO Scheduler", () => {
     // Create our queue
-    const queue = new Queue(Scheduler.LIFO);
+    const queue = new Queue(lifo);
 
     // Add test items to the queue
     queue.add({ data: { job: "test1" } });
@@ -82,7 +85,7 @@ Deno.test("Queue Test", async (t) => {
 
   await t.step("WEIGHTED Scheduler", () => {
     // Create our queue
-    const queue = new Queue(Scheduler.WEIGHTED);
+    const queue = new Queue(wfifo);
 
     // Add test items to the queue
     queue.add({ weight: 0, data: { job: "test1" } });
@@ -93,6 +96,7 @@ Deno.test("Queue Test", async (t) => {
     queue.add({ data: { job: "test6" } });
 
     // Make sure peeking works without removal
+    console.log(queue.dump);
     assertEquals(queue.peek, { weight: 3, data: { job: "test5" } });
     assertEquals(queue.count, 6);
 

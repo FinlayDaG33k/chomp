@@ -1,21 +1,20 @@
-import { Logger } from "../core/logger.ts";
+import { default as defaultScheduler } from "./scheduler/first-in-first-out.ts";
 
-interface QueueItem {
+export type QueueItem = {
+  /**
+   * Weight for the item.
+   * Only used in weighted algorithms.
+   */
   weight?: number;
+
+  /**
+   * Main data for the QueueItem
+   */
   // deno-lint-ignore no-explicit-any -- Any arbitrary data may be used
   data: any;
 }
 
-export enum Scheduler {
-  /* First In, First Out */
-  FIFO = 0,
-
-  /* Last In, First Out */
-  LIFO = 1,
-
-  /* Highest Weight go out FIFO */
-  WEIGHTED = 2,
-}
+export type Scheduler = (item: QueueItem, items: QueueItem[]) => QueueItem[];
 
 /**
  * Crude yet effective in-memory Queue system
@@ -24,7 +23,7 @@ export class Queue {
   private items: QueueItem[] = [];
   private readonly scheduler: Scheduler;
 
-  public constructor(scheduler: Scheduler = Scheduler.FIFO) {
+  public constructor(scheduler: Scheduler = defaultScheduler) {
     this.scheduler = scheduler;
   }
 
@@ -85,7 +84,7 @@ export class Queue {
   }
 
   /**
-   * Add an item to the queue based on the scheduler used
+   * Add an item to the queue
    *
    * @param item Item to add to the queue
    */
@@ -93,43 +92,8 @@ export class Queue {
     // Make sure data was set
     if (Object.keys(item.data).length === 0) throw Error("Data for queue item may not be empty!");
 
-    // Add item to the queue based on the scheduler used
-    switch (this.scheduler) {
-      case Scheduler.FIFO:
-        if ("weight" in item) {
-          Logger.debug("A weight was set without the weighted scheduler, removing it...");
-          delete item.weight;
-        }
-        this.items.push(item);
-        break;
-      case Scheduler.LIFO:
-        if ("weight" in item) {
-          Logger.debug("A weight was set without the weighted scheduler, removing it...");
-          delete item.weight;
-        }
-        this.items.unshift(item);
-        break;
-      case Scheduler.WEIGHTED:
-        if (!("weight" in item)) {
-          Logger.debug("No weight was set with weighted scheduler, defaulting to 0...");
-          item.weight = 0;
-        }
-
-        // Loop over all items in queue, add it at the bottom of it's weight
-        for (let i = 0; i < this.items.length; i++) {
-          // @ts-ignore Weight is set to 0 by default
-          if (item.weight > this.items[i].weight || i === this.items.length) {
-            this.items.splice(i, 0, item);
-            return;
-          }
-        }
-
-        // Queue is empty, just push
-        this.items.push(item);
-        break;
-      default:
-        throw Error("No scheduler has been set, this is a bug!");
-    }
+    // Add item to the queue via the scheduler
+    this.items = this.scheduler(item, this.items);
   }
 
   /**
