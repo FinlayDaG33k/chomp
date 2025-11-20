@@ -1,6 +1,7 @@
 import { raise } from "../error/raise.ts";
 import { empty } from "./empty.ts";
 import { nameOf } from "./name-of.ts";
+import {valueOrDefault} from "./value-or-default.ts";
 
 /**
  * Class to more easily throw errors while creating (among others) constructors.
@@ -17,14 +18,24 @@ export class Contract {
    * import { Contract } from "https://deno.land/x/chomp/utility/contract.ts";
    *
    * const myStatement = false;
-   * Contract.require(myStatement, "Statement must be true");
+   * Contract.requireCondition(myStatement, "Statement must be true");
    * ```
    *
    * @param condition
    * @param message
    */
-  public static require(condition: boolean, message: string): void|never {
-    if (!condition) raise(message, "ContractRequirementFalse");
+  public static requireCondition(condition: boolean, message?: string): asserts condition is true {
+    if (!condition) raise(
+      valueOrDefault<string>(message, 'Contract failed, passed condition was null'),
+      "ContractConditionFailed"
+    );
+  }
+
+  public static requireAssertion<T>(argument: unknown, expression: boolean, message?: string): asserts argument is T {
+    if (!expression) raise("Expression evaluated to false");
+
+    Contract.requireNotNullish(argument, message);
+    Contract.requireNotNullish(expression, message);
   }
 
   /**
@@ -42,7 +53,10 @@ export class Contract {
    * @param message
    */
   public static requireNotNull<T>(argument: T, message?: string): asserts argument is Exclude<T, null> {
-    if (argument === null) raise(message ? message : `Contract failed, argument ("${argument}") was null`, "ContractArgumentNull");
+    if (argument === null) raise(
+      valueOrDefault<string>(message,`Contract failed, argument ("${argument}") was null`),
+      "ContractArgumentNull"
+    );
   }
 
   /**

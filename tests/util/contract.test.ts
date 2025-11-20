@@ -2,12 +2,12 @@ import { Contract } from "../../utility/contract.ts";
 import { assert, assertThrows } from "https://deno.land/std@0.152.0/testing/asserts.ts";
 
 Deno.test("Contract Test", async (t) => {
-  await t.step("require", () => {
+  await t.step("requireCondition", () => {
     // Test when the condition is false
-    assertThrows(() => Contract.require(false, "Condition must be true"));
+    assertThrows(() => Contract.requireCondition(false, "Condition must be true"));
 
     // Test when the condition if true
-    assert(() => Contract.require(true, "Condition must be true"));
+    assert(() => Contract.requireCondition(true, "Condition must be true"));
   });
 
   await t.step("requireNotNull", () => {
