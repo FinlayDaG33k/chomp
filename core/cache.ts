@@ -1,7 +1,7 @@
 import { TimeString } from "../utility/time-string.ts";
 import { Logger } from "./logger.ts";
-import { Cron } from "../utility/cron.ts";
 import { Configure } from "./configure.ts";
+import {Contract} from "../utility/contract.ts";
 
 interface CacheItem {
   // deno-lint-ignore no-explicit-any -- Any arbitrary data may be added to cache
@@ -58,7 +58,7 @@ export class Cache {
    *
    * @param key
    */
-  public static metrics(key: keyof CacheMetrics["reads"]|"rate"|"total"|"writes"|"swept"|"size"|null = null): number|CacheMetrics {
+  public static metrics<T>(key: keyof CacheMetrics["reads"]|"rate"|"total"|"writes"|"swept"|"size"|null = null): T|number|CacheMetrics {
     switch(key) {
       case "hit":
         return Cache._metrics.reads.hit;
@@ -105,17 +105,23 @@ export class Cache {
   public static set(key: string, value: any, expiry: string | null = "+1 minute"): void {
     let expiresAt = null;
     let optimisticExpiry = undefined;
-    if (expiry) {
+
+    // Check if an expiry is specified
+    // Calculate the expiry values if so
+    if (expiry !== null) {
       const now = new Date();
       expiresAt = new Date(now.getTime() + TimeString`${expiry}`);
       optimisticExpiry = new Date(expiresAt.getTime() + TimeString`${Configure.get('chomp_optimistic_delay', OPTIMISTIC_DELAY)}`)
     }
 
+    // Set item in the Cache
     Cache._items.set(key, {
       data: value,
       expires: expiresAt,
       optimistic: optimisticExpiry
     });
+
+    // Increase write metric
     Cache._metrics.writes++;
   }
 
@@ -137,9 +143,9 @@ export class Cache {
    * ```
    *
    * @param key
-   * @param optimistic Whether to serve expired items from the cache
+   * @param allowOptimism Whether to allow optimistically serve expired items from the cache
    */
-  public static get<T>(key: string, optimistic = false): T | null {
+  public static get<T>(key: string, allowOptimism = false): T | null {
     // Return null if the item doesn't exist
     if (!Cache.exists(key)) {
       Cache._metrics.reads.miss++;
@@ -147,14 +153,22 @@ export class Cache {
     }
 
     // Return null if the item expired
-    if (Cache.expired(key) && !optimistic) {
+    const itemHasExpired = Cache.expired(key);
+    const disallowOptimism = !allowOptimism;
+    if (itemHasExpired && disallowOptimism) {
       Cache._metrics.reads.miss++;
       return null;
     }
 
-    // Return the item's data
+    // Get item from cache
+    const item = Cache._items.get(key);
+    Contract.requireNotUndefined(item);
+
+    // Increase hit counter
     Cache._metrics.reads.hit++;
-    return Cache._items.get(key)?.data;
+
+    // Return Cache data
+    return item.data;
   }
 
   /**
@@ -187,12 +201,17 @@ export class Cache {
    * @param key
    */
   public static expired(key: string): boolean {
-    // If the item doesn't exist, return true
-    if (!Cache.exists(key)) return true;
+    // Get the item from cache
+    const item = Cache._items.get(key);
 
-    // Check if the expiry date is before our current date
-    if (!Cache._items.get(key)?.expires) return false;
-    return Cache._items.get(key)?.expires! < new Date();
+    // Make sure the item exists
+    if(item === undefined) return true;
+
+    // Make sure the item has an expiry
+    if(item.expires === null) return false;
+
+    // Check whether the item has expired
+    return item.expires < new Date();
   }
 
   /**
@@ -207,11 +226,11 @@ export class Cache {
    * ```
    *
    * @param key
-   * @param optimistic Whether to serve expired items from the cache
+   * @param allowOptimism Whether to allow optimistically serve expired items from the cache
    */
-  public static consume<T>(key: string, optimistic = false): T | null {
+  public static consume<T>(key: string, allowOptimism = false): T | null {
     // Copy item from cache
-    const data = <T|null>Cache.get(key, optimistic);
+    const data = <T|null>Cache.get(key, allowOptimism);
 
     // Remove item from cache
     Cache.remove(key);
@@ -257,7 +276,11 @@ export class Cache {
    */
   public static async remember<T>(key: string, expiry: string | null = "+1 minute", callable: Promise<T>|(() => Promise<T>)): Promise<T> {
     // Check if cache item exists and hasn't expired
-    if(!Cache.expired(key)) return <T>Cache.get(key);
+    // If so, return the cached item
+    const itemNotExpired = !Cache.expired(key);
+    if(itemNotExpired) return <T>Cache.get(key);
+
+    // Increase metrics
     Cache._metrics.reads.miss++;
 
     // Cache does not exist, run callable
@@ -304,21 +327,22 @@ export class Cache {
     const now = new Date();
 
     // Loop over each item in the cache
-    for (const [key, value] of Cache._items) {
+    for (const [key, item] of Cache._items) {
       // Keep items that do not expire
-      if (!value.expires) {
+      if (item.expires === null) {
         Logger.trace(`Keeping cache item "${key}": Does not expire`);
         continue;
       }
 
       // Keep items that have not yet expired
-      if (value.expires >= now) {
+      const itemNotExpired = item.expires >= now;
+      if (itemNotExpired) {
         Logger.trace(`Keeping cache item "${key}": Has not expired`);
         continue;
       }
 
       // Keep items that may be served optimistically
-      if (value.optimistic && value.optimistic >= now) {
+      if (item.optimistic !== undefined && item.optimistic >= now) {
         Logger.trace(`Keeping cache item "${key}": Keep for optimistic caching`);
         continue;
       }
