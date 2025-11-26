@@ -116,4 +116,32 @@ export class Contract {
   public static requireEmpty<T>(argument: T): void|never {
     if(!empty(argument)) raise(`${nameOf({ argument })} must be empty`, "ContractArgumentNotEmpty");
   }
+
+  /**
+   * Require this call to never be reached.
+   * Used for enforcing exhaustiveness.
+   *
+   * @example Basic usage
+   * ```
+   * type Shape =
+   *   | { kind: "circle"; radius: number; }
+   *   | { kind: "square"; size: number; }
+   *
+   * function getArea(shape: Shape): number {
+   *   switch(shape.kind) {
+   *     case "circle":
+   *       return Math.PI * shape.radius ** 2;
+   *     case "square":
+   *       return shape.size ** 2;
+   *     default:
+   *       Contract.requireUnreachable(shape);
+   *   }
+   * }
+   * ```
+   *
+   * @param argument
+   */
+  public static requireUnreachable(argument: never): void {
+    raise(`Case not handled: ${argument}`);
+  }
 }
