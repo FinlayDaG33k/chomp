@@ -1,6 +1,7 @@
 import { Logger } from "./logger.ts";
 import {valueOrDefault} from "../utility/value-or-default.ts";
 import { File } from "../filesystem/file.ts";
+import {empty} from "../utility/empty.ts";
 
 // deno-lint-ignore no-explicit-any -- Arbitrary data may be used
 const defaults = new Map<string, any>([
@@ -72,7 +73,8 @@ export class Configure {
     const file = new File(`${Deno.cwd()}/config.json`);
 
     // Make sure our file exists
-    if(!await file.exists()) {
+    const isFileMissing = !await file.exists();
+    if(isFileMissing) {
       Logger.warning(`Could not find file "config.json" at "${Deno.cwd()}". Configure will be empty!`);
       Configure.hasLoaded = true;
       return;
@@ -139,7 +141,8 @@ export class Configure {
    */
   // deno-lint-ignore no-explicit-any -- Any arbitrary data may be used
   public static set(key: string, value: any): void {
-    if (value === null || typeof value === "undefined") return;
+    const hasData = empty(value);
+    if (!hasData) return;
     Configure.config.set(key, value);
   }
 
@@ -185,7 +188,8 @@ export class Configure {
    */
   public static consume<T>(key: string, defaultValue: T|null = null): T {
     // Check if the key exists, if not, return the default value
-    if (!Configure.config.has(key)) return defaultValue as T;
+    const hasConfigureItem = Configure.config.has(key);
+    if (!hasConfigureItem) return defaultValue as T;
 
     // Hack together a reference to our item's value
     const ref = [Configure.config.get(key)];
