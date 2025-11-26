@@ -63,5 +63,5 @@ Deno.test("Contract Test", async (t) => {
     assert(() => Contract.requireEmpty(""));
     assert(() => Contract.requireEmpty([]));
     assert(() => Contract.requireEmpty({}));
-  })
+  });
 });
