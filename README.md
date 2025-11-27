@@ -36,8 +36,9 @@ As a result, some things can be configured by you by adding entries to the Confi
 
 | Key | Default Value | Comment                                                                                                                             |
 |-----|---------------|-------------------------------------------------------------------------------------------------------------------------------------|
-| `chomp_optimistic_delay` | `'+1 hour'` | Additional time a cache entry may exist for optimistic caching. Uses the `utility/time-string` formats |
+| `chomp_optimistic_delay` | `'+1 hour'` | Additional time a cache entry may exist for optimistic caching. Uses the `utility/time-string` formats                              |
 | `chomp_couchdb_cache` | `'+1 hour'` | Time a document for `communication/couchdb` will be kept in the cache to improve read times. Uses the `utility/time-string` formats |
+ | `log_level` | `1.0` | Bitmask for the enabled log levels.                                                                                                 |
 
 ### Extensions
 

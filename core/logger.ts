@@ -2,6 +2,20 @@ import { Time } from "../utility/time.ts";
 import { Configure } from "./configure.ts";
 import { bold, cyan, magenta, red, yellow, blue, green, gray } from "https://deno.land/std@0.117.0/fmt/colors.ts";
 
+export enum LogLevels {
+  All = 1 << 0,
+  Error = 1 << 1,
+  Success = 1 << 2,
+  Warning = 1 << 3,
+  Notice = 1 << 4,
+  Info = 1 << 5,
+  Monitor= 1 << 6,
+  Debug = 1 << 7,
+  Trace = 1 << 8,
+}
+
+type LogLevelKeys = keyof typeof LogLevels;
+
 type Handlers = {
   error: (message: string, stack: string | null) => void;
   success: (message: string) => void;
@@ -12,7 +26,8 @@ type Handlers = {
   debug: (message: string) => void;
   trace: (message: string) => void;
 };
-type LogLevels = keyof Handlers;
+
+type LogLevelHandlerKeys = keyof Handlers;
 
 const handlers: Handlers = {
   error: (message: string, stack: string | null = null): void => {
@@ -76,13 +91,14 @@ export class Logger {
    * @param handler {any}
    */
   // deno-lint-ignore no-explicit-any -- TODO: Figure out how to replace any type with something more sane
-  public static setHandler(level: LogLevels, handler: any): void {
+  public static setHandler(level: LogLevelHandlerKeys, handler: any): void {
     Logger._handlers[level] = handler;
   }
 
   /**
    * Write an error message to the console.
-   * If the "error_log" Configure item is set, will also write to file.
+   *
+   * Using the default handler, if the "error_log" Configure item is set, will also write to file.
    *
    * Available in any log level.
    *
@@ -91,7 +107,7 @@ export class Logger {
    * @returns {void}
    */
   public static error(message: string, stack: string | null = null): void {
-    Logger._handlers["error"](message, stack);
+    if(Logger.shouldLog("Error")) Logger._handlers["error"](message, stack);
   }
 
   /**
@@ -103,7 +119,7 @@ export class Logger {
    * @returns {void}
    */
   public static success(message: string): void {
-    Logger._handlers["success"](message);
+    if(Logger.shouldLog("Success")) Logger._handlers["success"](message);
   }
 
   /**
@@ -115,7 +131,7 @@ export class Logger {
    * @returns {void}
    */
   public static warning(message: string): void {
-    if(Logger.shouldLog(0)) Logger._handlers["warning"](message);
+    if(Logger.shouldLog("Warning")) Logger._handlers["warning"](message);
   }
 
   /**
@@ -127,7 +143,7 @@ export class Logger {
    * @returns {void}
    */
   public static notice(message: string): void {
-    if(Logger.shouldLog(1)) Logger._handlers["notice"](message);
+    if(Logger.shouldLog("Notice")) Logger._handlers["notice"](message);
   }
 
   /**
@@ -139,7 +155,7 @@ export class Logger {
    * @returns {void}
    */
   public static info(message: string): void {
-    if(Logger.shouldLog(2)) Logger._handlers["info"](message);
+    if(Logger.shouldLog("Info")) Logger._handlers["info"](message);
   }
 
   /**
@@ -152,7 +168,7 @@ export class Logger {
    * @returns {void}
    */
   public static monitor(message: string): void {
-    if(Logger.shouldLog(3)) Logger._handlers["monitor"](message);
+    if(Logger.shouldLog("Monitor")) Logger._handlers["monitor"](message);
   }
 
   /**
@@ -164,7 +180,7 @@ export class Logger {
    * @returns {void}
    */
   public static debug(message: string): void {
-    if(Logger.shouldLog(4)) Logger._handlers["debug"](message);
+    if(Logger.shouldLog("Debug")) Logger._handlers["debug"](message);
   }
 
   /**
@@ -177,7 +193,7 @@ export class Logger {
    * @returns {void}
    */
   public static trace(message: string): void {
-    if(Logger.shouldLog(5)) Logger._handlers["trace"](message);
+    if(Logger.shouldLog("Trace")) Logger._handlers["trace"](message);
   }
 
   /**
@@ -198,7 +214,19 @@ export class Logger {
    * @param level
    * @private
    */
-  private static shouldLog(level: number): boolean {
-    return Configure.get("log_level", 5) >= level;
+  private static shouldLog(level: LogLevelKeys): boolean {
+    // Get enabled log levels
+    const enabledLevels = Configure.get<number>("log_level", LogLevels.All);
+
+    // Check if log enabled levels includes "all"
+    const allEnabled = enabledLevels & LogLevels.All;
+    if(allEnabled) return true;
+
+    // Get bitmask for requested level
+    const bitmask = LogLevels[level];
+
+    // Check whether the current level is enabled
+    const levelEnabled = enabledLevels & LogLevels[level];
+    return levelEnabled;
   }
 }

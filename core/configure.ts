@@ -1,4 +1,4 @@
-import { Logger } from "./logger.ts";
+import {Logger, LogLevels} from "./logger.ts";
 import {valueOrDefault} from "../utility/value-or-default.ts";
 import { File } from "../filesystem/file.ts";
 import {empty} from "../utility/empty.ts";
@@ -6,7 +6,7 @@ import {empty} from "../utility/empty.ts";
 // deno-lint-ignore no-explicit-any -- Arbitrary data may be used
 const defaults = new Map<string, any>([
   ["debug", false],
-  ["log_level", 5],
+  ["log_level", LogLevels.All],
   ["error_log", `${Deno.cwd()}/logs/error.log`],
 ]);
 
