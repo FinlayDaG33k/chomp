@@ -1,3 +1,3 @@
-export { Cache } from "./cache.ts";
-export { Configure } from "./configure.ts";
-export { Logger } from "./logger.ts";
+export * from "./cache.ts";
+export * from "./configure.ts";
+export * from "./logger.ts";
