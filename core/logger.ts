@@ -1,35 +1,9 @@
+import { LogLevels, LogLevelKeys, LogHandlers, LogLevelHandlerKeys } from "../types/logging.ts";
 import { Time } from "../utility/time.ts";
 import { Configure } from "./configure.ts";
 import { bold, cyan, magenta, red, yellow, blue, green, gray } from "https://deno.land/std@0.117.0/fmt/colors.ts";
 
-export enum LogLevels {
-  All = 1 << 0,
-  Error = 1 << 1,
-  Success = 1 << 2,
-  Warning = 1 << 3,
-  Notice = 1 << 4,
-  Info = 1 << 5,
-  Monitor= 1 << 6,
-  Debug = 1 << 7,
-  Trace = 1 << 8,
-}
-
-type LogLevelKeys = keyof typeof LogLevels;
-
-type Handlers = {
-  error: (message: string, stack: string | null) => void;
-  success: (message: string) => void;
-  warning: (message: string) => void;
-  notice: (message: string) => void;
-  info: (message: string) => void;
-  monitor: (message: string) => void;
-  debug: (message: string) => void;
-  trace: (message: string) => void;
-};
-
-type LogLevelHandlerKeys = keyof Handlers;
-
-const handlers: Handlers = {
+const handlers: LogHandlers = {
   error: (message: string, stack: string | null = null): void => {
     // Get current time
     const now = Logger.time();
@@ -82,7 +56,7 @@ const handlers: Handlers = {
  * Logging handler for writing to console
  */
 export class Logger {
-  private static _handlers: Handlers = handlers;
+  private static _handlers: LogHandlers = handlers;
 
   /**
    * Override a handler app-wide.

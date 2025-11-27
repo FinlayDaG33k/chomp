@@ -1,23 +1,8 @@
+import { CacheItem, CacheMetrics } from "../types/cache.ts";
 import { TimeString } from "../utility/time-string.ts";
 import { Logger } from "./logger.ts";
 import { Configure } from "./configure.ts";
 import {Contract} from "../utility/contract.ts";
-
-interface CacheItem {
-  // deno-lint-ignore no-explicit-any -- Any arbitrary data may be added to cache
-  data: any;
-  expires: Date | null;
-  optimistic?: Date;
-}
-
-interface CacheMetrics {
-  reads: {
-    hit: number;
-    miss: number;
-  };
-  writes: number;
-  swept: number;
-}
 
 /**
  * Default optimistic boundaries

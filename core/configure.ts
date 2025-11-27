@@ -1,4 +1,5 @@
-import {Logger, LogLevels} from "./logger.ts";
+import { LogLevels } from "../types/logging.ts";
+import {Logger} from "./logger.ts";
 import {valueOrDefault} from "../utility/value-or-default.ts";
 import { File } from "../filesystem/file.ts";
 import {empty} from "../utility/empty.ts";
