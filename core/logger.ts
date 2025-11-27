@@ -209,7 +209,7 @@ export class Logger {
   }
 
   /**
-   * Check
+   * Check whether the log level is enabled
    *
    * @param level
    * @private
@@ -219,14 +219,13 @@ export class Logger {
     const enabledLevels = Configure.get<number>("log_level", LogLevels.All);
 
     // Check if log enabled levels includes "all"
-    const allEnabled = enabledLevels & LogLevels.All;
+    const allEnabled = (enabledLevels & LogLevels.All) === LogLevels.All;
     if(allEnabled) return true;
 
     // Get bitmask for requested level
     const bitmask = LogLevels[level];
 
     // Check whether the current level is enabled
-    const levelEnabled = enabledLevels & LogLevels[level];
-    return levelEnabled;
+    return (enabledLevels & bitmask) === bitmask;
   }
 }
