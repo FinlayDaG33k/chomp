@@ -141,7 +141,7 @@ export class Configure {
    */
   // deno-lint-ignore no-explicit-any -- Any arbitrary data may be used
   public static set(key: string, value: any): void {
-    const hasData = empty(value);
+    const hasData = !empty(value);
     if (!hasData) return;
     Configure.config.set(key, value);
   }
