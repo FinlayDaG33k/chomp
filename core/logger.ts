@@ -3,6 +3,8 @@ import { Time } from "../utility/time.ts";
 import { Configure } from "./configure.ts";
 import { bold, cyan, magenta, red, yellow, blue, green, gray } from "https://deno.land/std@0.117.0/fmt/colors.ts";
 
+export { LogLevels };
+
 const handlers: LogHandlers = {
   error: (message: string, stack: string | null = null): void => {
     // Get current time
