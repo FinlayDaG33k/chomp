@@ -9,6 +9,7 @@ Deno.test("Date Extensions Test", async (t) => {
   const a = new Date(0);
   const b = new Date(1);
   const c = new Date('2025-09-16T12:13:56.123Z').setMidnight();
+  const d = new Date('2025-09-16T12:13:56.123Z').setMidnight(true);
 
   await t.step("isAfter", () => {
     assertEquals(b.isAfter(a), true);
@@ -36,6 +37,7 @@ Deno.test("Date Extensions Test", async (t) => {
 
   await t.step("setMidnight", () => {
     assertEquals(c.getTime(), 1757973600000);
+    assertEquals(d.getTime(), 1758060000000);
     assertEquals(a.isBeforeOrEqual(b), true);
     assertEquals(b.isBeforeOrEqual(a), false);
     assertEquals(b.isBeforeOrEqual(b), true);
