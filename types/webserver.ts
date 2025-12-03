@@ -1,7 +1,3 @@
-export interface ViewVariable {
-  [key: string]: string | number | unknown;
-}
-
 export type ViewVariables = Map<string, string|number|unknown>;
 
 export interface RequestParameters {
@@ -14,11 +10,6 @@ export interface QueryParameters {
 
 export interface ResponseHeader {
   [key: string]: string;
-}
-
-export interface HandlebarsCacheItem {
-  // deno-lint-ignore ban-types -- TODO
-  [key: string]: Function;
 }
 
 export interface Route {
