@@ -2,15 +2,14 @@ import { Algorithms, INSECURE_ALGORITHMS } from "../../types/hash.ts";
 import { PasswordOptions, HASH_IDENTIFIERS } from "../../types/password.ts";
 import { Hash } from "./hash.ts";
 import { Random } from "./random.ts";
-
+import {Logger, raise} from "../../mod.ts";
+import {valueOrDefault} from "../utility/value-or-default.ts";
 
 /**
  *  Recommended hashing algorithm for most use-cases.
  *  May change over time to keep up with NIST approved algorithms
  */
 export const PASSWORD_DEFAULT = Algorithms.SHA3_256;
-
-
 
 /**
  * Default options for password hashing.
@@ -45,24 +44,32 @@ export class Password {
     options: PasswordOptions = DEFAULT_OPTS,
   ): Promise<string> {
     // Make sure we are not using an insecure algorithm
-    if (INSECURE_ALGORITHMS.includes(algo) && !options.allowInsecure) {
-      throw Error("Insecure hashing algorithm selected, aborting.");
-    }
+    const isUsingInsecureAlgorithm = INSECURE_ALGORITHMS.includes(algo);
+    const mayUseInsecureAlgorithms = !options.allowInsecure;
+    if (isUsingInsecureAlgorithm && !mayUseInsecureAlgorithms) raise("Insecure hashing algorithm selected, aborting.");
 
     // Make sure cost is set, else, use a default
-    if (typeof options.cost !== "number" || options.cost <= 0) options.cost = DEFAULT_OPTS.cost;
+    const cost = valueOrDefault<number>(options.cost, 0);
+    const costIsAboveZero = cost > 0;
+    if (!costIsAboveZero) options.cost = DEFAULT_OPTS.cost;
 
     // Get our identifier
     const identifierIndex = Object.values(HASH_IDENTIFIERS).indexOf(algo as unknown as HASH_IDENTIFIERS);
     if (!identifierIndex) throw Error(`Identifier for algorithm "${algo}" could not be found!`);
     const identifier = Object.keys(HASH_IDENTIFIERS)[identifierIndex];
 
-    // Create our hash
-    const salt = await Random.string(32);
-    const result = await Password.doHash(password, algo, salt, options.cost!);
+    // Create salt if need be
+    if(options.salt === undefined) {
+      options.salt = Random.string(32);
+    } else {
+      Logger.warning("Using statically defined salt, this is not suitable for production usage!");
+    }
+
+    // Hash our password
+    const result = await Password.doHash(password, algo, options.salt, options.cost!);
 
     // Return our final hash string
-    return `${identifier}!${options.cost}!${salt}!${result}`;
+    return `${identifier}!${options.cost}!${options.salt}!${result}`;
   }
 
   /**

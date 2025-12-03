@@ -44,4 +44,9 @@ export interface PasswordOptions {
   cost?: number;
   /* Allow the use of insecure algorithms */
   allowInsecure?: boolean;
+  /**
+   * Specify a static salt
+   * Usage of this should be limited to testing only!
+   */
+  salt?: string;
 }
