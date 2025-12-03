@@ -25,7 +25,8 @@ export class Text {
 
   /**
    * Replace special characters with their HTML entities.
-   * TODO: Add support for diacritical marks.
+   * 
+   * @todo Add support for diacritical marks.
    *
    * @param str
    * @returns string

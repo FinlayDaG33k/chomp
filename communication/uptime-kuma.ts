@@ -2,6 +2,9 @@ import { UptimeKumaInstance } from "../types/uptime-kuma.ts";
 import {fetchWithTimeout} from "../utility/fetch-with-timeout.ts";
 import {raise} from "../mod.ts";
 
+/**
+ * Interact with an Uptime Kuma instance.
+ */
 export class UptimeKuma {
   private readonly _host: string = 'http://localhost:3001';
   private readonly _id: string;

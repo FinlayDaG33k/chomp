@@ -2,6 +2,9 @@ import { Auth, CouchResponse, CouchRequest, CachedResponse, CouchOverrides} from
 import { Cache } from "../core/cache.ts";
 import { Configure } from "../core/configure.ts";
 
+/**
+ * Default cache time
+ */
 const CACHE_TIME = '+1 hour';
 
 /**
