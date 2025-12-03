@@ -1,4 +1,4 @@
-import "../../extensions/array/includes-any.ts";
+import "../../src/extensions/array/includes-any.ts";
 import {assertEquals} from "https://deno.land/std@0.152.0/testing/asserts.ts";
 
 Deno.test("Array Extensions", async (t) => {

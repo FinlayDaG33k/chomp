@@ -1,4 +1,4 @@
-import {QueueItem} from "../../types/queue.ts";
+import {QueueItem} from "../../../types/queue.ts";
 import {valueOrDefault} from "../../utility/value-or-default.ts";
 
 export default function(item: QueueItem, items: QueueItem[] = []) {

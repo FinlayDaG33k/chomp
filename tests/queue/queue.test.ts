@@ -1,8 +1,8 @@
 import { assertEquals } from "https://deno.land/std@0.152.0/testing/asserts.ts";
-import { Queue  } from "../../queue/queue.ts";
-import { default as fifo } from "../../queue/scheduler/first-in-first-out.ts";
-import { default as lifo } from "../../queue/scheduler/last-in-first-out.ts";
-import { default as wfifo } from "../../queue/scheduler/weighted-first-in-first-out.ts";
+import { Queue } from "../../src/queue/queue.ts";
+import { default as fifo } from "../../src/queue/scheduler/first-in-first-out.ts";
+import { default as lifo } from "../../src/queue/scheduler/last-in-first-out.ts";
+import { default as wfifo } from "../../src/queue/scheduler/weighted-first-in-first-out.ts";
 
 Deno.test("Queue Test", async (t) => {
   await t.step("Common", () => {

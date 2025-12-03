@@ -1,8 +1,8 @@
-import "../../extensions/date/is-after.ts";
-import "../../extensions/date/is-after-or-equal.ts";
-import "../../extensions/date/is-before.ts";
-import "../../extensions/date/is-before-or-equal.ts";
-import "../../extensions/date/set-midnight.ts";
+import "../../src/extensions/date/is-after.ts";
+import "../../src/extensions/date/is-after-or-equal.ts";
+import "../../src/extensions/date/is-before.ts";
+import "../../src/extensions/date/is-before-or-equal.ts";
+import "../../src/extensions/date/set-midnight.ts";
 import { assertEquals } from "https://deno.land/std@0.152.0/testing/asserts.ts";
 
 Deno.test("Date Extensions Test", async (t) => {

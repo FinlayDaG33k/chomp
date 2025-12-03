@@ -1,4 +1,4 @@
-import { LogLevels, LogLevelKeys, LogHandlers, LogLevelHandlerKeys } from "../types/logging.ts";
+import { LogLevels, LogLevelKeys, LogHandlers, LogLevelHandlerKeys } from "../../types/logging.ts";
 import { Time } from "../utility/time.ts";
 import { Configure } from "./configure.ts";
 import { bold, cyan, magenta, red, yellow, blue, green, gray } from "https://deno.land/std@0.117.0/fmt/colors.ts";

@@ -1,5 +1,5 @@
-import {ValidationCallbackResponse, ValidationOptions} from "../../types/validator.ts";
-import {empty} from "../../mod.ts";
+import {ValidationCallbackResponse, ValidationOptions} from "../../../types/validator.ts";
+import {empty} from "../../../mod.ts";
 
 export function isEmpty(input: any, options: ValidationOptions): ValidationCallbackResponse {
   // Check if input is empty

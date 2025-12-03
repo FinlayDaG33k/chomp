@@ -1,5 +1,5 @@
 import { assertEquals, assertNotEquals } from "https://deno.land/std@0.152.0/testing/asserts.ts";
-import { Text } from "../../utility/text.ts";
+import { Text } from "../../src/utility/text.ts";
 
 Deno.test("Text Test", async (t) => {
   await t.step("tokenize", () => {

@@ -1,4 +1,4 @@
-import { PacketType } from "../types/rcon.ts";
+import { PacketType } from "../../types/rcon.ts";
 import { Buffer } from "https://deno.land/std@0.87.0/node/buffer.ts";
 
 /**

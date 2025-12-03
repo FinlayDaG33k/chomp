@@ -1,4 +1,4 @@
-import { Contract } from "../../utility/contract.ts";
+import { Contract } from "../../src/utility/contract.ts";
 import { assert, assertThrows } from "https://deno.land/std@0.152.0/testing/asserts.ts";
 
 Deno.test("Contract Test", async (t) => {

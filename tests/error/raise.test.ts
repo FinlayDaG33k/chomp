@@ -1,5 +1,5 @@
 import { assertThrows } from "https://deno.land/std@0.152.0/testing/asserts.ts";
-import { raise } from "../../error/raise.ts";
+import { raise } from "../../src/error/raise.ts";
 
 class CustomError extends Error {
   constructor(public message: string) {

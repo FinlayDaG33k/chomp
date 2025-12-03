@@ -1,4 +1,4 @@
-import { ExclusionConfig } from "../types/check-source.ts";
+import { ExclusionConfig } from "../../types/check-source.ts";
 import { Logger } from "../core/logger.ts";
 import { File } from "../filesystem/file.ts";
 

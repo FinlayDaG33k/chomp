@@ -1,4 +1,4 @@
-import { ResponseHeader } from "../../types/webserver.ts";
+import { ResponseHeader } from "../../../types/webserver.ts";
 import { StatusCodes } from "./status-codes.ts";
 import { TimeString } from "../../utility/time-string.ts";
 

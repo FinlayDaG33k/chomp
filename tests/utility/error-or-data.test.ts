@@ -1,4 +1,4 @@
-import { errorOrData } from "../../utility/error-or-data.ts";
+import { errorOrData } from "../../src/utility/error-or-data.ts";
 import { assertEquals, assertRejects, assertInstanceOf } from "https://deno.land/std@0.152.0/testing/asserts.ts";
 import {assertNotInstanceOf} from "https://deno.land/std@0.159.0/testing/asserts.ts";
 
