@@ -2,6 +2,8 @@ export interface ViewVariable {
   [key: string]: string | number | unknown;
 }
 
+export type ViewVariables = Map<string, string|number|unknown>;
+
 export interface RequestParameters {
   [name: string]: string;
 }

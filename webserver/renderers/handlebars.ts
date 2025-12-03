@@ -1,33 +1,54 @@
-import { HandlebarsCacheItem, ViewVariable } from "../../types/webserver.ts";
+import { HandlebarsCacheItem, ViewVariables } from "../../types/webserver.ts";
 import { default as hbs } from "https://jspm.dev/handlebars@4.7.6";
-import { raise } from "../../error/raise.ts";
+import { Cache } from "../../core/cache.ts";
 
 export class Handlebars {
-  private static _cache: HandlebarsCacheItem = <HandlebarsCacheItem> {};
 
+  /**
+   * Render the Handlebars template
+   *
+   * @param path
+   * @param vars
+   * @param expiry Time to cache the rendered template. Use null to cache indefinitely.
+   */
   public static async render(
     path: string,
-    vars: ViewVariable = <ViewVariable> {},
-    cache = true,
-  ): Promise<string | void> {
-    // Read and execute from cache if possible
-    if (cache && path in Handlebars._cache) return Handlebars._cache[path](vars);
+    vars: ViewVariables = new Map<string, string | number | unknown>(),
+    expiry: string|null = "+1 hour",
+  ): Promise<string | null> {
+    // Load and compile template
+    const template = await Handlebars._compileTemplate(path, expiry);
 
-    // Load our template
-    const template = await Handlebars.getTemplate(path) ?? raise("Could not load template");
-
-    // Compile our template
-    // Cache it if need be
-    // TODO: Fix type
-    // @ts-ignore See TODO
-    const compiled = hbs.compile(template) ?? raise("Could not compile template");
-    if (cache) Handlebars._cache[path] = compiled;
-
-    // Let the engine render
-    return compiled(vars);
+    // Render template with our view vars
+    return template(vars);
   }
 
-  private static async getTemplate(path: string): Promise<string> {
+  public static async _compileTemplate(path: string, expiry: string|null = "+1 hour") {
+    // Build Cache key
+    const key = `Webserver.Rendered.Handlebars "${path}"`;
+
+    // Check if we have a cached version
+    // Return it if we do
+    const inCache = Cache.exists(key);
+    const isValid = !Cache.expired(key);
+    if(inCache && isValid) return Cache.get(key);
+
+    // Load our template
+    const template = await Handlebars._getTemplate(path);
+
+    // Compile our template
+    // TODO: Fix type
+    // @ts-ignore See TODO
+    const compiled = hbs.compile(template);
+
+    // Cache template
+    Cache.set(key, compiled, expiry)
+
+    // Return compiled template
+    return compiled;
+  }
+
+  private static async _getTemplate(path: string): Promise<string> {
     // Make sure out template exists
     try {
       await Deno.stat(path);

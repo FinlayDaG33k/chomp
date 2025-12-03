@@ -1,19 +1,20 @@
-import { ViewVariable } from "../../types/webserver.ts";
+import {ViewVariables} from "../../types/webserver.ts";
 import { Logger } from "../../core/logger.ts";
 import { Inflector } from "../../utility/inflector.ts";
-import { Handlebars } from "../renderers/handlebars.ts";
+import {Handlebars, Json, OctetStream, Plaintext} from "../renderers/mod.ts";
 import { ResponseBuilder } from "../http/response-builder.ts";
 import { Request } from "../http/request.ts";
 import { raise } from "../../error/raise.ts";
 import { Component } from "./component.ts";
 import { Registry } from "../../utility/registry.ts";
 import { compress as compressBrotli } from "https://deno.land/x/brotli@v0.1.4/mod.ts";
+import {valueOrDefault} from "../../utility/value-or-default.ts";
 
 export class Controller {
   private static readonly _templateDir = `./src/templates`;
   private static readonly _componentDir = `file:///${Deno.cwd()}/src/controller/component`;
   private _response: ResponseBuilder = new ResponseBuilder();
-  private _vars: ViewVariable = <ViewVariable> {};
+  private _vars: ViewVariables = new Map<string, string|number|unknown>();
 
   /**
    * Set the 'Content-Type' header
@@ -102,7 +103,7 @@ export class Controller {
    * @param value
    */
   protected set(key: string, value: string | number | unknown) {
-    this._vars[key] = value;
+    this._vars.set(key, value);
   }
 
   /**
@@ -116,22 +117,22 @@ export class Controller {
     const canCompress = true;
     switch (this.getResponse().getHeaderLine("Content-Type").toLowerCase()) {
       case "application/json": {
-        body = JSON.stringify(this._vars["data"]);
+        body = Json.render(this._vars);
         break;
       }
       case "text/plain": {
-        body = this._vars["message"] as string;
+        body = Plaintext.render(this._vars);
         break;
       }
       case "text/html": {
         const controller = Inflector.lcfirst(this.getRequest().getRoute().getController());
         const action = this.getRequest().getRoute().getAction();
         const rendered = await Handlebars.render(`${Controller._templateDir}/${controller}/${action}.hbs`, this._vars);
-        body = rendered ? rendered : '';
+        body = valueOrDefault<string>(rendered, '');
         break;
       }
       case "application/octet-stream": {
-        body = this._vars["data"] as Uint8Array;
+        body = OctetStream.render(this._vars);
         break;
       }
     }
