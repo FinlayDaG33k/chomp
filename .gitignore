@@ -2,7 +2,7 @@
 /.idea
 
 # Ignore reports
-/src/coverage
+/cov
 /cov.lcov
 
 # Ignore docs
