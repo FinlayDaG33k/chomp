@@ -1,5 +1,5 @@
-import { Algorithms, INSECURE_ALGORITHMS } from "../types/hash.ts";
-import { PasswordOptions, HASH_IDENTIFIERS } from "../types/password.ts";
+import { Algorithms, INSECURE_ALGORITHMS } from "../../types/hash.ts";
+import { PasswordOptions, HASH_IDENTIFIERS } from "../../types/password.ts";
 import { Hash } from "./hash.ts";
 import { Random } from "./random.ts";
 
