@@ -14,10 +14,6 @@ export interface ResponseHeader {
   [key: string]: string;
 }
 
-export interface RegistryItem {
-  [key: string]: any;
-}
-
 export interface HandlebarsCacheItem {
   // deno-lint-ignore ban-types -- TODO
   [key: string]: Function;

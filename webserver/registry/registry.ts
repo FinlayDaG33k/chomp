@@ -1,11 +1,10 @@
-import { RegistryItem } from "../../types/webserver.ts";
+import { Registry as newRegistry } from "../../utility/registry.ts";
 
 /**
- * @deprecated Use {@linkcode ../../utility/Registry} instead
+ * @deprecated Use {@linkcode ../../utility/Registry} instead.
+ * This class only serves as a legacy proxy to it.
  */
 export class Registry {
-  private static _items: RegistryItem = <RegistryItem> {};
-
   /**
    * Add an item to the registry
    *
@@ -13,7 +12,7 @@ export class Registry {
    * @param module
    */
   public static add(name: string, module: any): void {
-    Registry._items[name] = module;
+    newRegistry.add(name, module);
   }
 
   /**
@@ -22,7 +21,7 @@ export class Registry {
    * @param name
    */
   public static get(name: string): any | null {
-    return Registry._items[name] ?? null;
+    return newRegistry.get(name);
   }
 
   /**
@@ -31,6 +30,6 @@ export class Registry {
    * @param name
    */
   public static has(name: string): boolean {
-    return name in Registry._items;
+    return newRegistry.has(name);
   }
 }
