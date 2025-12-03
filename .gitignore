@@ -4,3 +4,6 @@
 # Ignore reports
 /coverage
 /cov.lcov
+
+# Ignore docs
+/docs
