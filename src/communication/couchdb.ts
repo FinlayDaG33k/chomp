@@ -1,4 +1,4 @@
-import { Auth, CouchResponse, CouchRequest, CachedResponse, CouchOverrides} from "../types/couchdb.ts";
+import { Auth, CouchResponse, CouchRequest, CachedResponse, CouchOverrides} from "../@types/couchdb.ts";
 import { Cache } from "../core/cache.ts";
 import { Configure } from "../core/configure.ts";
 
