@@ -1,9 +1,5 @@
+import { IEvent } from "../types/websocket.ts";
 import { Logger } from "../core/logger.ts";
-
-interface IEvent {
-  name: string;
-  handler: string;
-}
 
 export class Events {
   private static list: IEvent[] = [];

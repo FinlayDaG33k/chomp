@@ -2,14 +2,6 @@
  * Thanks to Mordo95 for this code
  * https://github.com/Mordo95/interval-template-strings/blob/35d55c86ee8cbff947b66740b327e1de4d4f96aa/index.js
  */
-
-interface RegExp {
-  groups: {
-    digit: number;
-    format: string;
-  };
-}
-
 const TimeRegexp = /(?<value>[+-]?\d+(\.\d+)?)\s*(?<unit>[a-zA-Z]+)/g;
 const second = 1000;
 const minute = second * 60;

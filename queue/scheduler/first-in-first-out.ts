@@ -1,4 +1,4 @@
-import {QueueItem} from "../queue.ts";
+import {QueueItem} from "../../types/queue.ts";
 
 export default function(item: QueueItem, items: QueueItem[] = []) {
   // Remove weight if specified

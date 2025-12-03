@@ -3,6 +3,9 @@ import { Time } from "../utility/time.ts";
 import { Configure } from "./configure.ts";
 import { bold, cyan, magenta, red, yellow, blue, green, gray } from "https://deno.land/std@0.117.0/fmt/colors.ts";
 
+/**
+ * Exporting LogLevels to make it easier to use this class.
+ */
 export { LogLevels };
 
 const handlers: LogHandlers = {

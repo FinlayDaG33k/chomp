@@ -1,12 +1,5 @@
+import { RequestParameters, QueryParameters } from "../../types/webserver.ts";
 import { Route } from "../routing/route.ts";
-
-export interface RequestParameters {
-  [name: string]: string;
-}
-
-export interface QueryParameters {
-  [name: string]: string;
-}
 
 export class Request {
   constructor(

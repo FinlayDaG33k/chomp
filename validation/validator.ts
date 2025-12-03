@@ -1,22 +1,6 @@
+import { ValidationCallback, ValidationOptions, ValidationStep } from "../types/validator.ts";
 import {raise} from "../error/raise.ts";
 import { Validators } from "./rules.ts";
-
-export type ValidationCallback = (input: any, parameters: any) => ValidationCallbackResponse;
-export type ValidationCallbackResponse = ValidationCallbackSuccess|ValidationCallbackError;
-export type ValidationCallbackParameters = ValidationParameter[];
-export type ValidationOptions = {
-  last?: boolean;
-  message?: string;
-  parameters?: ValidationCallbackParameters;
-};
-
-type ValidationStep = {
-  callback: ValidationCallback
-  options: ValidationOptions;
-};
-type ValidationCallbackSuccess = [undefined];
-type ValidationCallbackError = [string];
-type ValidationParameter = {[key: string]: any};
 
 /**
  * Run validator functions on inputs.

@@ -1,3 +1,4 @@
+import { ViewVariable } from "../../types/webserver.ts";
 import { Logger } from "../../core/logger.ts";
 import { Inflector } from "../../utility/inflector.ts";
 import { Handlebars } from "../renderers/handlebars.ts";
@@ -7,10 +8,6 @@ import { raise } from "../../error/raise.ts";
 import { Component } from "./component.ts";
 import { Registry } from "../../utility/registry.ts";
 import { compress as compressBrotli } from "https://deno.land/x/brotli@v0.1.4/mod.ts";
-
-export interface ViewVariable {
-  [key: string]: string | number | unknown;
-}
 
 export class Controller {
   private static readonly _templateDir = `./src/templates`;

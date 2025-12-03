@@ -1,14 +1,9 @@
+import { HandlebarsCacheItem, ViewVariable } from "../../types/webserver.ts";
 import { default as hbs } from "https://jspm.dev/handlebars@4.7.6";
 import { raise } from "../../error/raise.ts";
-import { ViewVariable } from "../controller/controller.ts";
-
-interface CacheItem {
-  // deno-lint-ignore ban-types -- TODO
-  [key: string]: Function;
-}
 
 export class Handlebars {
-  private static _cache: CacheItem = <CacheItem> {};
+  private static _cache: HandlebarsCacheItem = <HandlebarsCacheItem> {};
 
   public static async render(
     path: string,

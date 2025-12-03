@@ -1,57 +1,6 @@
+import { Auth, CouchResponse, CouchRequest, CachedResponse, CouchOverrides} from "../types/couchdb.ts";
 import { Cache } from "../core/cache.ts";
-import {Configure} from "../core/configure.ts";
-
-type Auth = {
-  username: string;
-  password: string;
-}
-
-type CouchRequest = {
-  method: string;
-  // deno-lint-ignore no-explicit-any -- TODO: Figure out proper type
-  headers: any;
-  body?: string;
-}
-
-type CachedResponse = {
-  etag: string;
-  data: CouchResponse;
-}
-
-export type CouchFailure = [
-  // Error data
-  { error: string; reason: string; } | undefined,
-
-  // No document
-  undefined,
-
-  // HTTP Status code
-  number,
-]
-
-export type CouchSuccess = [
-  // No error
-  undefined,
-
-  // Document
-  // deno-lint-ignore no-explicit-any -- TODO: Figure out proper type
-  DocumentHeader & any,
-
-  // HTTP Status code
-  number,
-]
-
-export type CouchResponse = CouchSuccess|CouchFailure;
-
-export interface CouchOverrides {
-  method?: string;
-  etag?: string;
-}
-
-export type DocumentHeader = {
-  _id: string;
-  _rev?: string;
-}
+import { Configure } from "../core/configure.ts";
 
 const CACHE_TIME = '+1 hour';
 

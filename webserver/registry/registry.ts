@@ -1,6 +1,4 @@
-interface RegistryItem {
-  [key: string]: any;
-}
+import { RegistryItem } from "../../types/webserver.ts";
 
 /**
  * @deprecated Use {@linkcode ../../utility/Registry} instead

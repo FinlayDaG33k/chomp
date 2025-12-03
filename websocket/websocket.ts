@@ -4,6 +4,12 @@ import { Events } from "./events.ts";
 import { Authenticator } from "./authenticator.ts";
 import { Configure } from "../core/configure.ts";
 
+declare global {
+  interface Window {
+    websocket: Websocket;
+  }
+}
+
 export class Websocket {
   private readonly port: number = 80;
   private readonly authenticate: boolean = false;

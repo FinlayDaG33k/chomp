@@ -1,9 +1,5 @@
+import { NutState } from "../types/nut.ts";
 import { Logger } from "../core/logger.ts";
-
-export class NutState {
-  public static readonly WAITING = 0;
-  public static readonly IDLE = 1;
-}
 
 /**
  * Interact with NUT (Network UPS Tools).

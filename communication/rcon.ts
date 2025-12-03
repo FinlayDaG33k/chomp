@@ -1,9 +1,5 @@
+import { PacketType } from "../types/rcon.ts";
 import { Buffer } from "https://deno.land/std@0.87.0/node/buffer.ts";
-
-export enum PacketType {
-  COMMAND = 0x02,
-  AUTH = 0x03,
-}
 
 /**
  * Interact with RCON.

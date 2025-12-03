@@ -1,4 +1,4 @@
-type SuccessResponse<T> = [undefined, T];
+import { SuccessResponse } from "../types/error-or-data.ts";
 
 export async function errorOrData<T, E extends new (message?: string) => Error>(promise: Promise<T>, catchables?: E[]): Promise<SuccessResponse<T> | [InstanceType<E>]> {
   try {

@@ -1,17 +1,5 @@
+import { Precision, Api } from "../types/influxdb.ts";
 import { Logger } from "../core/logger.ts";
-
-export enum Precision {
-  s,
-  ms,
-  us,
-  ns,
-}
-
-interface Api {
-  url: string;
-  auth: string;
-  precision: Precision;
-}
 
 /**
  * Interact with InfluxDB

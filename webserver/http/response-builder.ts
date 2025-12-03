@@ -1,9 +1,6 @@
+import { ResponseHeader } from "../../types/webserver.ts";
 import { StatusCodes } from "./status-codes.ts";
 import { TimeString } from "../../utility/time-string.ts";
-
-interface ResponseHeader {
-  [key: string]: string;
-}
 
 export class ResponseBuilder {
   private readonly _headers: Map<string, Array<string>> = new Map<string, Array<string>>();

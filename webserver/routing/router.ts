@@ -1,21 +1,15 @@
+import { Route, QueryParameters, RequestParameters } from "../../types/webserver.ts";
 import { readerFromStreamReader } from "https://deno.land/std@0.126.0/io/mod.ts";
 import { readAll } from "https://deno.land/std@0.213.0/io/read_all.ts";
 import { pathToRegexp } from "../pathToRegexp.ts";
 import { Inflector } from "../../utility/inflector.ts";
 import { Logger } from "../../core/logger.ts";
-import { QueryParameters, Request as ChompRequest, RequestParameters } from "../http/request.ts";
+import { Request as ChompRequest } from "../http/request.ts";
 import { StatusCodes } from "../http/status-codes.ts";
 import { Route as ChompRoute } from "./route.ts";
 import { Controller } from "../controller/controller.ts";
 import { Registry } from "../../utility/registry.ts";
 import { raise } from "../../error/raise.ts";
-
-interface Route {
-  path: string;
-  controller: string;
-  action: string;
-  method?: string;
-}
 
 export class Router {
   private static readonly _controllerDir = `file://${Deno.cwd()}/src/controller`;
