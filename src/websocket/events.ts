@@ -1,4 +1,4 @@
-import { IEvent } from "../../types/websocket.ts";
+import { IEvent } from "../types/websocket.ts";
 import { Logger } from "../core/logger.ts";
 
 export class Events {

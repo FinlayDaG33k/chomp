@@ -1,4 +1,4 @@
-import { ViewVariables } from "../../../types/webserver.ts";
+import { ViewVariables } from "../../types/webserver.ts";
 import { default as hbs } from "https://jspm.dev/handlebars@4.7.6";
 import { Cache } from "../../core/cache.ts";
 

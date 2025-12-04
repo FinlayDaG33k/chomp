@@ -9,7 +9,7 @@ import {
   PathFunction,
   TokensToFunctionOptions,
   ParseOptions
-} from "../../types/webserver.ts";
+} from "../types/webserver.ts";
 
 /**
  * Tokenize input string.

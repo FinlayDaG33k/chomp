@@ -1,4 +1,4 @@
-import {ViewVariables} from "../../../types/webserver.ts";
+import {ViewVariables} from "../../types/webserver.ts";
 import { Logger } from "../../core/logger.ts";
 import { Inflector } from "../../utility/inflector.ts";
 import {Handlebars, Json, OctetStream, Plaintext} from "../renderers/mod.ts";

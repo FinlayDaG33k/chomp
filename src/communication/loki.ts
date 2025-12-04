@@ -1,4 +1,4 @@
-import { LokiStream } from "../../types/loki.ts";
+import { LokiStream } from "../types/loki.ts";
 import { Logger } from "../core/logger.ts";
 
 /**

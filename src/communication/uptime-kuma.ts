@@ -1,4 +1,4 @@
-import { UptimeKumaInstance } from "../../types/uptime-kuma.ts";
+import { UptimeKumaInstance } from "../types/uptime-kuma.ts";
 import {fetchWithTimeout} from "../utility/fetch-with-timeout.ts";
 import {raise} from "../../mod.ts";
 

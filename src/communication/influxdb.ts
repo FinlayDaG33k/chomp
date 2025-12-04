@@ -1,4 +1,4 @@
-import { Precision, Api } from "../../types/influxdb.ts";
+import { Precision, Api } from "../types/influxdb.ts";
 import { Logger } from "../core/logger.ts";
 
 /**

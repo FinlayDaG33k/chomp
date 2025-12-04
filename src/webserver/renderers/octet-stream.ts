@@ -1,4 +1,4 @@
-import {ViewVariables} from "../../../types/webserver.ts";
+import {ViewVariables} from "../../types/webserver.ts";
 
 export class OctetStream {
   public static render(

@@ -1,4 +1,4 @@
-import { CacheItem, CacheMetrics } from "../../types/cache.ts";
+import { CacheItem, CacheMetrics } from "../types/cache.ts";
 import { TimeString } from "../utility/time-string.ts";
 import { Logger } from "./logger.ts";
 import { Configure } from "./configure.ts";

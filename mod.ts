@@ -40,9 +40,9 @@ export { Queue } from "./src/queue/queue.ts";
 export { Hash } from "./src/security/hash.ts";
 export { Password } from "./src/security/password.ts";
 export { Random } from "./src/security/random.ts";
-export type { Algorithms, INSECURE_ALGORITHMS } from "./types/hash.ts";
+export type { Algorithms, INSECURE_ALGORITHMS } from "./src/types/hash.ts";
 export type { DEFAULT_OPTS, PASSWORD_DEFAULT } from "./src/security/password.ts";
-export type { PasswordOptions } from "./types/password.ts";
+export type { PasswordOptions } from "./src/types/password.ts";
 
 /**
  * Utility
@@ -59,7 +59,7 @@ export { nameOf } from "./src/utility/name-of.ts";
 export { Text } from "./src/utility/text.ts";
 export { Time } from "./src/utility/time.ts";
 export { TimeString, TimeStringSeconds } from "./src/utility/time-string.ts";
-export type { ExclusionConfig } from "./types/check-source.ts";
+export type { ExclusionConfig } from "./src/types/check-source.ts";
 
 /**
  * Webserver

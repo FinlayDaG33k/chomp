@@ -1,4 +1,4 @@
-import { RequestParameters, QueryParameters } from "../../../types/webserver.ts";
+import { RequestParameters, QueryParameters } from "../../types/webserver.ts";
 import { Route } from "../routing/route.ts";
 
 export class Request {

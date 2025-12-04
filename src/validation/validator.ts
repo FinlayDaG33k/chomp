@@ -1,4 +1,4 @@
-import { ValidationCallback, ValidationOptions, ValidationStep } from "../../types/validator.ts";
+import { ValidationCallback, ValidationOptions, ValidationStep } from "../types/validator.ts";
 import {raise} from "../error/raise.ts";
 import { Validators } from "./rules.ts";
 

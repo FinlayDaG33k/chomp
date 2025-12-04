@@ -1,4 +1,4 @@
-import { NutState } from "../../types/nut.ts";
+import { NutState } from "../types/nut.ts";
 import { Logger } from "../core/logger.ts";
 
 /**

@@ -1,4 +1,4 @@
-import { Route, QueryParameters, RequestParameters } from "../../../types/webserver.ts";
+import { Route, QueryParameters, RequestParameters } from "../../types/webserver.ts";
 import { readerFromStreamReader } from "https://deno.land/std@0.126.0/io/mod.ts";
 import { readAll } from "https://deno.land/std@0.213.0/io/read_all.ts";
 import { pathToRegexp } from "../pathToRegexp.ts";

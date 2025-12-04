@@ -1,4 +1,4 @@
-import {ValidationCallbackResponse, ValidationOptions} from "../../../types/validator.ts";
+import {ValidationCallbackResponse, ValidationOptions} from "../../types/validator.ts";
 import {empty} from "../../../mod.ts";
 
 export function isEmpty(input: any, options: ValidationOptions): ValidationCallbackResponse {

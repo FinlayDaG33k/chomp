@@ -1,4 +1,4 @@
-import { QueueItem, Scheduler } from "../../types/queue.ts";
+import { QueueItem, Scheduler } from "../types/queue.ts";
 import { default as defaultScheduler } from "./scheduler/first-in-first-out.ts";
 
 /**
