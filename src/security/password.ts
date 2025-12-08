@@ -26,6 +26,7 @@ export const DEFAULT_OPTS: PasswordOptions = {
  *
  * Heavily inspired by PHP's {@link https://www.php.net/manual/en/function.password-hash.php password_hash}
  * and {@link https://www.php.net/manual/en/function.password-verify.php password_verify} functions.
+ * However, not compatible with one and another at the moment.
  *
  * **NOTE**: If you want to create deterministic hashes, use the {@linkcode Hash} class instead!
  */
