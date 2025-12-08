@@ -1,7 +1,7 @@
-import { Algorithms, INSECURE_ALGORITHMS } from "../types/hash.ts";
-import { PasswordOptions, HASH_IDENTIFIERS } from "../types/password.ts";
-import { Hash } from "./hash.ts";
-import { Random } from "./random.ts";
+import {Algorithms, INSECURE_ALGORITHMS} from "../types/hash.ts";
+import {HASH_IDENTIFIERS, PasswordOptions} from "../types/password.ts";
+import {Hash} from "./hash.ts";
+import {Random} from "./random.ts";
 import {Logger, raise} from "../../mod.ts";
 import {valueOrDefault} from "../utility/value-or-default.ts";
 
@@ -45,7 +45,7 @@ export class Password {
   ): Promise<string> {
     // Make sure we are not using an insecure algorithm
     const isUsingInsecureAlgorithm = INSECURE_ALGORITHMS.includes(algo);
-    const mayUseInsecureAlgorithms = !options.allowInsecure;
+    const mayUseInsecureAlgorithms = options.allowInsecure;
     if (isUsingInsecureAlgorithm && !mayUseInsecureAlgorithms) raise("Insecure hashing algorithm selected, aborting.");
 
     // Make sure cost is set, else, use a default
@@ -59,17 +59,17 @@ export class Password {
     const identifier = Object.keys(HASH_IDENTIFIERS)[identifierIndex];
 
     // Create salt if need be
-    if(options.salt === undefined) {
-      options.salt = Random.string(32);
-    } else {
+    // Warn if we use a static salt
+    if(options.salt !== undefined) {
       Logger.warning("Using statically defined salt, this is not suitable for production usage!");
     }
+    const salt = valueOrDefault<string>(options.salt, Random.string(32));
 
     // Hash our password
-    const result = await Password.doHash(password, algo, options.salt, options.cost!);
+    const result = await Password.doHash(password, algo, salt, options.cost!);
 
     // Return our final hash string
-    return `${identifier}!${options.cost}!${options.salt}!${result}`;
+    return `${identifier}!${options.cost}!${salt}!${result}`;
   }
 
   /**
@@ -99,10 +99,11 @@ export class Password {
   private static async doHash(input: string, algo: string, salt: string, cost: number): Promise<string> {
     const rounds = 2 ** cost;
     let result = input;
+
     for (let round = 0; round < rounds; round++) {
-      const h = new Hash(`${salt}${input}`, algo);
+      const h = new Hash(`${salt}${input}`, algo as Algorithms);
       await h.digest();
-      result = await h.hex();
+      result = h.hex();
     }
 
     return result;
