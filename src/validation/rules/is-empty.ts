@@ -5,8 +5,8 @@ export function isEmpty(input: any, options: ValidationOptions): ValidationCallb
   // Check if input is empty
   // If so, return the message
   const inputIsEmpty = empty(input);
-  if(inputIsEmpty) return [options.message];
+  if(inputIsEmpty) return [undefined];
 
   // We have something inside
-  return [undefined];
+  return [options.message];
 }

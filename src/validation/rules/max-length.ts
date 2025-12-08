@@ -6,10 +6,10 @@ export function maxLength(input: any, options: ValidationOptions): ValidationCal
   // If not set, default to 0
   const max = valueOrDefault<number>(options.parameters?.length, 0);
 
-  // Check if we are below the maximum length
+  // Check if we are above the maximum length
   const maxLengthExceeded = input.length > max;
-  if(maxLengthExceeded) return [undefined];
+  if(maxLengthExceeded) return [options.message];
 
-  // Max length was exceeded
-  return [options.message];
+  // Did not exceed max length
+  return [undefined];
 }

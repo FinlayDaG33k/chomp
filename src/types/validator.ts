@@ -2,7 +2,7 @@ export type ValidationCallback = (input: any, parameters: any) => ValidationCall
 
 export type ValidationCallbackResponse = ValidationCallbackSuccess|ValidationCallbackError;
 
-export type ValidationCallbackParameters = ValidationParameter[];
+export type ValidationCallbackParameters = {[key: string]: any};
 
 export type ValidationOptions = {
   last?: boolean;
@@ -18,5 +18,3 @@ export type ValidationStep = {
 export type ValidationCallbackSuccess = [undefined];
 
 export type ValidationCallbackError = [string];
-
-export type ValidationParameter = {[key: string]: any};
