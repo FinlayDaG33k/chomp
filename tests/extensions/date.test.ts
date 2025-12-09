@@ -36,8 +36,8 @@ Deno.test("Date Extensions Test", async (t) => {
   });
 
   await t.step("setMidnight", () => {
-    assertEquals(c.getTime(), 1757973600000);
-    assertEquals(d.getTime(), 1758060000000);
+    assertEquals(c.toISOString(), '2025-09-15T22:00:00.000Z');
+    assertEquals(d.toISOString(), '2025-09-16T22:00:00.000Z');
     assertEquals(a.isBeforeOrEqual(b), true);
     assertEquals(b.isBeforeOrEqual(a), false);
     assertEquals(b.isBeforeOrEqual(b), true);
