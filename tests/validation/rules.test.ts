@@ -5,7 +5,7 @@ import { minLength } from "../../src/validation/rules/min-length.ts";
 import { maxLength } from "../../src/validation/rules/max-length.ts";
 import { assertEquals } from "https://deno.land/std@0.152.0/testing/asserts.ts";
 
-Deno.test("Validator Test", async (t) => {
+Deno.test("Validator Rules Test", async (t) => {
   await t.step("isEmpty", () => {
     const message = "Passed argument not empty!";
     const params = {message: message}
