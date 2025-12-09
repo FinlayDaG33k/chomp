@@ -1,6 +1,7 @@
 import { time as timets } from "https://denopkg.com/burhanahmeed/time.ts@v2.0.1/mod.ts";
 import { format as formatter } from "https://cdn.deno.land/std/versions/0.77.0/raw/datetime/mod.ts";
 import { TimeString } from "./time-string.ts";
+import {envOrDefault} from "./env-or-default.ts";
 
 /**
  * Try to alleviate the pain of working with time.
@@ -38,7 +39,8 @@ export class Time {
   }
 
   public constructor(time: string | undefined = undefined) {
-    this.time = timets(time).tz(Deno.env.get("TZ")!).t;
+    const timezone = envOrDefault<string>("TZ", "Europe/Amsterdam");
+    this.time = timets(time).tz(timezone).t;
   }
 
   public format(format: string) {
