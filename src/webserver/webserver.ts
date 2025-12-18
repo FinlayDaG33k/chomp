@@ -18,8 +18,12 @@ export class Webserver {
 
     // Serve connections
     for await (const conn of this.server) {
-      // @ts-ignore Left intentionally without await
-      this.serve(conn);
+      try {
+        // <void> No need to await
+        void this.serve(conn);
+      } catch(e) {
+        Logger.error(`Could not serve connection: ${e.message}`, e.stack);
+      }
     }
   }
 
