@@ -30,12 +30,14 @@ export class Websocket {
         Logger.warning(
           `Closing connection with "${(client.webSocket.conn.remoteAddr as Deno.NetAddr).hostname!}": Invalid token!`,
         );
-        client.close(1000, "Invalid authentication token!");
+        // void: No need to await
+        void client.close(1000, "Invalid authentication token!");
         return;
       }
 
       // Dispatch "ClientConnect" event
-      this.handleEvent("ClientConnect", { client: client });
+      // void: No need to await
+      void this.handleEvent("ClientConnect", { client: client });
 
       client.on("message", (message: string) => this.onMessage(message));
     });
@@ -52,7 +54,8 @@ export class Websocket {
     for (const client of this.server.clients) {
       if (!client) continue;
       if (client.isClosed) continue;
-      client.send(JSON.stringify({
+      // void: No need to await
+       void client.send(JSON.stringify({
         event: eventString,
         data: data,
       }));
