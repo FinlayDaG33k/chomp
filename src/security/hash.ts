@@ -1,6 +1,7 @@
 import { Algorithms } from "../types/hash.ts";
 import { DigestAlgorithm } from "https://cdn.deno.land/std/versions/0.113.0/raw/_wasm_crypto/mod.ts";
 import { crypto } from "https://deno.land/std@0.113.0/crypto/mod.ts";
+import { encodeHex } from "jsr:@std/encoding@1.0.10";
 
 /**
  * Create hashes
@@ -52,6 +53,6 @@ export class Hash {
    * ```
    */
   public hex() {
-    return [...new Uint8Array(this.result)].map((x) => x.toString(16).padStart(2, "0")).join("");
+    return encodeHex(this.result);
   }
 }
