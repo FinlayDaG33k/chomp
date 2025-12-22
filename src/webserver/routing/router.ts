@@ -9,6 +9,7 @@ import { Route as ChompRoute } from "./route.ts";
 import { Controller } from "../controller/controller.ts";
 import { Registry } from "../../utility/registry.ts";
 import { raise } from "../../error/raise.ts";
+import {valueOrDefault} from "../../utility/value-or-default.ts";
 
 export class Router {
   private static readonly _controllerDir = `file://${Deno.cwd()}/src/controller`;
@@ -198,7 +199,7 @@ export class Router {
   public static getAuth(request: Request): string {
     // Get our authorization header
     // Return it or empty string if none found
-    return request.headers.get("authorization") ?? "";
+    return valueOrDefault<string>(request.headers.get("authorization"), "");
   }
 
   /**
@@ -214,7 +215,7 @@ export class Router {
         new URLPattern({pathname: route.path}),
         Inflector.pascalize(route.controller),
         route.action,
-        route.method ?? "GET",
+        valueOrDefault<string>(route.method, "GET"),
       ),
     );
   }
