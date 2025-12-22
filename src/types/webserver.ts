@@ -1,8 +1,6 @@
 export type ViewVariables = Map<string, string|number|unknown>;
 
-export interface RequestParameters {
-  [name: string]: string;
-}
+export type RequestParameters = Record<string, string|undefined>;
 
 export interface QueryParameters {
   [name: string]: string;

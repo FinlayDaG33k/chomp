@@ -1,7 +1,6 @@
-import { Route, QueryParameters, RequestParameters } from "../../types/webserver.ts";
+import { Route, QueryParameters } from "../../types/webserver.ts";
 import { readerFromStreamReader } from "https://deno.land/std@0.126.0/io/mod.ts";
 import { readAll } from "https://deno.land/std@0.213.0/io/read_all.ts";
-import { pathToRegexp } from "../pathToRegexp.ts";
 import { Inflector } from "../../utility/inflector.ts";
 import { Logger } from "../../core/logger.ts";
 import { Request as ChompRequest } from "../http/request.ts";
@@ -42,14 +41,18 @@ export class Router {
       if (route.getMethod() !== request.method) continue;
 
       // Make sure we have a matching route
-      const matches = pathToRegexp(route.getPath()).exec(path);
-      if (matches) {
-        return {
-          route: route,
-          path: path,
-        };
-      }
+      const isMatch = route.getPath().test(request.url);
+      if(!isMatch) continue;
+
+      return {
+        route: route,
+        path: path,
+        data: route.getPath().exec(request.url),
+      };
     }
+
+    // No suitable route was found
+    return null;
   }
 
   /**
@@ -63,7 +66,8 @@ export class Router {
     // Make sure a route was found
     // Otherwise return a 404 response
     const route = Router.route(request);
-    if (!route || !route.route) {
+    const hasRoute = route !== null;
+    if (!hasRoute) {
       return new Response(
         "The requested page could not be found.",
         {
@@ -82,7 +86,7 @@ export class Router {
       route.route,
       request.headers,
       await Router.getBody(request),
-      Router.getParams(route.route, route.path),
+      route.data!.pathname.groups,
       Router.getQuery(request.url),
       Router.getAuth(request),
       clientIp,
@@ -155,28 +159,6 @@ export class Router {
   }
 
   /**
-   * Get the parameters for the given route
-   *
-   * @param route
-   * @param path
-   * @returns RequestParameters
-   */
-  public static getParams(route: ChompRoute, path: string): RequestParameters {
-    // Strip off query parameters
-    const pathSplit = path.split("%3F");
-    path = pathSplit[0];
-
-    const keys: string[] = [];
-    // TODO: Fix type error
-    // @ts-ignore --
-    const r = pathToRegexp(route.getPath(), keys).exec(path) || [];
-
-    // TODO: Fix type error
-    // @ts-ignore --
-    return keys.reduce((acc, key, i) => ({ [key.name]: r[i + 1], ...acc }), {});
-  }
-
-  /**
    * Get the query parameters for the given route
    *
    * @param path
@@ -229,7 +211,7 @@ export class Router {
   public static add(route: Route): void {
     Router.routes.push(
       new ChompRoute(
-        route.path,
+        new URLPattern({pathname: route.path}),
         Inflector.pascalize(route.controller),
         route.action,
         route.method ?? "GET",
