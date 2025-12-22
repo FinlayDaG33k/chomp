@@ -3,6 +3,7 @@ import { Logger } from "../core/logger.ts";
 import { Events } from "./events.ts";
 import { Authenticator } from "./authenticator.ts";
 import { Configure } from "../core/configure.ts";
+import {valueOrDefault} from "../utility/value-or-default.ts";
 
 declare global {
   interface Window {
@@ -21,7 +22,8 @@ export class Websocket {
   }
 
   public start() {
-    this.server = new WebSocketServer(this.port, Configure.get("real_ip_header", "X-Forwarded-For") ?? null);
+    const header = Configure.get("real_ip_header", "X-Forwarded-For");
+    this.server = new WebSocketServer(this.port, valueOrDefault<string|null>(header, null));
     this.server.on("connection", (client: WebSocketAcceptedClient, url: string) => {
       Logger.info(`New WebSocket connection from "${(client.webSocket.conn.remoteAddr as Deno.NetAddr).hostname!}"...`);
 

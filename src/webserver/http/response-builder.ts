@@ -1,6 +1,7 @@
 import { ResponseHeader } from "../../types/webserver.ts";
 import { StatusCodes } from "./status-codes.ts";
 import { TimeString } from "../../utility/time-string.ts";
+import {valueOrDefault} from "../../utility/value-or-default.ts";
 
 export class ResponseBuilder {
   private readonly _headers: Map<string, Array<string>> = new Map<string, Array<string>>();
@@ -26,7 +27,7 @@ export class ResponseBuilder {
    * @param name
    */
   public getHeader(name: string): string[] {
-    return this._headers.get(name) ?? [];
+    return valueOrDefault<string[]>(this._headers.get(name), []);
   }
 
   /**
