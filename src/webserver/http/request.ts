@@ -1,5 +1,6 @@
 import { RequestParameters, QueryParameters } from "../../types/webserver.ts";
 import { Route } from "../routing/route.ts";
+import {valueOrDefault} from "../../utility/value-or-default.ts";
 
 export class Request {
   constructor(
@@ -40,8 +41,7 @@ export class Request {
   }
 
   public getParam(name: string): string | null {
-    if (name in this.params) return this.params[name];
-    return null;
+    return valueOrDefault<string|null>(this.params[name], null);
   }
 
   public getQueryParams(): QueryParameters {
@@ -49,8 +49,7 @@ export class Request {
   }
 
   public getQuery(name: string): string | null {
-    if (name in this.query) return this.query[name];
-    return null;
+    return valueOrDefault<string|null>(this.query[name], null);
   }
 
   public getAuth(): string {
