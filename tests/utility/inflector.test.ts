@@ -19,6 +19,13 @@ Deno.test("Inflector Test", async (t) => {
     assertEquals(Inflector.pascalize("hello_World", "-"), "Hello_World");
   });
 
+  await t.step("camelize", () => {
+    assertEquals(Inflector.camelize("hello-world"), "hello-world");
+    assertEquals(Inflector.camelize("hello_world"), "helloWorld");
+    assertEquals(Inflector.camelize("hello-world", "-"), "helloWorld");
+    assertEquals(Inflector.camelize("hello_world", "-"), "hello_world");
+  })
+
   await t.step("humanize", () => {
     assertEquals(Inflector.humanize("hello-world"), "Hello-world");
     assertEquals(Inflector.humanize("hello_World"), "Hello World");
