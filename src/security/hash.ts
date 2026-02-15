@@ -12,7 +12,7 @@ export class Hash {
   private result!: ArrayBuffer;
 
   constructor(
-    private input: string,
+    private input: string|ArrayBuffer,
     private algo: Algorithms,
   ) {}
 
@@ -37,7 +37,11 @@ export class Hash {
    * ```
    */
   public async digest() {
-    this.result = await crypto.subtle.digest(this.algo as DigestAlgorithm, new TextEncoder().encode(this.input));
+    // Check if we need to encode text into an array buffer
+    if(typeof this.input === "string") this.input = new TextEncoder().encode(this.input);
+
+    // Hash input
+    this.result = await crypto.subtle.digest(this.algo as DigestAlgorithm, this.input);
   }
 
   /**
