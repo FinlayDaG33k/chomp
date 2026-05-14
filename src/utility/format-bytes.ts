@@ -11,6 +11,8 @@ const defaultSizes = ['Bytes', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 
  *
  * @source https://stackoverflow.com/a/18650828/5001849
  *
+ * @deprecated Please use `@std/fmt/bytes` instead.
+ *
  * @param bytes
  * @param decimals
  * @param sizes Array of sizes
