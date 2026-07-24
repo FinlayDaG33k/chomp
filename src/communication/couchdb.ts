@@ -1,6 +1,7 @@
 import { Auth, CouchResponse, CouchRequest, CachedResponse, CouchOverrides} from "../types/couchdb.ts";
 import { Cache } from "../core/cache.ts";
 import { Configure } from "../core/configure.ts";
+import { valueOrDefault } from "../utility/value-or-default.ts";
 
 /**
  * Default cache time
@@ -325,6 +326,12 @@ export class CouchDB {
     return this.raw(`_find`, body, {method: 'POST'});
   }
 
+  public health() {
+    return this.raw("_up", null, {
+      root: true,
+    });
+  }
+
   /**
    * Main request handler.
    * This method is used for most of our other methods as well.
@@ -360,8 +367,19 @@ export class CouchDB {
     const cacheKey = endpoint;
     if (endpoint.charAt(0) !== "/" && endpoint !== "") endpoint = `/${endpoint}`;
 
-    // Send our request
-    const resp = await fetch(`${this.host}/${this.database}${endpoint}`, opts);
+    // Check whether we should run the request against the root
+    const isRootEndpoint = valueOrDefault<boolean>(overrides.root, false);
+
+    // Build Url
+    const urlParts = [
+      this.host,
+      isRootEndpoint ? "" : `/${this.database}`,
+      endpoint
+    ];
+    const url = urlParts.join("");
+
+    // Send request
+    const resp = await fetch(url, opts);
 
     // Check if we have a 304
     // If so, return here

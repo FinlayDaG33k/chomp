@@ -41,8 +41,21 @@ export type CouchSuccess = [
 export type CouchResponse = CouchSuccess|CouchFailure;
 
 export interface CouchOverrides {
+  /**
+   * Override the request method
+   */
   method?: string;
+
+  /**
+   * Override the request E-Tag for caching
+   */
   etag?: string;
+
+  /**
+   * Run request on root (ignoring database field).
+   * Can be used to call endpoints on the node itself (eg. "_up").
+   */
+  root?: boolean;
 }
 
 export type DocumentHeader = {
