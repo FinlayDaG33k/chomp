@@ -1,4 +1,4 @@
-import { time as timets } from "https://denopkg.com/burhanahmeed/time.ts@v2.0.1/mod.ts";
+import { time as timets } from "https://deno.land/x/time.ts@v2.0.1/mod.ts";
 import { format as formatter } from "https://cdn.deno.land/std/versions/0.77.0/raw/datetime/mod.ts";
 import { TimeString } from "./time-string.ts";
 import {envOrDefault} from "./env-or-default.ts";
