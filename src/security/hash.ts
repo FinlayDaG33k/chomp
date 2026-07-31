@@ -12,7 +12,7 @@ export class Hash {
   private result!: ArrayBuffer;
 
   constructor(
-    private input: string|ArrayBuffer,
+    private input: string|ArrayBuffer|Uint8Array<ArrayBuffer>,
     private algo: Algorithms,
   ) {}
 
