@@ -1,6 +1,6 @@
 import { Algorithms } from "../types/hash.ts";
-import { DigestAlgorithm } from "https://cdn.deno.land/std/versions/0.113.0/raw/_wasm_crypto/mod.ts";
-import { crypto } from "https://deno.land/std@0.113.0/crypto/mod.ts";
+import { DigestAlgorithm } from "jsr:@std/crypto@1.1.0/crypto";
+import { crypto } from "jsr:@std/crypto@1.1.0/crypto";
 import { encodeHex } from "jsr:@std/encoding@1.0.10";
 
 /**
