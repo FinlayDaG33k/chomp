@@ -19,7 +19,8 @@ export class Cache {
   private static _metrics: CacheMetrics = {
     reads: {
       hit: 0,
-      miss: 0
+      miss: 0,
+      optimistic: 0,
     },
     writes: 0,
     swept: 0,
@@ -47,6 +48,8 @@ export class Cache {
     switch(key) {
       case "hit":
         return Cache._metrics.reads.hit;
+      case "optimistic":
+        return Cache._metrics.reads.optimistic;
       case "miss":
         return Cache._metrics.reads.miss;
       case "total":
@@ -94,9 +97,8 @@ export class Cache {
     // Check if an expiry is specified
     // Calculate the expiry values if so
     if (expiry !== null) {
-      const now = new Date();
-      expiresAt = new Date(now.getTime() + TimeString`${expiry}`);
-      optimisticExpiry = new Date(expiresAt.getTime() + TimeString`${Configure.get('chomp_optimistic_delay', OPTIMISTIC_DELAY)}`)
+      expiresAt = Date.now() + TimeString`${expiry}`
+      optimisticExpiry = expiresAt + TimeString`${Configure.get('chomp_optimistic_delay', OPTIMISTIC_DELAY)}`;
     }
 
     // Set item in the Cache
@@ -131,26 +133,32 @@ export class Cache {
    * @param allowOptimism Whether to allow optimistically serve expired items from the cache
    */
   public static get<T>(key: string, allowOptimism = false): T | null {
-    // Return null if the item doesn't exist
-    if (!Cache.exists(key)) {
-      Cache._metrics.reads.miss++;
-      return null;
-    }
-
-    // Return null if the item expired
-    const itemHasExpired = Cache.expired(key);
-    const disallowOptimism = !allowOptimism;
-    if (itemHasExpired && disallowOptimism) {
-      Cache._metrics.reads.miss++;
-      return null;
-    }
-
-    // Get item from cache
+    // Check if item exists
     const item = Cache._items.get(key);
-    Contract.requireNotUndefined(item);
 
-    // Increase hit counter
+    // Return null if no item was found
+    if (item === undefined) {
+      Cache._metrics.reads.miss++;
+      console.log(`${key} does not exist in cache!`);
+      return null;
+    }
+
+    // Return item if we didn't expire yet
+    const hasExpired = Cache._expiry(item);
+    if(!hasExpired) {
+      Cache._metrics.reads.hit++;
+      return item.data;
+    }
+
+    // Return null if we're not allowed to be optimistic
+    if (!allowOptimism && Cache._optimism(item)) {
+      Cache._metrics.reads.miss++;
+      return null;
+    }
+
+    // Increase hit counters
     Cache._metrics.reads.hit++;
+    Cache._metrics.reads.optimistic++;
 
     // Return Cache data
     return item.data;
@@ -175,6 +183,7 @@ export class Cache {
 
   /**
    * Check whether an item has expired.
+   * This function ignores optimistic caching.
    *
    * @example Basic Usage
    * ```ts
@@ -192,11 +201,8 @@ export class Cache {
     // Make sure the item exists
     if(item === undefined) return true;
 
-    // Make sure the item has an expiry
-    if(item.expires === null) return false;
-
     // Check whether the item has expired
-    return item.expires < new Date();
+    return Cache._expiry(item);
   }
 
   /**
@@ -260,24 +266,25 @@ export class Cache {
    * @param callable
    */
   public static async remember<T>(key: string, expiry: string | null = "+1 minute", callable: Promise<T>|(() => Promise<T>)): Promise<T> {
-    // Check if cache item exists and hasn't expired
-    // If so, return the cached item
-    const itemNotExpired = !Cache.expired(key);
-    if(itemNotExpired) return <T>Cache.get(key);
+    // Get item from cache
+    const item = Cache.get<T>(key);
 
-    // Increase metrics
-    Cache._metrics.reads.miss++;
+    // Check if cache item exists
+    // If not, execute callable and remember it
+    if(item === null) {
+      // TODO: Fix "no call signatures" in lint
+      // @ts-ignore See TODO
+      const res = await callable();
 
-    // Cache does not exist, run callable
-    // TODO: Fix "no call signatures" in lint
-    // @ts-ignore See TODO
-    const res = await callable();
+      // Add result to cache
+      Cache.set(key, res, expiry);
 
-    // Add result to cache
-    Cache.set(key, res, expiry);
+      // Return result
+      return res;
+    }
 
-    // Return result
-    return res;
+    // Return item
+    return item;
   }
 
   /**
@@ -309,25 +316,21 @@ export class Cache {
     Logger.debug('Starting cache sweep...');
 
     // Set the start time of this sweep
-    const now = new Date();
+    const now = Date.now();
 
     // Loop over each item in the cache
+    // TODO: Run this in batches instead
     for (const [key, item] of Cache._items) {
-      // Keep items that do not expire
-      if (item.expires === null) {
-        Logger.trace(`Keeping cache item "${key}": Does not expire`);
-        continue;
-      }
 
-      // Keep items that have not yet expired
-      const itemNotExpired = item.expires >= now;
-      if (itemNotExpired) {
+      // Check if item has expired
+      // If not, move on
+      if(!Cache._expiry(item)) {
         Logger.trace(`Keeping cache item "${key}": Has not expired`);
         continue;
       }
 
       // Keep items that may be served optimistically
-      if (item.optimistic !== undefined && item.optimistic >= now) {
+      if(Cache._optimism(item)) {
         Logger.trace(`Keeping cache item "${key}": Keep for optimistic caching`);
         continue;
       }
@@ -339,5 +342,37 @@ export class Cache {
     }
 
     Logger.debug('Finished cache sweep!');
+  }
+
+  /**
+   * Logic to check whether a cache item has expired.
+   *
+   * @param item
+   */
+  private static _expiry(item: CacheItem) {
+    // Get current date
+    const now = Date.now();
+
+    // Make sure the item has an expiry
+    if(item.expires === null) return false;
+
+    // Check whether the item has expired
+    return item.expires < now;
+  }
+
+  /**
+   * Logic to check whether a cache item can be served optimistically
+   *
+   * @param item
+   */
+  private static _optimism(item: CacheItem) {
+    // Get current date
+    const now =  Date.now();
+
+    // Make sure the item has optimistic expiry
+    if(item.optimistic === undefined) return false;
+
+    // Check whether the item has expired
+    return item.optimistic < now;
   }
 }
