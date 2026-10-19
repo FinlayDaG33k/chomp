@@ -348,11 +348,9 @@ export class Cache {
    * Logic to check whether a cache item has expired.
    *
    * @param item
+   * @param now Timestamp against which to check
    */
-  private static _expiry(item: CacheItem) {
-    // Get current date
-    const now = Date.now();
-
+  private static _expiry(item: CacheItem, now: number = Date.now()) {
     // Make sure the item has an expiry
     if(item.expires === null) return false;
 
@@ -364,11 +362,9 @@ export class Cache {
    * Logic to check whether a cache item can be served optimistically
    *
    * @param item
+   * @param now Timestamp against which to check
    */
-  private static _optimism(item: CacheItem) {
-    // Get current date
-    const now =  Date.now();
-
+  private static _optimism(item: CacheItem, now: number = Date.now()) {
     // Make sure the item has optimistic expiry
     if(item.optimistic === undefined) return false;
 
