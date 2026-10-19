@@ -144,7 +144,6 @@ export class Cache {
     // Return null if no item was found
     if (item === undefined) {
       Cache._metrics.reads.miss++;
-      console.log(`${key} does not exist in cache!`);
       return null;
     }
 
