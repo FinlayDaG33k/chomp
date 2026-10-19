@@ -10,6 +10,11 @@ import {Contract} from "../utility/contract.ts";
 const OPTIMISTIC_DELAY = '+1 hour';
 
 /**
+ * Default batch size for sweeper
+ */
+const SWEEP_BATCH_SIZE = 100;
+
+/**
  * Very crude but effective in-memory caching
  *
  * Running {@linkcode Cache.sweep} is up to the app itself.
@@ -312,36 +317,67 @@ export class Cache {
    * Cache.sweep();
    * ```
    */
-  public static sweep(): void {
+  public static async sweep(): Promise<void> {
     Logger.debug('Starting cache sweep...');
 
-    // Set the start time of this sweep
+    // Prepare some variables
     const now = Date.now();
+    const iterator = Cache._items.entries();
 
-    // Loop over each item in the cache
-    // TODO: Run this in batches instead
-    for (const [key, item] of Cache._items) {
+    // Process a new patch
+    // TODO: Move this out of this method for readability
+    const batchProcess = () : Promise<boolean> => {
+      return new Promise((resolve) => {
+        // Yield execution back to the event loop
+        setTimeout(() => {
+          // Keep count of
+          let count = 0;
 
-      // Check if item has expired
-      // If not, move on
-      if(!Cache._expiry(item)) {
-        Logger.trace(`Keeping cache item "${key}": Has not expired`);
-        continue;
-      }
+          while (count < SWEEP_BATCH_SIZE) {
+            // Get next item
+            const next = iterator.next();
 
-      // Keep items that may be served optimistically
-      if(Cache._optimism(item)) {
-        Logger.trace(`Keeping cache item "${key}": Keep for optimistic caching`);
-        continue;
-      }
+            // Check if next item was found
+            // If not, we're done sweeping
+            if (next.done) return resolve(true);
 
-      // Clean up items that have expired
-      Logger.trace(`Removing expired cache item "${key}"`);
-      Cache._items.delete(key);
-      Cache._metrics.swept++;
+            // Get value for the cache item
+            const [key, item] = next.value;
+            count++;
+
+            // Check if entry has expired
+            // If not, move along
+            if(!Cache._expiry(item, now)) {
+              Logger.trace(`Keeping cache item "${key}": Has not expired`);
+              continue;
+            }
+
+            // Check if item can still be served optimistically
+            // If so, move along
+            if(Cache._optimism(item, now)) {
+              Logger.trace(`Keeping cache item "${key}": Keep for optimistic caching`);
+              continue;
+            }
+
+            // Clean up items that have expired
+            Logger.trace(`Removing expired cache item "${key}"`);
+            Cache._items.delete(key);
+            Cache._metrics.swept++;
+          }
+
+          // Batch completed but we still have items to check
+          resolve(false);
+        }, 0);
+      });
     }
 
-    Logger.debug('Finished cache sweep!');
+    // Check if we have more work to do
+    // If so, process next batch
+    let isDone = false;
+    while(!isDone) {
+      isDone = await batchProcess();
+    }
+    Logger.debug(`Finished cache sweep!`);
   }
 
   /**
